@@ -18,7 +18,8 @@
         "psr-4": { "BadPixxel\\SendinblueBridge\\": "src" }
     },
     "autoload-dev": {
-        "psr-4": { "BadPixxel\\SendinblueBridge\\Tests\\": "tests" }
+        "psr-4": { "BadPixxel\\SendinblueBridge\\Tests\\": "tests" },
+        "classmap": [ "app/AppKernel.php" ]        
     },
     
     "require": {
@@ -31,13 +32,15 @@
         "doctrine/doctrine-bundle":                     "^1.6",
         "doctrine/doctrine-cache-bundle":               "^1.2",
         
-        "sonata-project/admin-bundle":                  ">3.0",
-        "sonata-project/doctrine-orm-admin-bundle":     ">3.0",
-        
         "sendinblue/api-bundle":                        "^1.0"
     },    
     
     "require-dev": {
+        
+        "sonata-project/admin-bundle":                  ">3.0",
+        "sonata-project/user-bundle":                   ">3.0",
+        "sonata-project/doctrine-orm-admin-bundle":     ">3.0",
+        
         "phpunit/phpunit":                              ">5",
         "symfony/phpunit-bridge":                       "^3.0",
 

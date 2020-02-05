@@ -1,0 +1,76 @@
+
+################################################################################
+#
+#  Copyright (C) 2020 BadPixxel <www.badpixxel.com>
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+################################################################################
+
+
+################################################################################
+# Define Test Matrix
+matrix:
+    include:          
+        # Symfony 3.4 Branch       
+        - php: 7.3
+          env: SF_VERSION="3.4.*"        
+        
+    allow_failures:
+        - env: SF_VERSION="4.2.*"  STABILITY="dev"       
+        
+    # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
+    fast_finish: true
+
+before_install:
+    # Disable Xdebug ...
+    - phpenv config-rm xdebug.ini    
+      
+# Install composer dependencies,
+install:   
+    - echo "Build Dependencies"
+    - composer update  --prefer-dist --no-interaction  
+
+# Run script
+script:
+    # Execute Grump Travis Testsuite 
+    - php vendor/bin/grumphp run --testsuite=travis
+    # Execute CsFixer
+    - php vendor/bin/grumphp run --testsuite=csfixer    
+    # Execute Phpstan 
+    - php vendor/bin/grumphp run --testsuite=phpstan   
+    # Show Outdated Packages   
+    - composer outdated
+    
+################################################################################
+# Project language
+language: php
+# Allows use container-based infrastructure
+sudo: false
+#sudo: required
+dist: trusty
+################################################################################
+# Start mysql service
+services:
+  - mysql
+################################################################################
+# Cache composer packages so "composer install" is faster
+cache:
+    directories:
+        - $HOME/.composer/cache/files
+################################################################################
+# Define an environment variable
+env:
+    global:
+        - SYMFONY_DEPRECATIONS_HELPER=disabled
+################################################################################
+# After a build, send email notification with the build results
+notifications:
+  email:         
+    on_success: never # default: change
+    on_failure: never # default: always
