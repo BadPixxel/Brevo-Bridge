@@ -28,14 +28,14 @@ matrix:
 
 before_install:
     # Disable Xdebug ...
-    - phpenv config-rm xdebug.ini    
+    - phpenv config-rm xdebug.ini 
+    # Setup Travis PHP     
+    - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then echo "memory_limit = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
       
 # Install composer dependencies,
 install:   
     - echo "Build Dependencies"
     - composer update  --prefer-dist --no-interaction  
-    - echo "Setup Travis PHP"     
-    - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then echo "memory_limit = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
 
 
 
