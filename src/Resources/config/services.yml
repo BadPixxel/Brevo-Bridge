@@ -1,0 +1,20 @@
+
+services:
+    
+    badpixxel.sendinblue.configuration:
+        class: BadPixxel\SendinblueBridge\Services\ConfigurationManager
+        public: true
+        arguments:
+            - %sendinblue_bridge%
+#            - True
+            - %swiftmailer.delivery.enabled%
+    
+    badpixxel.sendinblue.account:
+        class: BadPixxel\SendinblueBridge\Services\AccountManager
+        public: true
+        autowire: true
+        
+    badpixxel.sendinblue.smtp:
+        class: BadPixxel\SendinblueBridge\Services\SmtpManager
+        public: true
+        autowire: true 

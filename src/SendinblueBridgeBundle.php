@@ -1,20 +1,14 @@
 <?php
 
 /*
- * This file is part of Immo-Pop Website Project.
+ *  Copyright (C) 2020 BadPixxel <www.badpixxel.com>
  *
- * Copyright (C) Immo-Pop SAS <www.immo-pop.com>
- * All rights reserved.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * NOTE: All information contained herein is, and remains the property of Splash
- * Sync and its suppliers, if any.  The intellectual and technical concepts
- * contained herein are proprietary to Splash Sync and its suppliers, and are
- * protected by trade secret or copyright law. Dissemination of this information
- * or reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Splash Sync.
- *
- * @author Bernard Paquier <contact@splashsync.com>
- * @author Yohann Bernard <contact@immo-pop.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace BadPixxel\SendinblueBridge;
@@ -26,10 +20,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SendinblueBridgeBundle extends Bundle
 {
-    
-    public function boot() {
+    /**
+     * @return void
+     */
+    public function boot()
+    {
         //==============================================================================
-        // Force Loading of SendInBlue Smtp Service  
+        // Force Loading of SendInBlue Smtp Service
         $this->container->get('badpixxel.sendinblue.smtp');
     }
 }

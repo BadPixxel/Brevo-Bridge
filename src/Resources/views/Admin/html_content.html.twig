@@ -1,0 +1,6 @@
+
+{% if object is defined and object.htmlContent is not empty %}
+    
+    {{ object.htmlContent | raw }}
+        
+{% endif %}

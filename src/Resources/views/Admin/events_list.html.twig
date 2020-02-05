@@ -1,0 +1,23 @@
+{# empty Twig template #}
+
+{% if object is defined and object.events is not empty %}
+    
+    <ul>
+    {% for event in object.events %}
+    
+        <li>
+            {{ event.date | localizeddate('short', 'short') }}
+            :&nbsp;
+            <span class="label label-{{ object.getEventBadgeClass(event.event) }}">
+                {{ event.event | capitalize }}
+            </span>
+            {% if event.reason is not empty %}
+                &nbsp;({{ event.reason }})
+            {% endif %}
+        </li>
+    
+    {% endfor %}
+    
+    </ul>
+    
+{% endif %}

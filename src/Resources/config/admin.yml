@@ -1,0 +1,20 @@
+services:
+
+
+    ############################################################################
+    # Pop Unified Document Types Sonata Admin Class 
+    badpixxel.sendinblue.admin.emails:
+        class: BadPixxel\SendinblueBridge\Admin\UserEmailsAdmin
+        arguments: 
+            -   ~
+            - %sendinblue_bridge.emails.class%
+            -   ~
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: SendInBlue Emails, group: System, icon: '<i class="fa fa-server"></i>'  }
+            
+    ############################################################################
+    # Sendinblue Bridge Emails Admin Extension for Users 
+    badpixxel.sendinblue.admin.emails.extension:
+        class: BadPixxel\SendinblueBridge\Admin\Extensions\UserEmailsExtension
+        tags:
+            - { name: sonata.admin.extension, target: sonata.user.admin.user }  

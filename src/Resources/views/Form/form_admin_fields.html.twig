@@ -1,0 +1,48 @@
+
+{% block sendinblue_bridge_email_view_widget %}
+{% apply spaceless %}
+
+    <div class="row">
+        <div class="col-xs-3 col-md-2">
+            {{ value.sendAt  | localizeddate('short', 'short') }}
+        </div>
+        <div class="col-xs-3 col-md-2">
+            {% if value.openAt is not empty %}
+                <span class="label label-success">Openned</span>
+                &nbsp;{{ value.openAt | ago }}
+            {% else %}
+                <span class="label label-danger">Not Open</span>
+            {% endif %}
+        </div>
+        <div class="col-xs-6 col-md-4">
+            {{ value.subject }}
+        </div>
+        <div class="col-xs-12 col-md-4 text-right">
+            <a class="btn btn-primary" role="button" 
+               data-toggle="collapse" href="#email{{ value.id }}" 
+               aria-expanded="false" aria-controls="email{{ value.id }}">
+                <i class="fa fa-eye"></i>
+                View
+            </a>
+        </div>
+    </div>
+                
+    <div class="row">
+        <div class="collapse" id="email{{ value.id }}">
+            <hr />
+            <div class="well">
+                {% if value.htmlContent is not empty %}
+                    {{ value.htmlContent | raw }}
+                {% else %}
+                    <div class="text-center text-warning">
+                        <i class="fa fa-exclamation-triangle fa-3x "></i>
+                        <br />
+                        Html Contents Not Loaded
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endapply %}
+{% endblock sendinblue_bridge_email_view_widget %}
