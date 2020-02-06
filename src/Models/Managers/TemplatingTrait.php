@@ -92,7 +92,7 @@ trait TemplatingTrait
         $this->twig = $twig;
         $this->translator = $translator;
         $this->router = $router;
-
+        
         return $this;
     }
 }

@@ -15,6 +15,7 @@ namespace BadPixxel\SendinblueBridge\Services;
 
 use SendinBlue\Client\Model\SendSmtpEmailReplyTo;
 use SendinBlue\Client\Model\SendSmtpEmailSender;
+use Symfony\Component\Routing\RouterInterface as Router;
 
 /**
  * Bridge Configuration Manager for SendingBlue Api.
@@ -119,5 +120,23 @@ class ConfigurationManager
     public function getAllEmails(): array
     {
         return $this->config['emails'];
+    }
+
+    /**
+     * Override Current Router Config if we are in CLI Mode (Tests)
+     *
+     * @param Router $router
+     *
+     * @return Router
+     */
+    public function configureRouter(Router $router): Router
+    {
+        $context = $router->getContext();
+        if ("localhost" == $context->getHost()) {
+            $context->setHost(parse_url($this->config['cli_host'], PHP_URL_HOST));
+            $context->setScheme(parse_url($this->config['cli_host'], PHP_URL_SCHEME));
+        }
+
+        return $router;
     }
 }

@@ -75,6 +75,9 @@ class SmtpManager
         Router $router
     ) {
         //==============================================================================
+        // Connect to Bridge Configuration Service
+        $this->config = $config;
+        //==============================================================================
         // Connect to Smtp API Service
         $this->smtpApi = $api;
         //==============================================================================
@@ -85,10 +88,11 @@ class SmtpManager
         $this->setupStorage($doctrine);
         //==============================================================================
         // Connect to Templating Services
-        $this->setupTemplating($twig, $translator, $router);
-        //==============================================================================
-        // Connect to Bridge Configuration Service
-        $this->config = $config;
+        $this->setupTemplating(
+            $twig, 
+            $translator, 
+            $this->config->configureRouter($router)
+        );
         //==============================================================================
         // Store Static Instance for Access as Static
         static::$staticInstance = $this;

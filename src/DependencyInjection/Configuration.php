@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+            ->scalarNode('cli_host')->defaultValue("http://localhost")->cannotBeEmpty()->end()
             ->arrayNode('sender')
             ->children()
             ->scalarNode('name')->isRequired()->cannotBeEmpty()->end()

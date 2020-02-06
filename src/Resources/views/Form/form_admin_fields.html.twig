@@ -18,18 +18,19 @@
             {{ value.subject }}
         </div>
         <div class="col-xs-12 col-md-4 text-right">
-            <a class="btn btn-primary" role="button" 
-               data-toggle="collapse" href="#email{{ value.id }}" 
-               aria-expanded="false" aria-controls="email{{ value.id }}">
-                <i class="fa fa-eye"></i>
-                View
-            </a>
-            <a class="btn btn-default text-warning" target="_blank" 
-               href="{{ path('admin_application_sendinbluebridge_email_show', {"id": value.id }) }}" 
-            >
-                <i class="fa fa-external-link-square"></i>
-            </a>                
-                
+            <div class="btn-group">
+                <a class="btn btn-primary" role="button" 
+                   data-toggle="collapse" href="#email{{ value.id }}" 
+                   aria-expanded="false" aria-controls="email{{ value.id }}">
+                    <i class="fa fa-eye"></i>
+                    View
+                </a>
+                <a class="btn btn-default text-warning" target="_blank" 
+                   href="{{ path('admin_application_sendinbluebridge_email_show', {"id": value.id }) }}" 
+                >
+                    <i class="fa fa-external-link-square"></i>
+                </a>                
+            </div>
         </div>
     </div>
                 
