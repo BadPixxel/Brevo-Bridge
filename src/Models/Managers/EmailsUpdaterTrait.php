@@ -145,7 +145,7 @@ trait EmailsUpdaterTrait
         curl_close($curl);
         //==============================================================================
         // Errors Checks
-        if ($err) {
+        if ($err || !is_string($response)) {
             return null;
         }
         //==============================================================================
@@ -168,7 +168,7 @@ trait EmailsUpdaterTrait
         //==============================================================================
         // Safety Checks
         if (empty($host) || empty($apiKey)) {
-            return $this;
+            return null;
         }
         //==============================================================================
         // Collect Events via RAW CURL REQUEST
@@ -192,7 +192,7 @@ trait EmailsUpdaterTrait
         curl_close($curl);
         //==============================================================================
         // Errors Checks
-        if ($err) {
+        if ($err || !is_string($response)) {
             return null;
         }
         //==============================================================================

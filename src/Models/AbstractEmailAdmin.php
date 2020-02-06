@@ -13,18 +13,14 @@
 
 namespace BadPixxel\SendinblueBridge\Models;
 
-use Application\DocsBundle\Form\Type\AdminFileType;
 use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Object\Metadata;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Sonata Admin Class for Emails.
@@ -43,7 +39,7 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
             ->addIdentifier('subject')
@@ -62,7 +58,7 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('email')
@@ -74,39 +70,7 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureFormFields(FormMapper $formMapper)
-    {
-//        $formMapper->remove('_delete');
-
-        $formMapper
-//            ->with('Général', array('class' => 'col-md-6'))
-//            ->add('file', AdminFileType::class, array(
-//                'required' => !$abstractFile->isValid(),
-//                'label' => 'Fichier / Image',
-//                'attr' => array('width' => ($isEmebedded ? null : '100%')),
-//            ))
-//            ->add('email', TextType::class, array())
-//            ->remove('_delete')
-            ->add('subject')
-            ->add('sendAt', DateType::class, array('widget' => 'single_text'))
-
-//            ->add('events', null, array(
-//                'template' => '@Advert/Admin/Adverts/advert.stats.html.twig',
-//            ))
-
-//            ->add('title', null, array(
-//                'required' => false,
-//                'sonata_help' => ''
-//                    .'<span class="text-info"><i class="fa fa-question-circle"></i>&nbsp;Regénéré si moins de 3 lettres... essayez! </span>',
-//                'empty_data' => '',
-//            ))
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureShowFields(ShowMapper $showMapper)
+    protected function configureShowFields(ShowMapper $showMapper): void
     {
         $this->updateEmailMetadata();
 
@@ -144,9 +108,15 @@ abstract class AbstractEmailAdmin extends Admin
             return;
         }
         //==============================================================================
+        // Connect to Container
+        $container = $this->getConfigurationPool()->getContainer();
+        if (!$container) {
+            return;
+        }
+        //==============================================================================
         // Connect to Smtp Manager
         /** @var SmtpManager $smtpManager */
-        $smtpManager = $this->getConfigurationPool()->getContainer()->get('badpixxel.sendinblue.smtp');
+        $smtpManager = $container->get('badpixxel.sendinblue.smtp');
         //==============================================================================
         // Refresh Email if Needed
         $smtpManager->update($storageEmail, false);

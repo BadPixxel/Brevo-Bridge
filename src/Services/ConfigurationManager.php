@@ -13,6 +13,9 @@
 
 namespace BadPixxel\SendinblueBridge\Services;
 
+use SendinBlue\Client\Model\SendSmtpEmailReplyTo;
+use SendinBlue\Client\Model\SendSmtpEmailSender;
+
 /**
  * Bridge Configuration Manager for SendingBlue Api.
  */
@@ -30,6 +33,7 @@ class ConfigurationManager
 
     /**
      * @param array $configuration
+     * @param bool  $enabled
      */
     public function __construct(array $configuration, bool $enabled)
     {
@@ -70,13 +74,50 @@ class ConfigurationManager
     /**
      * Get Default Email Sender.
      *
-     * @return array
+     * @return SendSmtpEmailSender
      */
-    public function getDefaultSender(): array
+    public function getDefaultSender(): SendSmtpEmailSender
     {
-        return array(
+        return new SendSmtpEmailSender(array(
             'name' => $this->config['sender']['name'],
             'email' => $this->config['sender']['email'],
-        );
+        ));
+    }
+
+    /**
+     * Get Default Email Sender.
+     *
+     * @return SendSmtpEmailReplyTo
+     */
+    public function getDefaultReplyTo(): SendSmtpEmailReplyTo
+    {
+        return new SendSmtpEmailReplyTo(array(
+            'name' => $this->config['reply']['name'],
+            'email' => $this->config['reply']['email'],
+        ));
+    }
+
+    /**
+     * Find an Email Class by Code
+     *
+     * @param string $emailCode
+     *
+     * @return null|string
+     */
+    public function getEmailByCode(string $emailCode): ?string
+    {
+        return isset($this->config['emails'][$emailCode])
+            ? $this->config['emails'][$emailCode]
+            : null;
+    }
+
+    /**
+     * Get All Emails Class
+     *
+     * @return array
+     */
+    public function getAllEmails(): array
+    {
+        return $this->config['emails'];
     }
 }

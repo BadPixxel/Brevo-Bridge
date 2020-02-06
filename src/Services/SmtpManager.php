@@ -24,6 +24,7 @@ use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\CreateSmtpEmail;
 use SendinBlue\Client\Model\SendSmtpEmail;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface as Twig;
+use Symfony\Component\Routing\RouterInterface as Router;
 use Symfony\Component\Translation\TranslatorInterface as Translator;
 
 /**
@@ -57,22 +58,34 @@ class SmtpManager
     private static $staticInstance;
 
     /**
-     * @param SMTPApi $smtpApi
+     * @param SMTPApi       $api
+     * @param Configuration $config
+     * @param EntityManager $doctrine
+     * @param UserManager   $users
+     * @param Twig          $twig
+     * @param Translator    $translator
      */
-    public function __construct(SMTPApi $smtpApi, Configuration $config, EntityManager $doctrine, UserManager $userManager, Twig $twig, Translator $translator)
-    {
+    public function __construct(
+        SMTPApi $api,
+        Configuration $config,
+        EntityManager $doctrine,
+        UserManager $users,
+        Twig $twig,
+        Translator $translator,
+        Router $router
+    ) {
         //==============================================================================
         // Connect to Smtp API Service
-        $this->smtpApi = $smtpApi;
+        $this->smtpApi = $api;
         //==============================================================================
         // Connect to FOS User Manager
-        $this->setUserManager($userManager);
+        $this->setUserManager($users);
         //==============================================================================
         // Connect to Storage Services
         $this->setupStorage($doctrine);
         //==============================================================================
         // Connect to Templating Services
-        $this->setupTemplating($twig, $translator);
+        $this->setupTemplating($twig, $translator, $router);
         //==============================================================================
         // Connect to Bridge Configuration Service
         $this->config = $config;
@@ -115,7 +128,7 @@ class SmtpManager
         // Setup Default Email Values
         $newEmail
             ->setSender($this->config->getDefaultSender())
-            ->setReplyTo($this->config->getDefaultSender())
+            ->setReplyTo($this->config->getDefaultReplyTo())
         ;
 
         return $newEmail;
@@ -126,19 +139,18 @@ class SmtpManager
      *
      * @return null|CreateSmtpEmail
      */
-    public function send(User $toUser, SendSmtpEmail $sendEmail, bool $demoMode): ?CreateSmtpEmail
+    public function send(array $toUser, SendSmtpEmail $sendEmail, bool $demoMode): ?CreateSmtpEmail
     {
         try {
             //==============================================================================
             // Check if Sending Emails is Allowed
             if (!$demoMode && !$this->config->isSendAllowed()) {
-                $this->isAlreadySend($toUser, $sendEmail);
-
                 return $this->setError('SendInBlue API is Disabled');
             }
             //==============================================================================
             // Check if THIS Email was Already Send
-            if (!$demoMode && $this->isAlreadySend($toUser, $sendEmail)) {
+            $filteredUsers = $this->filterAlreadySendUsers($toUser, $sendEmail, $demoMode);
+            if (!$filteredUsers) {
                 return $this->setError('This Email has Already been Send...');
             }
             //==============================================================================
@@ -146,16 +158,14 @@ class SmtpManager
             $createEmail = $this->smtpApi->sendTransacEmail($sendEmail);
             //==============================================================================
             // Save the Email to DataBase
-            $this->saveSendEmail($toUser, $sendEmail, $createEmail);
-
-            return $createEmail;
+            $this->saveSendEmail($filteredUsers, $sendEmail, $createEmail);
         } catch (ApiException $ex) {
             return $this->catchError($ex);
         } catch (Exception $ex) {
             return $this->setError($ex->getMessage());
         }
 
-        return null;
+        return $createEmail;
     }
 
     /**
@@ -175,5 +185,27 @@ class SmtpManager
         //==============================================================================
         // Update Email Html Contents
         $this->updateContents($storageEmail, $force);
+    }
+
+    /**
+     * Find an Email Class by Code
+     *
+     * @param string $emailCode
+     *
+     * @return null|string
+     */
+    public function getEmailByCode(string $emailCode): ?string
+    {
+        return $this->config->getEmailByCode($emailCode);
+    }
+
+    /**
+     * Find All Available Email Class
+     *
+     * @return array
+     */
+    public function getAllEmails(): array
+    {
+        return $this->config->getAllEmails();
     }
 }

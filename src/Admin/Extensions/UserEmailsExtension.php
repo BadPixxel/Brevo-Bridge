@@ -15,9 +15,9 @@ namespace BadPixxel\SendinblueBridge\Admin\Extensions;
 
 use BadPixxel\SendinblueBridge\Form\Type\EmailViewType;
 use BadPixxel\SendinblueBridge\Interfaces\EmailsAwareInterface;
+use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Exception;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
-//use Sonata\Form\Type\CollectionType;
 use Sonata\AdminBundle\Admin\AbstractAdminExtension;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -30,7 +30,7 @@ class UserEmailsExtension extends AbstractAdminExtension
     /**
      * @param FormMapper $formMapper
      */
-    public function configureFormFields(FormMapper $formMapper)
+    public function configureFormFields(FormMapper $formMapper): void
     {
         $this->updateEmailMetadata($formMapper);
 
@@ -72,9 +72,15 @@ class UserEmailsExtension extends AbstractAdminExtension
             return;
         }
         //==============================================================================
+        // Connect to Container
+        $container = $admin->getConfigurationPool()->getContainer();
+        if (!$container) {
+            return;
+        }
+        //==============================================================================
         // Connect to Smtp Manager
         /** @var SmtpManager $smtpManager */
-        $smtpManager = $admin->getConfigurationPool()->getContainer()->get('badpixxel.sendinblue.smtp');
+        $smtpManager = $container->get('badpixxel.sendinblue.smtp');
         //==============================================================================
         // Refresh Email if Needed
         foreach ($subject->getEmails() as $storageEmail) {

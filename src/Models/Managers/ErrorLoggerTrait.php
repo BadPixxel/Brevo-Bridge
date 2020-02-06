@@ -46,15 +46,15 @@ trait ErrorLoggerTrait
     }
 
     /**
-     * @param Exception $ex
+     * @param ApiException $exception
      *
      * @return null
      */
-    protected function catchError(ApiException $ex)
+    protected function catchError(ApiException $exception)
     {
-        $this->lastError = $ex->getMessage();
+        $this->lastError = $exception->getMessage();
 
-        $response = $ex->getResponseBody();
+        $response = $exception->getResponseBody();
         if (isset($response->message)) {
             $this->lastError .= ' : '.$response->message;
         }

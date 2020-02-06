@@ -86,7 +86,7 @@ trait MetadataTrait
     /**
      * Check if Email Events are OutDated.
      *
-     * @return DateTime
+     * @return bool
      */
     public function isEventOutdated(): bool
     {
@@ -150,9 +150,9 @@ trait MetadataTrait
     /**
      * Get sendAt.
      *
-     * @return DateTime
+     * @return null|DateTime
      */
-    public function getSendAt(): DateTime
+    public function getSendAt(): ?DateTime
     {
         return $this->sendAt;
     }

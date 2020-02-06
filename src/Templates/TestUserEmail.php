@@ -24,22 +24,21 @@ class TestUserEmail extends AbstractEmail
     /**
      * @var string
      */
-    const TEST_SUBJECT = "[BadPixxel][Test] Test d'envoi d'un message...";
+    const TEST_SUBJECT = "[BadPixxel] Sendinblue Api Validation...";
 
     /**
      * @var string
      */
-    const TEST_MSG = "Ceci est un message de test!\n"
-            .'Merci de ne pas y répondre.';
+    const TEST_MSG = "This is just a dummy test message!";
 
     /**
      * Construct Minimal Email
      *
-     * @param User $toUser
+     * @param User|User[] $toUsers Target User or Array of Target Users
      */
-    public function __construct(User $toUser)
+    public function __construct($toUsers)
     {
-        parent::__construct($toUser);
+        parent::__construct($toUsers);
 
         $this->email->setSubject(self::TEST_SUBJECT);
         $this->email->setTextContent(self::TEST_MSG);
@@ -48,37 +47,24 @@ class TestUserEmail extends AbstractEmail
     /**
      * Create Email Instance in Demo Mode
      *
-     * @param User $toUser
+     * @param User|User[] $toUsers Target User or Array of Target Users
      *
      * @return TestUserEmail
      */
-    protected static function getInstance(User $toUser): TestUserEmail
+    protected static function getInstance($toUsers): TestUserEmail
     {
-        return new self($toUser);
+        return new self($toUsers);
     }
 
     /**
      * Create Email Instance in Demo Mode
      *
-     * @param User $toUser
+     * @param User|User[] $toUsers Target User or Array of Target Users
      *
      * @return TestUserEmail
      */
-    protected static function getDemoInstance(User $toUser): TestUserEmail
+    protected static function getDemoInstance($toUsers): TestUserEmail
     {
-        return self::getInstance($toUser);
+        return self::getInstance($toUsers);
     }
-
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function sendDemo(User $user)
-//    {
-////        $this->smtpApi = $smtpApi;
-//
-//
-//        $this->getSmtpManager();
-//    }
-
-    //put your code here
 }

@@ -76,9 +76,9 @@ trait ContentsTrait
     private $textContent;
 
     /**
-     * @var null|string
+     * @var null|int
      *
-     * @ORM\Column(name="template_id", type="string", length=255, nullable=true)
+     * @ORM\Column(name="template_id", type="integer", nullable=true)
      */
     private $templateId;
 
@@ -167,9 +167,9 @@ trait ContentsTrait
     }
 
     /**
-     * @return string
+     * @return null|int
      */
-    public function getTemplateId(): string
+    public function getTemplateId(): ?int
     {
         return $this->templateId;
     }
@@ -267,11 +267,11 @@ trait ContentsTrait
     }
 
     /**
-     * @param string $templateId
+     * @param int $templateId
      *
      * @return $this
      */
-    protected function setTemplateId(?string $templateId): self
+    protected function setTemplateId(?int $templateId): self
     {
         $this->templateId = $templateId;
 

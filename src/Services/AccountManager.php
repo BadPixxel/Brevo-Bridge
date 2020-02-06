@@ -15,6 +15,7 @@ namespace BadPixxel\SendinblueBridge\Services;
 
 use Exception;
 use SendinBlue\Client\Api\AccountApi;
+use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\GetAccount;
 
 /**
@@ -46,10 +47,10 @@ class AccountManager
     {
         try {
             return $this->accountApi->getAccount();
+        } catch (ApiException $ex) {
+            return $this->catchError($ex);
         } catch (Exception $ex) {
-            $this->catchError($ex);
-
-            return null;
+            return $this->setError($ex->getMessage());
         }
     }
 }

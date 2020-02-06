@@ -13,8 +13,10 @@
 
 namespace BadPixxel\SendinblueBridge\Models\Managers;
 
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface as Twig;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface as Router;
+use Symfony\Component\Translation\TranslatorInterface as Translator;
 
 /**
  * Access to Symfony Templating Features.
@@ -24,25 +26,45 @@ trait TemplatingTrait
     /**
      * Twig Service.
      *
-     * @var EngineInterface
+     * @var Twig
      */
     private $twig;
 
     /**
      * Translator Service.
      *
-     * @var TranslatorInterface
+     * @var Translator
      */
     private $translator;
 
     /**
+     * Symfony Router.
+     *
+     * @var Router
+     */
+    private $router;
+
+    /**
      * Get Translator.
      *
-     * @return TranslatorInterface
+     * @return Translator
      */
-    public function getTranslator(): TranslatorInterface
+    public function getTranslator(): Translator
     {
         return $this->translator;
+    }
+
+    /**
+     * Generate Url.
+     *
+     * @param string $route
+     * @param array  $parameters
+     *
+     * @return string
+     */
+    public function getUrl(string $route, array $parameters): string
+    {
+        return $this->router->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
@@ -59,14 +81,17 @@ trait TemplatingTrait
     }
 
     /**
-     * @param UserManagerInterface $userManager
+     * @param Twig       $twig
+     * @param Translator $translator
+     * @param Router     $router
      *
      * @return self
      */
-    protected function setupTemplating(EngineInterface $twig, TranslatorInterface $translator): self
+    protected function setupTemplating(Twig $twig, Translator $translator, Router $router): self
     {
         $this->twig = $twig;
         $this->translator = $translator;
+        $this->router = $router;
 
         return $this;
     }

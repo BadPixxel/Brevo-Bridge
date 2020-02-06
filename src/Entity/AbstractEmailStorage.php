@@ -38,6 +38,13 @@ abstract class AbstractEmailStorage
      */
     protected $user;
 
+    /**
+     * Class Constructor
+     */
+    final public function __construct()
+    {
+    }
+
     //==============================================================================
     // MAIN FUNCTIONS
     //==============================================================================
@@ -46,6 +53,8 @@ abstract class AbstractEmailStorage
      * Create Storage Class from Api Results
      *
      * @return self
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public static function fromApiResults(User $toUser, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail)
     {
@@ -58,7 +67,7 @@ abstract class AbstractEmailStorage
             ->setHtmlContent($sendEmail->getHtmlContent())
             ->setTextContent($sendEmail->getTextContent())
             ->setTemplateId($sendEmail->getTemplateId())
-            ->setParameters($sendEmail->getParams())
+            ->setParameters((array) $sendEmail->getParams())
             ->setMd5(EmailExtractor::md5($sendEmail))
             ->setMessageId($createEmail->getMessageId())
         ;

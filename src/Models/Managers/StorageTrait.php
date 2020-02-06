@@ -15,6 +15,7 @@ namespace BadPixxel\SendinblueBridge\Models\Managers;
 
 use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use BadPixxel\SendinblueBridge\Helpers\EmailExtractor;
+use BadPixxel\SendinblueBridge\Repository\EmailRepository;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\CreateSmtpEmail;
@@ -31,7 +32,9 @@ trait StorageTrait
     private $entityManager;
 
     /**
-     * @param UserManagerInterface $userManager
+     * Setup Entity Manager for Storage
+     *
+     * @param EntityManager $manager
      *
      * @return self
      */
@@ -43,31 +46,63 @@ trait StorageTrait
     }
 
     /**
-     * Check if this Email was Already Send to this User
+     * Filter Target Users if Email was Already Send.
      *
-     * @return self
+     * @param User[]        $toUsers
+     * @param SendSmtpEmail $sendEmail
+     * @param bool          $demoMode
+     *
+     * @return null|User[]
      */
-    protected function isAlreadySend(User $toUser, SendSmtpEmail $email): bool
+    protected function filterAlreadySendUsers(array $toUsers, SendSmtpEmail $sendEmail, bool $demoMode): ?array
     {
-        $similarEmails = $this->entityManager
-            ->getRepository($this->config->getEmailStorageClass())
-            ->findByMd5($toUser, EmailExtractor::md5($email));
+        //==============================================================================
+        // DEMO MODE => Allow Multiple Sending to User
+        if ($demoMode) {
+            return $toUsers;
+        }
+        //==============================================================================
+        // NORMAL MODE => Filter Sending to User
+        foreach ($toUsers as $index => $toUser) {
+            //==============================================================================
+            // Check if THIS Email was Already Send
+            if (!$this->isAlreadySend($toUser, $sendEmail)) {
+                continue;
+            }
+            //==============================================================================
+            // Remove User from To Users
+            unset($toUsers[$index]);
+            //==============================================================================
+            // Remove User from To Emails
+            $emailTo = $sendEmail->getTo();
+            /** @var \ArrayAccess  $emailUser */
+            foreach ($emailTo as $emailIndex => $emailUser) {
+                if ($emailUser['email'] == $toUser->getEmailCanonical()) {
+                    unset($emailTo[$emailIndex]);
+                }
+            }
+            $sendEmail->setTo($emailTo);
+        }
 
-        return !empty($similarEmails);
+        return empty($toUsers) ? null : $toUsers;
     }
 
     /**
      * Save this Email in Database
      *
+     * @param array           $toUsers
+     * @param SendSmtpEmail   $sendEmail
+     * @param CreateSmtpEmail $createEmail
+     *
      * @return self
      */
-    protected function saveSendEmail(User $toUser, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail): self
+    protected function saveSendEmail(array $toUsers, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail): self
     {
         $storageClass = $this->config->getEmailStorageClass();
-
-        $storageEmail = $storageClass::fromApiResults($toUser, $sendEmail, $createEmail);
-
-        $this->entityManager->persist($storageEmail);
+        foreach ($toUsers as $toUser) {
+            $storageEmail = $storageClass::fromApiResults($toUser, $sendEmail, $createEmail);
+            $this->entityManager->persist($storageEmail);
+        }
         $this->entityManager->flush();
 
         return $this;
@@ -75,6 +110,9 @@ trait StorageTrait
 
     /**
      * Update this Email Events in Database
+     *
+     * @param EmailStorage $storageEmail
+     * @param array        $events
      *
      * @return self
      */
@@ -87,7 +125,11 @@ trait StorageTrait
     }
 
     /**
-     * Update this Email Contyents in Database
+     * Update this Email Contents in Database
+     *
+     * @param EmailStorage $storageEmail
+     * @param string       $uuid
+     * @param string       $contents
      *
      * @return self
      */
@@ -97,5 +139,24 @@ trait StorageTrait
         $this->entityManager->flush();
 
         return $this;
+    }
+
+    /**
+     * Check if this Email was Already Send to this User
+     *
+     * @param User          $toUser
+     * @param SendSmtpEmail $email
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    private function isAlreadySend(User $toUser, SendSmtpEmail $email): bool
+    {
+        /** @var EmailRepository $repository */
+        $repository = $this->entityManager
+            ->getRepository($this->config->getEmailStorageClass());
+
+        return !empty($repository->findByMd5($toUser, EmailExtractor::md5($email)));
     }
 }
