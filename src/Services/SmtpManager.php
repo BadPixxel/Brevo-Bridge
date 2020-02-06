@@ -89,8 +89,8 @@ class SmtpManager
         //==============================================================================
         // Connect to Templating Services
         $this->setupTemplating(
-            $twig, 
-            $translator, 
+            $twig,
+            $translator,
             $this->config->configureRouter($router)
         );
         //==============================================================================

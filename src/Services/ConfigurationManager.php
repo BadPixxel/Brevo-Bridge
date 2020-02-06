@@ -133,8 +133,8 @@ class ConfigurationManager
     {
         $context = $router->getContext();
         if ("localhost" == $context->getHost()) {
-            $context->setHost(parse_url($this->config['cli_host'], PHP_URL_HOST));
-            $context->setScheme(parse_url($this->config['cli_host'], PHP_URL_SCHEME));
+            $context->setHost((string) parse_url($this->config['cli_host'], PHP_URL_HOST));
+            $context->setScheme((string) parse_url($this->config['cli_host'], PHP_URL_SCHEME));
         }
 
         return $router;

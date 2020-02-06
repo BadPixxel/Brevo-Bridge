@@ -41,12 +41,14 @@ install:
 
 # Run script
 script:
-    # Execute Grump Travis Testsuite 
-    - php vendor/bin/grumphp run --testsuite=travis
-    # Execute CsFixer
-    - php vendor/bin/grumphp run --testsuite=csfixer    
-    # Execute Phpstan 
-    - php vendor/bin/grumphp run --testsuite=phpstan   
+    # Execute Grump Full Testsuite 
+    - php vendor/bin/grumphp run
+#    # Execute Grump Travis Testsuite 
+#    - php vendor/bin/grumphp run --testsuite=travis
+#    # Execute CsFixer
+#    - php vendor/bin/grumphp run --testsuite=csfixer    
+#    # Execute Phpstan 
+#    - php vendor/bin/grumphp run --testsuite=phpstan   
     # Show Outdated Packages   
     - composer outdated
     
