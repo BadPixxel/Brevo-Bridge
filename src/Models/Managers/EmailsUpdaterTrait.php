@@ -35,7 +35,7 @@ trait EmailsUpdaterTrait
         }
         //==============================================================================
         // Collect Events
-        $events = $this->getEventsfromApi($storageEmail->getMessageId());
+        $events = $this->getEventsfromApi($storageEmail->getMessageId(), $storageEmail->getEmail());
         if (empty($events)) {
             return $this;
         }
@@ -82,17 +82,18 @@ trait EmailsUpdaterTrait
      * Collect Email Events from Smtp Api.
      *
      * @param string $messageId
+     * @param string $email
      *
      * @return array
      */
-    protected function getEventsfromApi(string $messageId): array
+    protected function getEventsfromApi(string $messageId, string $email): array
     {
         //==============================================================================
         // Collect Events for this Message via Smtp Api
         try {
             $eventsReport = $this
                 ->getApi()
-                ->getEmailEventReport(10, 0, null, null, null, null, null, null, $messageId);
+                ->getEmailEventReport(10, 0, null, null, null, $email, null, null, $messageId);
         } catch (ApiException $ex) {
             $this->catchError($ex);
 
