@@ -68,7 +68,7 @@ class UserEmailsExtension extends AbstractAdminExtension
         //==============================================================================
         // Load Current Subject
         $subject = $admin->getSubject();
-        if (!($subject instanceof EmailsAwareInterface)) {
+        if (!($subject instanceof EmailsAwareInterface) || empty($subject->getId())) {
             return;
         }
         //==============================================================================
