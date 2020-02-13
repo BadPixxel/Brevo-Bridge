@@ -43,6 +43,7 @@ class UserEmailsExtension extends AbstractAdminExtension
                 array(
                     'label' => false,
                     'entry_type' => EmailViewType::class,
+                    'mapped' => false,
                 ),
                 array(
                 )
@@ -68,7 +69,7 @@ class UserEmailsExtension extends AbstractAdminExtension
         //==============================================================================
         // Load Current Subject
         $subject = $admin->getSubject();
-        if (!($subject instanceof EmailsAwareInterface) || empty($subject->getId())) {
+        if (!($subject instanceof EmailsAwareInterface) || !is_array($subject->getEmails())) {
             return;
         }
         //==============================================================================
