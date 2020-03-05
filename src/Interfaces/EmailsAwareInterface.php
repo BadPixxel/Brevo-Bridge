@@ -40,4 +40,11 @@ interface EmailsAwareInterface
      * @return self
      */
     public function setEmails();
+
+    /**
+     * Check if User Has Stored Emails.
+     *
+     * @return bool
+     */
+    public function hasEmails(): bool;
 }

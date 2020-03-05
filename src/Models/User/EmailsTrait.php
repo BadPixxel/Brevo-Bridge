@@ -55,6 +55,27 @@ trait EmailsTrait
     }
 
     /**
+     * Check if User Has Stored Emails.
+     *
+     * @return bool
+     */
+    public function hasEmails(): bool
+    {
+        //==============================================================================
+        // New Subject
+        if (empty($this->getId())) {
+            return false;
+        }
+        //==============================================================================
+        // Check Emails Collection Status
+        if (!($this->emails instanceof Collection) || $this->emails->isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Init Emails Collection.
      *
      * @return self

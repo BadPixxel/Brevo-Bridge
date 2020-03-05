@@ -32,7 +32,9 @@ class UserEmailsExtension extends AbstractAdminExtension
      */
     public function configureFormFields(FormMapper $formMapper): void
     {
-        $this->updateEmailMetadata($formMapper);
+        if (!$this->updateEmailMetadata($formMapper)) {
+            return;
+        }
 
         $formMapper
             ->tab('Emails')
@@ -55,9 +57,9 @@ class UserEmailsExtension extends AbstractAdminExtension
     /**
      * Update Current User Emails MetaData from Smtp Api.
      *
-     * @return void
+     * @return bool
      */
-    private function updateEmailMetadata(FormMapper $formMapper): void
+    private function updateEmailMetadata(FormMapper $formMapper): bool
     {
         //==============================================================================
         // Get Parent Admin Class
@@ -68,14 +70,14 @@ class UserEmailsExtension extends AbstractAdminExtension
         //==============================================================================
         // Load Current Subject
         $subject = $admin->getSubject();
-        if (!($subject instanceof EmailsAwareInterface) || empty($subject->getEmails())) {
-            return;
+        if (!($subject instanceof EmailsAwareInterface) || !$subject->hasEmails()) {
+            return false;
         }
         //==============================================================================
         // Connect to Container
         $container = $admin->getConfigurationPool()->getContainer();
         if (!$container) {
-            return;
+            return false;
         }
         //==============================================================================
         // Connect to Smtp Manager
@@ -86,5 +88,7 @@ class UserEmailsExtension extends AbstractAdminExtension
         foreach ($subject->getEmails() as $storageEmail) {
             $smtpManager->update($storageEmail, false);
         }
+
+        return true;
     }
 }
