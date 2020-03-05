@@ -39,5 +39,5 @@ interface EmailsAwareInterface
      *
      * @return self
      */
-    public function setEmails(): self;
+    public function setEmails();
 }
