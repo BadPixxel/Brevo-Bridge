@@ -45,10 +45,24 @@ trait EmailsTrait
     }
 
     /**
-     * Init Emails Collection.
+     * Set Emails => NO EFFECT.
+     *
+     * @return self
      */
-    protected function initEmails()
+    public function setEmails(): self
+    {
+        return $this;
+    }
+
+    /**
+     * Init Emails Collection.
+     *
+     * @return self
+     */
+    protected function initEmails(): self
     {
         $this->emails = new ArrayCollection();
+
+        return $this;
     }
 }

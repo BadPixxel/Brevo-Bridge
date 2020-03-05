@@ -21,9 +21,23 @@ use Doctrine\Common\Collections\Collection;
 interface EmailsAwareInterface
 {
     /**
+     * Get Doctrine Entity ID.
+     *
+     * @return int
+     */
+    public function getId();
+
+    /**
      * Get Emails.
      *
      * @return Collection
      */
     public function getEmails();
+
+    /**
+     * Set Emails => NO EFFECT.
+     *
+     * @return self
+     */
+    public function setEmails(): self;
 }
