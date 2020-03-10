@@ -1,6 +1,10 @@
 
 {% if object is defined and object.htmlContent is not empty %}
     
-    {{ object.htmlContent | raw }}
+    <iframe 
+        id="sib-email-{{ object.id }}" src="{{ admin.generateObjectUrl('preview', object) }}"
+        style="width: 100%; height: 800px;"
+    >
+    </iframe>
         
 {% endif %}

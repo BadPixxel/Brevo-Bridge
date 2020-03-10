@@ -8,7 +8,7 @@ services:
         arguments: 
             -   ~
             - %sendinblue_bridge.emails.class%
-            -   ~
+            - BadPixxel\SendinblueBridge\Controller\EmailAdminController
         tags:
             - { name: sonata.admin, manager_type: orm, label: SendInBlue Emails, group: System, icon: '<i class="fa fa-server"></i>'  }
             

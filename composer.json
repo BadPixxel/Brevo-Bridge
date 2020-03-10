@@ -60,5 +60,14 @@
         "phpstan/phpstan-doctrine":                     "^0.12",
         "phpstan/phpstan-phpunit":                      "^0.12",
         "phpstan/phpstan-symfony":                      "^0.12"        
+    },
+    
+    "scripts": {
+        "post-install-cmd": [
+            "php vendor/bin/grumphp git:deinit"            
+        ],
+        "post-update-cmd": [
+            "php vendor/bin/grumphp git:deinit"            
+        ]
     }
 }

@@ -28,12 +28,32 @@ use Sonata\AdminBundle\Show\ShowMapper;
 abstract class AbstractEmailAdmin extends Admin
 {
     /**
+     * @param string $action
+     * @param mixed  $object
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function configureActionButtons($action, $object = null): array
+    {
+        $list = parent::configureActionButtons($action, $object);
+
+        $list['refresh']['template'] = '@SendinblueBridge/Admin/action_refresh.html.twig';
+
+        return $list;
+    }
+    /**
      * {@inheritdoc}
      */
     protected function configureRoutes(RouteCollection $collection): void
     {
         $collection->remove('edit');
         $collection->remove('create');
+        // Email Preview
+        $collection->add('preview', $this->getRouterIdParameter().'/preview');
+        // Refresh Email Events
+        $collection->add('refresh', $this->getRouterIdParameter().'/refresh');
     }
 
     /**
