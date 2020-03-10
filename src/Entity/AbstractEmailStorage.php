@@ -80,6 +80,16 @@ abstract class AbstractEmailStorage
     //==============================================================================
 
     /**
+     * Get Doctrine Entity ID. Must be Overriden by Parent Class.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return 0;
+    }
+
+    /**
      * @return User
      */
     public function getUser(): User

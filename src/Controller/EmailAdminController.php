@@ -29,6 +29,8 @@ class EmailAdminController extends CRUDController
      * @param null|string $id
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function previewAction($id = null): Response
     {
@@ -50,6 +52,8 @@ class EmailAdminController extends CRUDController
      * @param null|string $id
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function refreshAction($id = null): Response
     {
@@ -69,6 +73,7 @@ class EmailAdminController extends CRUDController
         $smtpManager->update($email, true);
         //==============================================================================
         // Load Referer Url
+        /** @var string $referer */
         $referer = $this->getRequest()->headers->get('referer');
         if ($referer) {
             return $this->redirect($referer);
@@ -77,7 +82,7 @@ class EmailAdminController extends CRUDController
         // Redirect to View Page
         return $this->redirectToRoute(
             'admin_application_sendinbluebridge_email_show',
-            array('id' => $email->getid())
+            array('id' => $email->getId())
         );
     }
 }
