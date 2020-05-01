@@ -53,6 +53,26 @@ class ConfigurationManager
     }
 
     /**
+     * Allowed Mjml API ?
+     *
+     * @return bool
+     */
+    public function isMjmlAllowed(): bool
+    {
+        if (!isset($this->config["mjml"]["endpoint"]) || empty($this->config["mjml"]["endpoint"])) {
+            return false;
+        }
+        if (!isset($this->config["mjml"]["api_key"]) || empty($this->config["mjml"]["api_key"])) {
+            return false;
+        }
+        if (!isset($this->config["mjml"]["secret_key"]) || empty($this->config["mjml"]["secret_key"])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get Email Storage Class.
      *
      * @return string
@@ -138,5 +158,25 @@ class ConfigurationManager
         }
 
         return $router;
+    }
+
+    /**
+     * Get Mjml API Endpoint
+     *
+     * @return string
+     */
+    public function getMjmlEndpoint(): string
+    {
+        return (string) $this->config["mjml"]["endpoint"];
+    }
+
+    /**
+     * Get Mjml API Auth
+     *
+     * @return string
+     */
+    public function getMjmlAuth(): string
+    {
+        return (string) $this->config["mjml"]["api_key"].":".$this->config["mjml"]["secret_key"];
     }
 }

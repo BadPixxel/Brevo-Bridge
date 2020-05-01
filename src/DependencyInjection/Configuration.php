@@ -58,6 +58,12 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('sms')
             ->scalarPrototype()->isRequired()->cannotBeEmpty()->end()
             ->end()
+            ->arrayNode('mjml')->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('endpoint')->defaultValue("https://api.mjml.io/v1/render")->end()
+            ->scalarNode('api_key')->defaultValue("%mjml_api_key%")->end()
+            ->scalarNode('secret_key')->defaultValue("%mjml_secret_key%")->end()
+            ->end()
             ->end()
             ->end()
         ;

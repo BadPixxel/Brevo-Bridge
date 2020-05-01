@@ -1,0 +1,14 @@
+
+<div align="center">
+    Select Email to Preview
+    <ul style="list-style-type:none;">
+    {% for emailCode, emailClass in tmplEmails %}
+        <li>
+            <a href="{{ path('badpixxel_sendinblue_tmpl_debug_view', {'emailCode': emailCode}) }}">
+                {{ emailCode }}: {{ emailClass }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+

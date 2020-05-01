@@ -1,0 +1,6 @@
+
+# Emails Templating Debug Routes 
+badpixxel_sendinblue_controllers:
+    resource: "@SendinblueBridgeBundle/Controller/"
+    type:     annotation
+    prefix:   /

@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Test Command fro Sending an Dummy Sms.
+ * Test Command for Sending an Dummy Emails.
  */
 class MailTestCommand extends ContainerAwareCommand
 {
