@@ -162,7 +162,9 @@ class TemplateManager
             ? $emailClass::getTemplateParameters()
             : array();
 
-        return array_replace_recursive($tmplParams, $emailParams);
+        return array_replace_recursive($tmplParams, array(
+            "params" => $emailParams
+        ));
     }
 
     //==============================================================================

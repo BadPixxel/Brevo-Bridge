@@ -5,7 +5,7 @@
     {% for emailCode, emailClass in tmplEmails %}
         <li>
             <a href="{{ path('badpixxel_sendinblue_tmpl_debug_view', {'emailCode': emailCode}) }}">
-                {{ emailCode }}: {{ emailClass }}
+                {{ emailCode }}
             </a>
         </li>
     {% endfor %}

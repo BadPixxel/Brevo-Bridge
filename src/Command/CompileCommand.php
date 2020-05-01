@@ -14,7 +14,6 @@
 namespace BadPixxel\SendinblueBridge\Command;
 
 use BadPixxel\SendinblueBridge\Services\TemplateManager;
-use FOS\UserBundle\Model\UserInterface as User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -106,14 +105,6 @@ class CompileCommand extends ContainerAwareCommand
                 'Exception => '.$this->tmplManager->getLastError()
             );
         }
-
-//        dump($rawHtml);
-
-//        //==============================================================================
-//        // Extract User Name
-//        $username = method_exists($user, "__toString")
-//            ? $user->__toString()
-//            : $user->getUsername();
 
         return self::showResult($output, true, $emailCode, 'Successfully Compiled');
     }
