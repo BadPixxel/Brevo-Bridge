@@ -87,7 +87,7 @@ class DebugController extends Controller
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
         $tmplHtml = (string) $tmplManager->compile($emailClass);
-        $tmplPath = $kernel->getProjectDir().self::TMPL_PATH;      
+        $tmplPath = $kernel->getProjectDir().self::TMPL_PATH;
         file_put_contents($tmplPath, $tmplHtml);
         //==============================================================================
         // Find All Avalaible Emails
@@ -113,9 +113,9 @@ class DebugController extends Controller
      *
      * @Route("/{emailCode}/mjml/{tmplCode}", name="badpixxel_sendinblue_tmpl_debug_mjml")
      *
-     * @param string $emailCode Email Code for Parameters Generation
-     * @param string $tmplCode  Twig Source Mjml Block Template
-     * @param string|null $tmplStyles  Twig Source Mjml Styles
+     * @param string      $emailCode  Email Code for Parameters Generation
+     * @param string      $tmplCode   Twig Source Mjml Block Template
+     * @param null|string $tmplStyles Twig Source Mjml Styles
      *
      * @return Response
      */
