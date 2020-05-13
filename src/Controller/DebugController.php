@@ -87,7 +87,7 @@ class DebugController extends Controller
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
         $tmplHtml = (string) $tmplManager->compile($emailClass);
-        $tmplPath = $kernel->getProjectDir().self::TMPL_PATH;
+        $tmplPath = $kernel->getProjectDir().self::TMPL_PATH;      
         file_put_contents($tmplPath, $tmplHtml);
         //==============================================================================
         // Find All Avalaible Emails
@@ -115,10 +115,11 @@ class DebugController extends Controller
      *
      * @param string $emailCode Email Code for Parameters Generation
      * @param string $tmplCode  Twig Source Mjml Block Template
+     * @param string|null $tmplStyles  Twig Source Mjml Styles
      *
      * @return Response
      */
-    public function mjmlAction(string $emailCode, string $tmplCode): Response
+    public function mjmlAction(string $emailCode, string $tmplCode, string $tmplStyles = null): Response
     {
         /** @var TemplateManager $tmplManager */
         $tmplManager = $this->get('badpixxel.sendinblue.templates');
@@ -144,6 +145,7 @@ class DebugController extends Controller
         /** @var EngineInterface $twig */
         $twig = $this->get('templating');
         $tmplMjml = (string) $twig->render("@SendinblueBridge/Debug/mjml_block.html.twig", array(
+            "tmplStyles" => $tmplStyles,
             "tmplPath" => $tmplCode,
             "tmplParams" => array(),
         ));

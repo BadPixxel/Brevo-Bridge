@@ -1,5 +1,12 @@
 
 <mjml>
+    
+    <mj-head>
+        {% if tmplStyles is defined and tmplStyles is not empty %}
+            {% include tmplStyles %}
+        {% endif %}
+    </mj-head>    
+    
     <mj-body background-color="PowderBlue">
         {# EMBEDD MJML BLOCK TEMPLATE #}
         {% include tmplPath with tmplParams only %}
