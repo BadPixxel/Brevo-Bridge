@@ -1,0 +1,69 @@
+{#
+    SEND IN BLUE BRIDGE: TEMPLATE EMAILS LISTING
+#}
+
+{% extends base_template %}
+
+{% block title %}SendInBlue{% endblock %}
+{% block navbar_title %}SendInBlue Bridge Templates{% endblock %}
+
+{% block sonata_admin_content %}
+    
+{% block notice %}
+    {% include '@SonataCore/FlashMessage/render.html.twig' %}
+{% endblock notice %}
+                            
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="box box-primary" style="margin-bottom: 100px;">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-bordered table-striped table-hover sonata-ba-list">
+                    
+                    <thead>
+                        <tr class="sonata-ba-list-field-header">
+                            <th class="sonata-ba-list-field-header-text">Code</th>                                            
+                            <th class="sonata-ba-list-field-header-text">Class</th>                                            
+                            <th class="sonata-ba-list-field-header-text">Action</th>                                            
+                        </tr>
+                    </thead>
+                        
+                   <tbody>
+                    {% for emailCode, emailClass in tmplEmails %}
+                        <tr class="sonata-ba-list-field-header">
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailCode }}</td>                                            
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailClass }}</td> 
+                            <td class="sonata-ba-list-field sonata-ba-list-field-actions" objectid="34">
+                                <div class="btn-group">
+                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_show', {'id': emailCode}) }}" 
+                                       class="btn btn-sm btn-default view_link" 
+                                       target="_blank" title="Preview"
+                                       >
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                        Preview
+                                    </a>
+                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_export', {'id': emailCode}) }}" 
+                                       class="btn btn-sm btn-default view_link" 
+                                       title="Export to SenInBlue"
+                                       >
+                                        <i class="fa fa-upload" aria-hidden="true"></i>
+                                        Export
+                                    </a>
+                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_send', {'id': emailCode}) }}" 
+                                       class="btn btn-sm btn-default view_link" 
+                                       title="Send a test Email"
+                                       >
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        Send
+                                    </a>
+                                </div>
+                            </td>                            
+                        </tr>
+                    {% endfor %}
+                   </tbody>
+                   
+                </table>
+            </div>
+        </div>
+    </div>
+</div>        
+{% endblock %}
