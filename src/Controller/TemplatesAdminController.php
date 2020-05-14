@@ -16,8 +16,10 @@ namespace BadPixxel\SendinblueBridge\Controller;
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use BadPixxel\SendinblueBridge\Services\TemplateManager;
+use FOS\UserBundle\Model\UserInterface as User;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -63,17 +65,17 @@ class TemplatesAdminController extends Controller
     /**
      * Complete Debug of an Email Template
      *
-     * @param null|string $id
+     * @param string $emailCode
      *
      * @return Response
      */
-    public function showAction($id = null)
+    public function viewAction(string $emailCode): Response
     {
         /** @var TemplateManager $tmplManager */
         $tmplManager = $this->get('badpixxel.sendinblue.templates');
         //==============================================================================
         // Identify Email Class
-        $emailClass = $tmplManager->getEmailByCode($id);
+        $emailClass = $tmplManager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
             return $this->redirectToRoute('badpixxel_sendinblue_tmpl_debug_index');
         }
@@ -109,11 +111,11 @@ class TemplatesAdminController extends Controller
     /**
      * Update Email Template on SendInBlue
      *
-     * @param null|string $id
+     * @param null|string $emailCode
      *
      * @return Response
      */
-    public function exportAction($id = null)
+    public function updateAction($emailCode = null): Response
     {
         /** @var TemplateManager $tmplManager */
         $tmplManager = $this->get('badpixxel.sendinblue.templates');
@@ -121,7 +123,7 @@ class TemplatesAdminController extends Controller
         $session = $this->getRequest()->getSession();
         //==============================================================================
         // Identify Email Class
-        $emailClass = $tmplManager->getEmailByCode($id);
+        $emailClass = $tmplManager->getEmailByCode((string) $emailCode);
         if (is_null($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Unable to identify Email');
 
@@ -137,7 +139,7 @@ class TemplatesAdminController extends Controller
         //==============================================================================
         // Check if Email Needs to Be Compiled
         if (!$tmplManager->isTemplateAware($emailClass)) {
-            $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$id.' do not manage Templates');
+            $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$emailCode.' do not manage Templates');
 
             return $this->redirectToList();
         }
@@ -164,19 +166,21 @@ class TemplatesAdminController extends Controller
     /**
      * Update Email Template on SendInBlue
      *
-     * @param null|string $id
+     * @param string $emailCode
      *
      * @return Response
      */
-    public function sendAction($id = null)
+    public function sendAction(string $emailCode): Response
     {
         /** @var SmtpManager $smtpManager */
         $smtpManager = $this->get('badpixxel.sendinblue.smtp');
         /** @var Session $session */
         $session = $this->getRequest()->getSession();
+        /** @var User $user */
+        $user = $this->getUser();
         //==============================================================================
         // Identify Email Class
-        $emailClass = $smtpManager->getEmailByCode($id);
+        $emailClass = $smtpManager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Unable to identify Email');
 
@@ -190,19 +194,22 @@ class TemplatesAdminController extends Controller
             return $this->redirectToList();
         }
         if (!is_subclass_of($emailClass, AbstractEmail::class)) {
-            $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$emailClass.' is not an '.AbstractEmail::class);
+            $session->getFlashBag()->add(
+                'sonata_flash_error',
+                'Email Class: '.$emailClass.' is not an '.AbstractEmail::class
+            );
 
             return $this->redirectToList();
         }
         //==============================================================================
         // Send Test Email
-        $email = $emailClass::sendDemo($this->getUser());
+        $email = $emailClass::sendDemo($user);
         if (is_null($email)) {
             $session->getFlashBag()->add('sonata_flash_error', $emailClass::getLastError());
 
             return $this->redirectToList();
         }
-        $session->getFlashBag()->add('sonata_flash_success', 'Test Email send to '.$this->getUser()->getEmail());
+        $session->getFlashBag()->add('sonata_flash_success', 'Test Email send to '.$user->getEmail());
 
         return $this->redirectToList();
     }

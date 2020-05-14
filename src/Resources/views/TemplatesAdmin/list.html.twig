@@ -34,21 +34,21 @@
                             <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailClass }}</td> 
                             <td class="sonata-ba-list-field sonata-ba-list-field-actions" objectid="34">
                                 <div class="btn-group">
-                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_show', {'id': emailCode}) }}" 
+                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_view', {'emailCode': emailCode}) }}" 
                                        class="btn btn-sm btn-default view_link" 
                                        target="_blank" title="Preview"
                                        >
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                         Preview
                                     </a>
-                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_export', {'id': emailCode}) }}" 
+                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_update', {'emailCode': emailCode}) }}" 
                                        class="btn btn-sm btn-default view_link" 
                                        title="Export to SenInBlue"
                                        >
                                         <i class="fa fa-upload" aria-hidden="true"></i>
                                         Export
                                     </a>
-                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_send', {'id': emailCode}) }}" 
+                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_send', {'emailCode': emailCode}) }}" 
                                        class="btn btn-sm btn-default view_link" 
                                        title="Send a test Email"
                                        >

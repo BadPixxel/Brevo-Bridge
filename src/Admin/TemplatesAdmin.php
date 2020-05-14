@@ -44,16 +44,20 @@ class TemplatesAdmin extends Admin
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('create');
         $collection->remove('batch');
+        $collection->remove('show');
         $collection->remove('edit');
         $collection->remove('export');
         $collection->remove('delete');
 
-        $collection->add('export', $this->getRouterIdParameter().'/export');
-        $collection->add('send', $this->getRouterIdParameter().'/send');
+        $collection->add('view', '{emailCode}/view');
+        $collection->add('update', '{emailCode}/update');
+        $collection->add('send', '{emailCode}/send');
     }
 }
