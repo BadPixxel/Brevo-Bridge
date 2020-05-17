@@ -6,7 +6,7 @@ services:
     badpixxel.sendinblue.admin.emails:
         class: BadPixxel\SendinblueBridge\Admin\UserEmailsAdmin
         arguments: 
-            -   ~
+            - ~
             - %sendinblue_bridge.emails.class%
             - BadPixxel\SendinblueBridge\Controller\EmailAdminController
         tags:
@@ -24,8 +24,8 @@ services:
     badpixxel.sendinblue.admin.templates:
         class: BadPixxel\SendinblueBridge\Admin\TemplatesAdmin
         arguments: 
-            -   ~
-            - %sendinblue_bridge.emails.class%
+            - ~
+            - BadPixxel\SendinblueBridge\Models\AbstractEmail
             - BadPixxel\SendinblueBridge\Controller\TemplatesAdminController
         tags:
             - { name: sonata.admin, manager_type: orm, label: SendInBlue Templates, group: System, icon: '<i class="fa fa-desktop"></i>'  }

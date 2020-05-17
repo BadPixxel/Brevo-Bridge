@@ -77,10 +77,10 @@ class TemplatesAdminController extends Controller
         // Identify Email Class
         $emailClass = $tmplManager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
-            return $this->redirectToRoute('badpixxel_sendinblue_tmpl_debug_index');
+            return $this->redirectToList();
         }
         if (!class_exists($emailClass) || !$tmplManager->isTemplateAware($emailClass)) {
-            return $this->redirectToRoute('badpixxel_sendinblue_tmpl_debug_index');
+            return $this->redirectToList();
         }
         //==============================================================================
         // Compile Email Template
@@ -212,5 +212,15 @@ class TemplatesAdminController extends Controller
         $session->getFlashBag()->add('sonata_flash_success', 'Test Email send to '.$user->getEmail());
 
         return $this->redirectToList();
+    }
+
+    /**
+     * Redirect to List Page
+     *
+     * @return Response
+     */
+    private function redirectToList(): Response
+    {
+        return $this->redirectToRoute("admin_badpixxel_sendinblue_templates_list");
     }
 }
