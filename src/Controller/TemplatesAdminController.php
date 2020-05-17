@@ -77,10 +77,10 @@ class TemplatesAdminController extends Controller
         // Identify Email Class
         $emailClass = $tmplManager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         if (!class_exists($emailClass) || !$tmplManager->isTemplateAware($emailClass)) {
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Compile Email Template
@@ -127,21 +127,21 @@ class TemplatesAdminController extends Controller
         if (is_null($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Unable to identify Email');
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Verify Email Class
         if (!class_exists($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$emailClass.' was not found');
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Check if Email Needs to Be Compiled
         if (!$tmplManager->isTemplateAware($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$emailCode.' do not manage Templates');
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Compile Email Template Raw Html
@@ -149,18 +149,18 @@ class TemplatesAdminController extends Controller
         if (is_null($rawHtml)) {
             $session->getFlashBag()->add('sonata_flash_error', $tmplManager->getLastError());
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Update Email Template On Host
         if (null == $tmplManager->update($emailClass, $rawHtml)) {
             $session->getFlashBag()->add('sonata_flash_error', $tmplManager->getLastError());
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         $session->getFlashBag()->add('sonata_flash_success', 'Email Template Updated');
 
-        return $this->redirectToList();
+        return $this->redirectToIndex();
     }
 
     /**
@@ -184,14 +184,14 @@ class TemplatesAdminController extends Controller
         if (is_null($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Unable to identify Email');
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Verify Email Class
         if (!class_exists($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$emailClass.' was not found');
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         if (!is_subclass_of($emailClass, AbstractEmail::class)) {
             $session->getFlashBag()->add(
@@ -199,7 +199,7 @@ class TemplatesAdminController extends Controller
                 'Email Class: '.$emailClass.' is not an '.AbstractEmail::class
             );
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         //==============================================================================
         // Send Test Email
@@ -207,11 +207,11 @@ class TemplatesAdminController extends Controller
         if (is_null($email)) {
             $session->getFlashBag()->add('sonata_flash_error', $emailClass::getLastError());
 
-            return $this->redirectToList();
+            return $this->redirectToIndex();
         }
         $session->getFlashBag()->add('sonata_flash_success', 'Test Email send to '.$user->getEmail());
 
-        return $this->redirectToList();
+        return $this->redirectToIndex();
     }
 
     /**
@@ -219,7 +219,7 @@ class TemplatesAdminController extends Controller
      *
      * @return Response
      */
-    private function redirectToList(): Response
+    private function redirectToIndex(): Response
     {
         return $this->redirectToRoute("admin_badpixxel_sendinblue_templates_list");
     }
