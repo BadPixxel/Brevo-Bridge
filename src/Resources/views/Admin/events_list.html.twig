@@ -8,8 +8,8 @@
         <li>
             {{ event.date | localizeddate('short', 'short') }}
             :&nbsp;
-            <span class="label label-{{ object.getEventBadgeClass(event.event) }}">
-                {{ event.event | capitalize }}
+            <span class="label label-{{ object.getEventBadgeClass(event.event | default("invalid")) }}">
+                {{ event.event | default("invalid") | capitalize }}
             </span>
             {% if event.reason is not empty %}
                 &nbsp;({{ event.reason }})
