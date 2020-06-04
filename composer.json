@@ -31,7 +31,9 @@
         "doctrine/doctrine-bundle":                     "^1.6",
         "doctrine/doctrine-cache-bundle":               "^1.2",
         
-        "sendinblue/api-bundle":                        "^1.0"
+        "sendinblue/api-bundle":                        "^1.0",
+        
+        "knplabs/knp-time-bundle":                      ">1.0"
     },    
     
     "require-dev": {
