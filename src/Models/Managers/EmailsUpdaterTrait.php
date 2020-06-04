@@ -1,7 +1,9 @@
 <?php
 
 /*
- *  Copyright (C) 2020 BadPixxel <www.badpixxel.com>
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,7 +37,7 @@ trait EmailsUpdaterTrait
         }
         //==============================================================================
         // Check if Events Refresh is Needed
-        if (!$storageEmail->isEventOutdated()) {
+        if (!$force && !$storageEmail->isEventOutdated()) {
             return $this;
         }
         //==============================================================================
@@ -61,7 +63,7 @@ trait EmailsUpdaterTrait
         }
         //==============================================================================
         // Check if Contents Refresh is Needed
-        if (!empty($storageEmail->getHtmlContent())) {
+        if (!$force && !empty($storageEmail->getHtmlContent())) {
             return $this;
         }
         //==============================================================================
