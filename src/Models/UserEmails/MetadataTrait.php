@@ -90,12 +90,32 @@ trait MetadataTrait
      */
     public function isEventOutdated(): bool
     {
-        if (null == $this->refreshedAt) {
-            return true;
+        //==============================================================================
+        // Was Refreshed within Last 12 Hour => Not OutDated
+        if (null != $this->refreshedAt) {
+            $oudatedDate = new DateTime('-12 hour');
+            if ($oudatedDate < $this->refreshedAt) {
+                return false;
+            }
         }
-        $oudatedDate = new DateTime('-1 days');
+        //==============================================================================
+        // Already Marked as Errored => Not OutDated
+        if ($this->isErrored()) {
+            return false;
+        }
+        //==============================================================================
+        // No Send Date => Should Not Happen => Not OutDated
+        if (null == $this->sendAt) {
+            return false;
+        }
+        //==============================================================================
+        // Send more than 4 Weeks Agp => OutDated but no use to Refresh
+        $deprecatedDate = new DateTime('-4 week');
+        if ($deprecatedDate > $this->sendAt) {
+            return false;
+        }
 
-        return $oudatedDate > $this->refreshedAt;
+        return true;
     }
 
     /**
@@ -125,6 +145,22 @@ trait MetadataTrait
     }
 
     /**
+     * Mark this Email was Errored during Refresh
+     *
+     * @return $this
+     */
+    public function setErrored(): self
+    {
+        $this->events = array(new Event(array(
+            "date" => new DateTime(),
+            "event" => Event::EVENT_INVALID,
+            "reason" => "Unable to update Email Metadatas",
+        )));
+
+        return $this;
+    }
+
+    /**
      * Get Bootstrap badge Class for Event.
      *
      * @param string $type
@@ -141,6 +177,52 @@ trait MetadataTrait
         }
 
         return 'primary';
+    }
+
+    /**
+     * Check if Email was Delivered.
+     *
+     * @return bool
+     */
+    public function isDelivered(): bool
+    {
+        return $this->hasEvent(Event::EVENT_DELIVERED);
+    }
+
+    /**
+     * Check if Email was Open.
+     *
+     * @return bool
+     */
+    public function isOpen(): bool
+    {
+        return $this->hasEvent(Event::EVENT_OPENED);
+    }
+
+    /**
+     * Check if Email was Blocked.
+     *
+     * @return bool
+     */
+    public function isBlocked(): bool
+    {
+        return $this->hasEvent(Event::EVENT_BLOCKED);
+    }
+
+    /**
+     * Check if Email is in Error.
+     *
+     * @return bool
+     */
+    public function isErrored(): bool
+    {
+        foreach (self::$eventDanger as $eventType) {
+            if ($this->hasEvent($eventType)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //==============================================================================
@@ -183,6 +265,35 @@ trait MetadataTrait
     public function getEvents(): ?array
     {
         return $this->events;
+    }
+
+    //==============================================================================
+    // PRIVATE FUNCTIONS
+    //==============================================================================
+
+    /**
+     * Check if Email has an Event Type
+     *
+     * @param string $eventType
+     *
+     * @return bool
+     */
+    public function hasEvent(string $eventType): bool
+    {
+        //==============================================================================
+        // Safety Check
+        if (!is_array($this->events)) {
+            return false;
+        }
+        //==============================================================================
+        // Walk on Email Events
+        foreach ($this->events as $event) {
+            if ($eventType == $event->getEvent()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

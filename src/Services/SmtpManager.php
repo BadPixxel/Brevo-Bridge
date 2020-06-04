@@ -212,4 +212,14 @@ class SmtpManager
     {
         return $this->config->getAllEmails();
     }
+
+    /**
+     * Get Configuration
+     *
+     * @return Configuration
+     */
+    protected function getConfig(): Configuration
+    {
+        return $this->config;
+    }
 }

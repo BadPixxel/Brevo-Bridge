@@ -7,37 +7,51 @@
             {{ value.sendAt  | localizeddate('short', 'short') }}
         </div>
         <div class="col-xs-3 col-md-2">
-            {% if value.openAt is not empty %}
-                <span class="label label-success">Openned</span>
+            {% if value.isErrored %}
+                <span class="label label-danger">In Error</span>
+                &nbsp;{{ value.openAt | ago }}
+            {% elseif value.openAt is not empty %}
+                <span class="label label-success">Opened</span>
                 &nbsp;{{ value.openAt | ago }}
             {% else %}
-                <span class="label label-danger">Not Open</span>
+                <span class="label label-warning">Not Open</span>
             {% endif %}
         </div>
-        <div class="col-xs-6 col-md-4">
+        <div class="col-xs-6 col-md-3">
             {{ value.subject }}
         </div>
-        <div class="col-xs-12 col-md-4 text-right">
+
+        <div class="col-xs-12 col-md-3 text-right">
             <div class="btn-group">
-                <a class="btn btn-primary" role="button" 
+                <a class="btn btn-sm btn-primary" role="button" 
                    data-toggle="collapse" href="#email{{ value.id }}" 
                    aria-expanded="false" aria-controls="email{{ value.id }}">
                     <i class="fa fa-eye"></i>
                     View
                 </a>
-                <a class="btn btn-success" 
+                <a class="btn btn-sm btn-success" 
                    href="{{ path('admin_application_sendinbluebridge_email_refresh', {"id": value.id }) }}" 
                 >
                     <i class="fa fa-refresh"></i>
                     Refresh
                 </a>                
-                <a class="btn btn-default text-warning" target="_blank" 
+                <a class="btn btn-sm btn-default text-warning" target="_blank" 
                    href="{{ path('admin_application_sendinbluebridge_email_show', {"id": value.id }) }}" 
                 >
                     <i class="fa fa-external-link-square"></i>
                 </a>                
             </div>
         </div>
+                
+        <div class="col-xs-6 col-md-2 text-warning">
+            <i class="fa fa-clock-o"></i>
+            {% if value.refreshedAt is not empty %}
+                {{ value.refreshedAt | ago }}
+            {% else %}
+                Never
+            {% endif %}
+        </div>                
+        
     </div>
                 
     <div class="row">

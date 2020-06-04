@@ -125,6 +125,21 @@ trait StorageTrait
     }
 
     /**
+     * Set this Email Events Refresh Errored in Database
+     *
+     * @param EmailStorage $storageEmail
+     *
+     * @return self
+     */
+    protected function updateSendEmailEventsErrored(EmailStorage $storageEmail): self
+    {
+        $storageEmail->setErrored();
+        $this->entityManager->flush();
+
+        return $this;
+    }
+
+    /**
      * Update this Email Contents in Database
      *
      * @param EmailStorage $storageEmail

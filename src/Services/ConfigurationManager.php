@@ -53,6 +53,26 @@ class ConfigurationManager
     }
 
     /**
+     * Allow Auto-Refresh of Emails Metadata?
+     *
+     * @return bool
+     */
+    public function isRefreshMetadataAllowed(): bool
+    {
+        return $this->config["refresh"]["metadata"];
+    }
+
+    /**
+     * Allow Auto-Refresh of Emails Contents?
+     *
+     * @return bool
+     */
+    public function isRefreshContentsAllowed(): bool
+    {
+        return $this->config["refresh"]["contents"];
+    }
+
+    /**
      * Allowed Mjml API ?
      *
      * @return bool

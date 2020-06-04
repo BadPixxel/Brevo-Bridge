@@ -29,21 +29,24 @@ trait EmailsUpdaterTrait
     protected function updateEvents(EmailStorage &$storageEmail, bool $force): self
     {
         //==============================================================================
+        // Check if Events Refresh is Allowed
+        if (!$force && !$this->getConfig()->isRefreshMetadataAllowed()) {
+            return $this;
+        }
+        //==============================================================================
         // Check if Events Refresh is Needed
-        if (!$force && !$storageEmail->isEventOutdated()) {
+        if (!$storageEmail->isEventOutdated()) {
             return $this;
         }
         //==============================================================================
         // Collect Events
         $events = $this->getEventsfromApi($storageEmail->getMessageId(), $storageEmail->getEmail());
         if (empty($events)) {
-            return $this;
+            return $this->updateSendEmailEventsErrored($storageEmail);
         }
         //==============================================================================
         // Update Storage
-        $this->updateSendEmailEvents($storageEmail, $events);
-
-        return $this;
+        return $this->updateSendEmailEvents($storageEmail, $events);
     }
 
     /**
@@ -52,8 +55,13 @@ trait EmailsUpdaterTrait
     protected function updateContents(EmailStorage &$storageEmail, bool $force): self
     {
         //==============================================================================
+        // Check if Events Refresh is Allowed
+        if (!$force && !$this->getConfig()->isRefreshContentsAllowed()) {
+            return $this;
+        }
+        //==============================================================================
         // Check if Contents Refresh is Needed
-        if (!$force && !empty($storageEmail->getHtmlContent())) {
+        if (!empty($storageEmail->getHtmlContent())) {
             return $this;
         }
         //==============================================================================
