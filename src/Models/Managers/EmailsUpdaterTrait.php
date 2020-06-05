@@ -1,7 +1,9 @@
 <?php
 
 /*
- *  Copyright (C) 2020 BadPixxel <www.badpixxel.com>
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2020 Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -55,8 +57,8 @@ trait EmailsUpdaterTrait
     protected function updateContents(EmailStorage &$storageEmail, bool $force): self
     {
         //==============================================================================
-        // Check if Events Refresh is Allowed
-        if (!$force && !$this->getConfig()->isRefreshContentsAllowed()) {
+        // Only if Events Refresh is Allowed
+        if (!$this->getConfig()->isRefreshContentsAllowed()) {
             return $this;
         }
         //==============================================================================
@@ -116,8 +118,9 @@ trait EmailsUpdaterTrait
         if (!($eventsReport instanceof GetEmailEventReport)) {
             return array();
         }
+        $events = $eventsReport->getEvents();
 
-        return $eventsReport->getEvents();
+        return is_array($events) ? $events : array();
     }
 
     /**
