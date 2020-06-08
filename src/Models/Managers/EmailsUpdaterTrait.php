@@ -118,6 +118,7 @@ trait EmailsUpdaterTrait
         if (!($eventsReport instanceof GetEmailEventReport)) {
             return array();
         }
+        /** @var null|array $events */
         $events = $eventsReport->getEvents();
 
         return is_array($events) ? $events : array();
