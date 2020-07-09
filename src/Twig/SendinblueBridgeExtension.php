@@ -29,7 +29,7 @@ class SendinblueBridgeExtension extends AbstractExtension
     public function getFilters(): array
     {
         return array(
-            new TwigFilter('safe', 'twig_raw_filter', array('is_safe' => array('all'))),
+            new TwigFilter('safe', '\twig_raw_filter', array('is_safe' => array('all'))),
         );
     }
 }
