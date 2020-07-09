@@ -25,4 +25,10 @@ services:
     badpixxel.sendinblue.templates:
         class: BadPixxel\SendinblueBridge\Services\TemplateManager
         public: true
-        autowire: true         
+        autowire: true
+
+    # SendInBlue Emails Templates Twig Extension
+    badpixxel.sendinblue.extension:
+        class: BadPixxel\SendinblueBridge\Twig\SendinblueBridgeExtension
+        tags:
+            - { name: twig.extension  }
