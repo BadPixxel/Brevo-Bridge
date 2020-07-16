@@ -52,3 +52,4 @@
 /.php_cs.cache
 /.phpunit.result.cache
 /.gh-pages/
+/.idea/
