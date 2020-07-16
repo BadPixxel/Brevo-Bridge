@@ -13,6 +13,8 @@
 
 namespace BadPixxel\SendinblueBridge\Controller;
 
+use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
+use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\TemplateManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -87,5 +89,49 @@ class DebugController extends Controller
         $user = $this->getUser();
 
         return $this->render($tmplPath, $tmplManager->getTmplParameters($emailClass, $user));
+    }
+
+    /**
+     * Debug of a Complete Mjml Email
+     *
+     * @param AbstractEmail $email
+     *
+     * @return Response
+     */
+    public function emailAction(AbstractEmail $email): Response
+    {
+        /** @var TemplateManager $tmplManager */
+        $tmplManager = $this->get('badpixxel.sendinblue.templates');
+        //==============================================================================
+        // Safety Check
+        if (!$tmplManager->isTemplateAware(get_class($email))) {
+            return new Response("Error: Email Class not Template Aware");
+        }
+        if (!($email instanceof MjmlTemplateProviderInterface)) {
+            return new Response("Error: Email Class not Template Aware");
+        }
+        //==============================================================================
+        // Load Mjml Convert
+        $mjmlConverter = $tmplManager->getMjmlConverter();
+        if (!$mjmlConverter) {
+            return new Response("Error: Mjml Converter not Available");
+        }
+        /** @var Kernel $kernel */
+        $kernel = $this->get('kernel');
+        //==============================================================================
+        // Compile Mjml Template to Html
+        $tmplHtml = $mjmlConverter->toHtml($email::getTemplateHtml());
+        $tmplPath = $kernel->getProjectDir().self::TMPL_DIR;
+        $tmplPath .= 'sib_'.md5(get_class($email)).'.html.twig';
+        //==============================================================================
+        // Store Template Html to Disk
+        file_put_contents($tmplPath, $tmplHtml);
+        //==============================================================================
+        // Render Email Html Preview
+        return $this->render(
+            $tmplPath,
+            array(
+                "params" => $email->getEmail()->getParams())
+        );
     }
 }
