@@ -100,6 +100,13 @@ trait StorageTrait
     {
         $storageClass = $this->config->getEmailStorageClass();
         foreach ($toUsers as $toUser) {
+            //==============================================================================
+            // Check if User Exists in Db
+            if (!($toUser instanceof User) || empty($toUser->getId())) {
+                continue;
+            }
+            //==============================================================================
+            // Create & Persist Email Storage
             $storageEmail = $storageClass::fromApiResults($toUser, $sendEmail, $createEmail);
             $this->entityManager->persist($storageEmail);
         }
