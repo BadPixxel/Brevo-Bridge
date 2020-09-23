@@ -8,22 +8,18 @@ services:
             - "%swiftmailer.delivery.enabled%"
     
     # SendInBlue API Account Manager    
-    badpixxel.sendinblue.account:
-        class: BadPixxel\SendinblueBridge\Services\AccountManager
-        public: true
+    BadPixxel\SendinblueBridge\Services\AccountManager:
         autowire: true
         
     # SendInBlue Emails SMTP Manager    
-    badpixxel.sendinblue.smtp:
-        class: BadPixxel\SendinblueBridge\Services\SmtpManager
-        public: true
-        autowire: true 
-        
-    # SendInBlue Emails Templates Manager    
-    badpixxel.sendinblue.templates:
-        class: BadPixxel\SendinblueBridge\Services\TemplateManager
-        public: true
+    BadPixxel\SendinblueBridge\Services\SmtpManager:
         autowire: true
+        public: true
+
+    # SendInBlue Emails Templates Manager    
+    BadPixxel\SendinblueBridge\Services\TemplateManager:
+        autowire: true
+        public: true
 
     # SendInBlue Emails Templates Twig Extension
     badpixxel.sendinblue.extension:

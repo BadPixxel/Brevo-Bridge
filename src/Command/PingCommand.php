@@ -41,7 +41,7 @@ class PingCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var AccountManager $accountManager */
-        $accountManager = $this->getContainer()->get('badpixxel.sendinblue.account');
+        $accountManager = $this->getContainer()->get(AccountManager::class);
         /** @var null|ArrayAccess $result */
         $result = $accountManager->getAccount();
         if (!$result) {

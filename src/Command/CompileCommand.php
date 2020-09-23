@@ -45,7 +45,7 @@ class CompileCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var TemplateManager $tmplManager */
-        $tmplManager = $this->getContainer()->get('badpixxel.sendinblue.templates');
+        $tmplManager = $this->getContainer()->get(TemplateManager::class);
         $this->tmplManager = $tmplManager;
         //==============================================================================
         // Compile All Avalaible Emails

@@ -60,7 +60,7 @@ class MailTestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var SmtpManager $smtpManager */
-        $smtpManager = $this->getContainer()->get('badpixxel.sendinblue.smtp');
+        $smtpManager = $this->getContainer()->get(SmtpManager::class);
         $this->smtpManager = $smtpManager;
 
         /** @var string $targetEmail */

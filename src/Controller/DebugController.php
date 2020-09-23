@@ -16,17 +16,17 @@ namespace BadPixxel\SendinblueBridge\Controller;
 use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\TemplateManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Emails Templates Debugging Actions.
  */
-class DebugController extends Controller
+class DebugController extends AbstractController
 {
     /**
      * @var string
@@ -52,7 +52,7 @@ class DebugController extends Controller
     public function mjmlAction(string $emailCode, string $tmplCode, string $tmplStyles = null): Response
     {
         /** @var TemplateManager $tmplManager */
-        $tmplManager = $this->get('badpixxel.sendinblue.templates');
+        $tmplManager = $this->get(TemplateManager::class);
         //==============================================================================
         // Identify Email Class
         $emailClass = $tmplManager->getEmailByCode($emailCode);
@@ -101,7 +101,7 @@ class DebugController extends Controller
     public function emailAction(AbstractEmail $email): Response
     {
         /** @var TemplateManager $tmplManager */
-        $tmplManager = $this->get('badpixxel.sendinblue.templates');
+        $tmplManager = $this->get(TemplateManager::class);
         //==============================================================================
         // Safety Check
         if (!$tmplManager->isTemplateAware(get_class($email))) {

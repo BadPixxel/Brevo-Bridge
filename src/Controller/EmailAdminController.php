@@ -67,7 +67,7 @@ class EmailAdminController extends CRUDController
         //==============================================================================
         // Connect to Smtp Manager
         /** @var SmtpManager $smtpManager */
-        $smtpManager = $this->get('badpixxel.sendinblue.smtp');
+        $smtpManager = $this->get(SmtpManager::class);
         //==============================================================================
         // Refresh Email (Forced)
         $smtpManager->update($email, true);

@@ -82,7 +82,7 @@ class UserEmailsExtension extends AbstractAdminExtension
         //==============================================================================
         // Connect to Smtp Manager
         /** @var SmtpManager $smtpManager */
-        $smtpManager = $container->get('badpixxel.sendinblue.smtp');
+        $smtpManager = $container->get(SmtpManager::class);
         //==============================================================================
         // Refresh Email if Needed
         foreach ($subject->getEmails() as $storageEmail) {

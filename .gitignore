@@ -53,3 +53,4 @@
 /.phpunit.result.cache
 /.gh-pages/
 /.idea/
+/travis/.php_cs.cache
