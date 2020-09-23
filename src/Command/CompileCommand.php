@@ -55,7 +55,7 @@ class CompileCommand extends ContainerAwareCommand
             }
         }
 
-        return null;
+        return 0;
     }
 
     /**
@@ -64,9 +64,9 @@ class CompileCommand extends ContainerAwareCommand
      * @param string          $emailCode
      * @param OutputInterface $output
      *
-     * @return null|int
+     * @return int
      */
-    protected function compileEmail(string $emailCode, OutputInterface $output): ?int
+    protected function compileEmail(string $emailCode, OutputInterface $output): int
     {
         //==============================================================================
         // Identify Email Class
@@ -117,13 +117,13 @@ class CompileCommand extends ContainerAwareCommand
      * @param string          $code
      * @param string          $text
      *
-     * @return null|int
+     * @return int
      */
-    protected static function showResult(OutputInterface $output, bool $result, string $code, string $text): ?int
+    protected static function showResult(OutputInterface $output, bool $result, string $code, string $text): int
     {
         $status = $result ? '[<info> OK </info>]' : '[<error> KO </error>]';
         $output->writeln($status.' '.ucfirst($code).' : '.$text);
 
-        return $result ? null : -1;
+        return $result ? 0 : -1;
     }
 }

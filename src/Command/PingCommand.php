@@ -59,6 +59,6 @@ class PingCommand extends ContainerAwareCommand
         }
         $output->writeln('<info>'.$message.'</info>');
 
-        return null;
+        return 0;
     }
 }

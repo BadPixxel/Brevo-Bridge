@@ -6,8 +6,8 @@ services:
         class: BadPixxel\SendinblueBridge\Services\ConfigurationManager
         public: true
         arguments:
-            - %sendinblue_bridge%
-            - %swiftmailer.delivery.enabled%
+            - "%sendinblue_bridge%"
+            - "%swiftmailer.delivery.enabled%"
     
     # SendInBlue API Account Manager    
     badpixxel.sendinblue.account:

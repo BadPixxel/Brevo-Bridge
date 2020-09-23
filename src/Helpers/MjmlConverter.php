@@ -46,7 +46,7 @@ class MjmlConverter
     private $cache;
 
     /**
-     * Class conctructor
+     * Class constructor
      *
      * @param string $endpoint
      * @param string $appUser
