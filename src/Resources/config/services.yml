@@ -2,9 +2,7 @@
 services:
     
     # Bridge Configurations Manager    
-    badpixxel.sendinblue.configuration:
-        class: BadPixxel\SendinblueBridge\Services\ConfigurationManager
-        public: true
+    BadPixxel\SendinblueBridge\Services\ConfigurationManager:
         arguments:
             - "%sendinblue_bridge%"
             - "%swiftmailer.delivery.enabled%"
