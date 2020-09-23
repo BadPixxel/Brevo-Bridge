@@ -19,10 +19,11 @@ matrix:
         # Symfony 3.4 Branch       
         - php: 7.3
           env: SF_VERSION="3.4.*"        
-        
-    allow_failures:
-        - env: SF_VERSION="4.2.*"  STABILITY="dev"       
-        
+
+      # Symfony 4.4 Branch
+        - php: 7.4
+          env: SF_VERSION="4.4.*"
+
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
     fast_finish: true
 
