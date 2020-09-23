@@ -36,21 +36,14 @@ before_install:
 # Install composer dependencies,
 install:   
     - echo "Build Dependencies"
-    - composer update  --prefer-dist --no-interaction  
-
-
-
+    # Setup Symfony Version if Required
+    - if [ "$SF_VERSION" != "" ]; then composer require --no-update symfony/symfony=$SF_VERSION; fi;
+    - composer update  --prefer-dist --no-interaction
 # Run script
 script:
     # Execute Grump Full Testsuite 
     - php vendor/bin/grumphp run
-#    # Execute Grump Travis Testsuite 
-#    - php vendor/bin/grumphp run --testsuite=travis
-#    # Execute CsFixer
-#    - php vendor/bin/grumphp run --testsuite=csfixer    
-#    # Execute Phpstan 
-#    - php vendor/bin/grumphp run --testsuite=phpstan   
-    # Show Outdated Packages   
+    # Show Outdated Packages
     - composer outdated
     
 ################################################################################
