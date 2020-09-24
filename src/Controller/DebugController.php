@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Emails Templates Debugging Actions.
@@ -36,7 +38,7 @@ class DebugController extends AbstractController
     /**
      * @var string
      */
-    const TMPL_PATH = "/var/sib_email_template.html.twig";
+    const TMPL_PATH = "/sib_email_template.html.twig";
 
     /**
      * Debug of a Partial Email Mjml Template Block
@@ -80,14 +82,22 @@ class DebugController extends AbstractController
         ));
         $tmplHtml = $mjmlConverter->toHtml($tmplMjml);
         $tmplPath = $kernel->getProjectDir().self::TMPL_DIR;
-        $tmplPath .= 'sib_'.md5($tmplCode).'.html.twig';
+        $tmplName = 'sib_'.md5($tmplCode).'.html.twig';
         //==============================================================================
         // Store Template Html to Disk
-        file_put_contents($tmplPath, $tmplHtml);
+        file_put_contents($tmplPath.$tmplName, $tmplHtml);
+        //==============================================================================
+        // Add Temporary Path to Twig Loader
+        /** @var Environment $twig */
+        $twig = $this->get('twig');
+        /** @var FilesystemLoader $loader */
+        $loader = $twig->getLoader();
+        $loader->addPath($tmplPath);
+
         /** @var UserInterface $user */
         $user = $this->getUser();
 
-        return $this->render($tmplPath, $manager->getTmplParameters($emailClass, $user));
+        return $this->render($tmplName, $manager->getTmplParameters($emailClass, $user));
     }
 
     /**
@@ -120,14 +130,21 @@ class DebugController extends AbstractController
         // Compile Mjml Template to Html
         $tmplHtml = $mjmlConverter->toHtml($email::getTemplateHtml());
         $tmplPath = $kernel->getProjectDir().self::TMPL_DIR;
-        $tmplPath .= 'sib_'.md5(get_class($email)).'.html.twig';
+        $tmplName = 'sib_'.md5(get_class($email)).'.html.twig';
         //==============================================================================
         // Store Template Html to Disk
-        file_put_contents($tmplPath, $tmplHtml);
+        file_put_contents($tmplPath.$tmplName, $tmplHtml);
+        //==============================================================================
+        // Add Temporary Path to Twig Loader
+        /** @var Environment $twig */
+        $twig = $this->get('twig');
+        /** @var FilesystemLoader $loader */
+        $loader = $twig->getLoader();
+        $loader->addPath($tmplPath);
         //==============================================================================
         // Render Email Html Preview
         return $this->render(
-            $tmplPath,
+            $tmplName,
             array("params" => $email->getEmail()->getParams())
         );
     }
