@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Admin Controller for SendInBlue Bridge Emails Templates Management
@@ -86,8 +88,15 @@ class TemplatesAdminController extends Controller
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
         $tmplHtml = (string) $tmplManager->compile($emailClass);
-        $tmplPath = $kernel->getProjectDir().self::TMPL_PATH;
-        file_put_contents($tmplPath, $tmplHtml);
+        $tmplPath = $kernel->getProjectDir().self::TMPL_DIR;
+        file_put_contents($tmplPath.self::TMPL_PATH, $tmplHtml);
+        //==============================================================================
+        // Add Temporary Path to Twig Loader
+        /** @var Environment $twig */
+        $twig = $this->get('twig');
+        /** @var FilesystemLoader $loader */
+        $loader = $twig->getLoader();
+        $loader->addPath($tmplPath);
         //==============================================================================
         // Find All Available Emails
         $tmplEmails = array();
