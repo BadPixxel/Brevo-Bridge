@@ -39,79 +39,60 @@ class TemplatesAdminController extends Controller
     const TMPL_PATH = "/var/sib_email_template.html.twig";
 
     /**
-     * @var TemplateManager
-     */
-    private $tmplManager;
-
-    /**
-     * @var SmtpManager
-     */
-    private $smtpManager;
-
-    /**
-     * Controller Constructor.
-     *
-     * @param SmtpManager     $smtpManager
-     * @param TemplateManager $tmplManager
-     */
-    public function __construct(SmtpManager $smtpManager, TemplateManager $tmplManager)
-    {
-        $this->smtpManager = $smtpManager;
-        $this->tmplManager = $tmplManager;
-    }
-
-    /**
      * Render User Dashboard.
      *
      * @return Response
      */
     public function listAction()
     {
+        /** @var TemplateManager $tmplManager */
+        $tmplManager = $this->get(TemplateManager::class);
         //==============================================================================
         // Find All Available Emails
         $tmplEmails = array();
-        foreach ($this->tmplManager->getAllEmails() as $emailCode => $emailClass) {
-            if (class_exists($emailClass) && $this->tmplManager->isTemplateAware($emailClass)) {
+        foreach ($tmplManager->getAllEmails() as $emailCode => $emailClass) {
+            if (class_exists($emailClass) && $tmplManager->isTemplateAware($emailClass)) {
                 $tmplEmails[$emailCode] = $emailClass;
             }
         }
 
-        return $this->render("@SendinblueBridge/TemplatesAdmin/list.html.twig", array(
+        return $this->renderWithExtraParams("@SendinblueBridge/TemplatesAdmin/list.html.twig", array(
             "tmplEmails" => $tmplEmails,
-            "allEmails" => $this->tmplManager->getAllEmails(),
+            "allEmails" => $tmplManager->getAllEmails(),
         ));
     }
 
     /**
      * Complete Debug of an Email Template
      *
-     * @param string $emailCode
+     * @param TemplateManager $tmplManager
+     * @param string          $emailCode
      *
      * @return Response
      */
-    public function viewAction(string $emailCode): Response
+    public function viewAction(TemplateManager $tmplManager, string $emailCode): Response
     {
         //==============================================================================
         // Identify Email Class
-        $emailClass = $this->tmplManager->getEmailByCode($emailCode);
+        $emailClass = $tmplManager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
             return $this->redirectToIndex();
         }
-        if (!class_exists($emailClass) || !$this->tmplManager->isTemplateAware($emailClass)) {
+        if (!class_exists($emailClass) || !$tmplManager->isTemplateAware($emailClass)) {
             return $this->redirectToIndex();
         }
         //==============================================================================
         // Compile Email Template
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
-        $tmplHtml = (string) $this->tmplManager->compile($emailClass);
+        $tmplHtml = (string) $tmplManager->compile($emailClass);
         $tmplPath = $kernel->getProjectDir().self::TMPL_PATH;
         file_put_contents($tmplPath, $tmplHtml);
         //==============================================================================
         // Find All Available Emails
         $tmplEmails = array();
-        foreach ($this->tmplManager->getAllEmails() as $code => $class) {
-            if (class_exists($class) && $this->tmplManager->isTemplateAware($class)) {
+        foreach ($tmplManager->getAllEmails() as $code => $class) {
+            if (class_exists($class) && $tmplManager->isTemplateAware($class)) {
                 $tmplEmails[$code] = $class;
             }
         }
@@ -120,26 +101,27 @@ class TemplatesAdminController extends Controller
 
         return $this->render("@SendinblueBridge/Debug/email_view.html.twig", array(
             "tmplPath" => $tmplPath,
-            'tmplParams' => $this->tmplManager->getTmplParameters($emailClass, $user),
+            'tmplParams' => $tmplManager->getTmplParameters($emailClass, $user),
             "tmplEmails" => $tmplEmails,
-            "allEmails" => $this->tmplManager->getAllEmails(),
+            "allEmails" => $tmplManager->getAllEmails(),
         ));
     }
 
     /**
      * Update Email Template on SendInBlue
      *
-     * @param null|string $emailCode
+     * @param TemplateManager $tmplManager
+     * @param null|string     $emailCode
      *
      * @return Response
      */
-    public function updateAction($emailCode = null): Response
+    public function updateAction(TemplateManager $tmplManager, $emailCode = null): Response
     {
         /** @var Session $session */
         $session = $this->getRequest()->getSession();
         //==============================================================================
         // Identify Email Class
-        $emailClass = $this->tmplManager->getEmailByCode((string) $emailCode);
+        $emailClass = $tmplManager->getEmailByCode((string) $emailCode);
         if (is_null($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Unable to identify Email');
 
@@ -154,23 +136,23 @@ class TemplatesAdminController extends Controller
         }
         //==============================================================================
         // Check if Email Needs to Be Compiled
-        if (!$this->tmplManager->isTemplateAware($emailClass)) {
+        if (!$tmplManager->isTemplateAware($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Email Class: '.$emailCode.' do not manage Templates');
 
             return $this->redirectToIndex();
         }
         //==============================================================================
         // Compile Email Template Raw Html
-        $rawHtml = $this->tmplManager->compile($emailClass);
+        $rawHtml = $tmplManager->compile($emailClass);
         if (is_null($rawHtml)) {
-            $session->getFlashBag()->add('sonata_flash_error', $this->tmplManager->getLastError());
+            $session->getFlashBag()->add('sonata_flash_error', $tmplManager->getLastError());
 
             return $this->redirectToIndex();
         }
         //==============================================================================
         // Update Email Template On Host
-        if (null == $this->tmplManager->update($emailClass, $rawHtml)) {
-            $session->getFlashBag()->add('sonata_flash_error', $this->tmplManager->getLastError());
+        if (null == $tmplManager->update($emailClass, $rawHtml)) {
+            $session->getFlashBag()->add('sonata_flash_error', $tmplManager->getLastError());
 
             return $this->redirectToIndex();
         }
@@ -182,11 +164,12 @@ class TemplatesAdminController extends Controller
     /**
      * Update Email Template on SendInBlue
      *
-     * @param string $emailCode
+     * @param SmtpManager $smtpManager
+     * @param string      $emailCode
      *
      * @return Response
      */
-    public function sendAction(string $emailCode): Response
+    public function sendAction(SmtpManager $smtpManager, string $emailCode): Response
     {
         /** @var Session $session */
         $session = $this->getRequest()->getSession();
@@ -194,7 +177,7 @@ class TemplatesAdminController extends Controller
         $user = $this->getUser();
         //==============================================================================
         // Identify Email Class
-        $emailClass = $this->smtpManager->getEmailByCode($emailCode);
+        $emailClass = $smtpManager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
             $session->getFlashBag()->add('sonata_flash_error', 'Unable to identify Email');
 

@@ -15,7 +15,7 @@ namespace BadPixxel\SendinblueBridge\Controller;
 
 use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use BadPixxel\SendinblueBridge\Services\TemplateManager;
+use BadPixxel\SendinblueBridge\Services\TemplateManager as Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,28 +43,27 @@ class DebugController extends AbstractController
      *
      * @Route("/{emailCode}/mjml/{tmplCode}", name="badpixxel_sendinblue_tmpl_debug_mjml")
      *
-     * @param string      $emailCode  Email Code for Parameters Generation
-     * @param string      $tmplCode   Twig Source Mjml Block Template
-     * @param null|string $tmplStyles Twig Source Mjml Styles
+     * @param Manager     $manager
+     * @param string      $emailCode Email Code for Parameters Generation
+     * @param string      $tmplCode  Twig Source Mjml Block Template
+     * @param null|string $styles    Twig Source Mjml Styles
      *
      * @return Response
      */
-    public function mjmlAction(string $emailCode, string $tmplCode, string $tmplStyles = null): Response
+    public function mjmlAction(Manager $manager, string $emailCode, string $tmplCode, string $styles = null): Response
     {
-        /** @var TemplateManager $tmplManager */
-        $tmplManager = $this->get(TemplateManager::class);
         //==============================================================================
         // Identify Email Class
-        $emailClass = $tmplManager->getEmailByCode($emailCode);
+        $emailClass = $manager->getEmailByCode($emailCode);
         if (is_null($emailClass)) {
             return new Response("Error: Email Class not Found");
         }
-        if (!class_exists($emailClass) || !$tmplManager->isTemplateAware($emailClass)) {
+        if (!class_exists($emailClass) || !$manager->isTemplateAware($emailClass)) {
             return new Response("Error: Email Class not Found");
         }
         //==============================================================================
         // Load Mjml Convert
-        $mjmlConverter = $tmplManager->getMjmlConverter();
+        $mjmlConverter = $manager->getMjmlConverter();
         if (!$mjmlConverter) {
             return new Response("Error: Mjml Converter not Available");
         }
@@ -75,7 +74,7 @@ class DebugController extends AbstractController
         /** @var EngineInterface $twig */
         $twig = $this->get('templating');
         $tmplMjml = (string) $twig->render("@SendinblueBridge/Debug/mjml_block.html.twig", array(
-            "tmplStyles" => $tmplStyles,
+            "tmplStyles" => $styles,
             "tmplPath" => $tmplCode,
             "tmplParams" => array(),
         ));
@@ -88,20 +87,19 @@ class DebugController extends AbstractController
         /** @var UserInterface $user */
         $user = $this->getUser();
 
-        return $this->render($tmplPath, $tmplManager->getTmplParameters($emailClass, $user));
+        return $this->render($tmplPath, $manager->getTmplParameters($emailClass, $user));
     }
 
     /**
      * Debug of a Complete Mjml Email
      *
+     * @param Manager       $tmplManager
      * @param AbstractEmail $email
      *
      * @return Response
      */
-    public function emailAction(AbstractEmail $email): Response
+    public function emailAction(Manager $tmplManager, AbstractEmail $email): Response
     {
-        /** @var TemplateManager $tmplManager */
-        $tmplManager = $this->get(TemplateManager::class);
         //==============================================================================
         // Safety Check
         if (!$tmplManager->isTemplateAware(get_class($email))) {
@@ -130,8 +128,7 @@ class DebugController extends AbstractController
         // Render Email Html Preview
         return $this->render(
             $tmplPath,
-            array(
-                "params" => $email->getEmail()->getParams())
+            array("params" => $email->getEmail()->getParams())
         );
     }
 }

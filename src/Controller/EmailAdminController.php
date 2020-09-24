@@ -49,13 +49,14 @@ class EmailAdminController extends CRUDController
     /**
      * Refresh Email Events.
      *
+     * @param SmtpManager $smtpManager
      * @param null|string $id
      *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    public function refreshAction($id = null): Response
+    public function refreshAction(SmtpManager $smtpManager, $id = null): Response
     {
         //====================================================================//
         // Load Email Object
@@ -64,10 +65,6 @@ class EmailAdminController extends CRUDController
         if (null == $email) {
             throw $this->createNotFoundException(sprintf('unable to find the object with id: %s', $id));
         }
-        //==============================================================================
-        // Connect to Smtp Manager
-        /** @var SmtpManager $smtpManager */
-        $smtpManager = $this->get(SmtpManager::class);
         //==============================================================================
         // Refresh Email (Forced)
         $smtpManager->update($email, true);
