@@ -39,7 +39,7 @@ class MailTestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sendinblue:email:test')
-            ->setDescription("Email Sending test: require email & ")
+            ->setDescription("Email Sending test: require user email & email Code")
             ->addArgument(
                 'target',
                 InputArgument::REQUIRED,
@@ -49,7 +49,7 @@ class MailTestCommand extends ContainerAwareCommand
                 'send',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Email to send (\"all\" to send all regietered emails)'
+                'Email to send (\"all\" to send all registered emails)'
             )
         ;
     }

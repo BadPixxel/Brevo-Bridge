@@ -1,5 +1,11 @@
-
 services:
+
+    ########################################################################
+    # Declare & AutoWire Bundle Commands
+    BadPixxel\SendinblueBridge\Command\:
+        resource: '../../Command'
+        autowire:   true
+        tags:       [ console.command ]
 
     ################################################################################
     # AutoWire for Controllers
