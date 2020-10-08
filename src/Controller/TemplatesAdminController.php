@@ -33,12 +33,12 @@ class TemplatesAdminController extends Controller
     /**
      * @var string
      */
-    const TMPL_DIR = "/var/";
+    const TMPL_DIR = "/var";
 
     /**
      * @var string
      */
-    const TMPL_PATH = "/var/sib_email_template.html.twig";
+    const TMPL_PATH = "/sib_email_template.html.twig";
 
     /**
      * Render User Dashboard.
@@ -109,7 +109,7 @@ class TemplatesAdminController extends Controller
         $user = $this->getUser();
 
         return $this->render("@SendinblueBridge/Debug/email_view.html.twig", array(
-            "tmplPath" => $tmplPath,
+            "tmplPath" => self::TMPL_PATH,
             'tmplParams' => $tmplManager->getTmplParameters($emailClass, $user),
             "tmplEmails" => $tmplEmails,
             "allEmails" => $tmplManager->getAllEmails(),
