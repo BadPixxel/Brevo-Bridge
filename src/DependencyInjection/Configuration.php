@@ -28,9 +28,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sendinblue_bridge');
+        $treeBuilder = new TreeBuilder('sendinblue_bridge');
+        $rootNode = $treeBuilder->getRootNode();
 
+        // @phpstan-ignore-next-line
         $rootNode
             ->children()
             ->scalarNode('cli_host')->defaultValue("http://localhost")->cannotBeEmpty()->end()

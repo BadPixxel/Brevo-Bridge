@@ -95,7 +95,7 @@ class ConfigurationManager
     /**
      * Get Email Storage Class.
      *
-     * @return string
+     * @return class-string
      */
     public function getEmailStorageClass(): string
     {

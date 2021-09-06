@@ -54,3 +54,4 @@
 /.gh-pages/
 /.idea/
 /travis/.php_cs.cache
+/.php-cs-fixer.cache

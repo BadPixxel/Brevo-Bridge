@@ -52,7 +52,7 @@ class SendinblueBridgeExtension extends Extension implements PrependExtensionInt
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        if (isset($bundles['SonataAdminBundle'])) {
+        if (!is_array($bundles) || isset($bundles['SonataAdminBundle'])) {
             $loader->load('admin.yml');
         }
 

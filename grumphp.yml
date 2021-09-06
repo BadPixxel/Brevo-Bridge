@@ -12,84 +12,16 @@
 #
 ################################################################################
 
-
+#############################################
+# Override Config. for Php Core Module
 parameters:
-    
-    #############################################        
-    #   Base Configs 
-    process_timeout: 180
-    
-    #############################################        
-    #   Tasks Configs     
-    tasks:
-        
-        #############################################        
-        #   Composer Verifs           
-        composer:
-            file:           "./composer.json"
-            
-        #############################################        
-        #   Syntax Errors Detection             
-        phplint:            ~
-        jsonlint:
-            detect_key_conflicts: true
-        xmllint: ~
-        yamllint: ~
+    # For Building Splash Module
+    mod-enable:     false
+    # For Building Documentation
+    doc-enable:     false
 
-        #############################################        
-        #   Blacklist Codes Detection
-        git_blacklist:
-            keywords:
-                - "var_dump"
-                - "dump("
-                - "console.log"
-                - "print_r"
-                - "die("
-            triggered_by: [php, js, twig]
-        #############################################        
-        #   Security Checks 
-        securitychecker: ~
-
-        #############################################        
-        #   Code Quality   
-        phpcsfixer:     ~ 
-        phpcsfixer2:    
-            allow_risky:    true
-            config:         "travis/php_cs.dist"
-            
-        phpcs:
-            standard:       "PSR2"
-            triggered_by:   [php]
-            ignore_patterns:
-                - phpstan.php
-                
-        phpmd:  ~
-        phpcpd: ~
-        
-        phpstan:
-            level:          8
-            configuration:  "travis/phpstan.neon"           
-        
-    #############################################        
-    #   Tests Suites     
-    testsuites:
-        travis:
-            tasks:
-                - composer
-                - phplint
-                - phpcs 
-                - git_blacklist
-                - jsonlint
-                - phpmd
-                - phpcpd
-                - xmllint
-                - yamllint
-              
-        csfixer:
-            tasks: 
-                - phpcsfixer
-                - phpcsfixer2
-                
-        phpstan:
-            tasks: 
-                - phpstan
+#############################################
+# Import Config. from Php Core Module
+imports:
+    - { resource: "./vendor/badpixxel/php-sdk/grumphp/generic.yml" }
+    - { resource: "./vendor/badpixxel/php-sdk/grumphp/extras.yml" }
