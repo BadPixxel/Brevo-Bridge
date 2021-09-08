@@ -13,6 +13,7 @@
 
 namespace BadPixxel\SendinblueBridge\Services;
 
+use SendinBlue\Client\Configuration;
 use SendinBlue\Client\Model\SendSmtpEmailReplyTo;
 use SendinBlue\Client\Model\SendSmtpEmailSender;
 use Symfony\Component\Routing\RouterInterface as Router;
@@ -28,6 +29,11 @@ class ConfigurationManager
     private $config;
 
     /**
+     * @var Configuration
+     */
+    private $sdkConfig;
+
+    /**
      * @var bool
      */
     private $enabled;
@@ -40,6 +46,22 @@ class ConfigurationManager
     {
         $this->config = $configuration;
         $this->enabled = $enabled;
+    }
+
+    /**
+     * Get SendInBlue Sdl Configuration
+     *
+     * @return Configuration
+     */
+    public function getSdkConfig(): Configuration
+    {
+        if (!isset($this->sdkConfig)) {
+            $this->sdkConfig = Configuration::getDefaultConfiguration()
+                ->setApiKey('api-key', $this->config["api_key"])
+            ;
+        }
+
+        return $this->sdkConfig;
     }
 
     /**

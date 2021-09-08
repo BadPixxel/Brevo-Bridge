@@ -13,7 +13,9 @@
 
 namespace BadPixxel\SendinblueBridge\Services;
 
+use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
 use Exception;
+use GuzzleHttp\Client;
 use SendinBlue\Client\Api\AccountApi;
 use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\GetAccount;
@@ -31,11 +33,14 @@ class AccountManager
     private $accountApi;
 
     /**
-     * @param AccountApi $accountApi
+     * @param ConfigurationManager $configurationManager
      */
-    public function __construct(AccountApi $accountApi)
+    public function __construct(Configuration $configurationManager)
     {
-        $this->accountApi = $accountApi;
+        $this->accountApi = new AccountApi(
+            new Client(),
+            $configurationManager->getSdkConfig()
+        );
     }
 
     /**

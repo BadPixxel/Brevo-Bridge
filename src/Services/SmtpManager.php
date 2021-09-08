@@ -17,18 +17,20 @@ use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Exception;
-use FOS\UserBundle\Model\UserInterface as User;
 use FOS\UserBundle\Model\UserManagerInterface as UserManager;
-use SendinBlue\Client\Api\SMTPApi;
+use GuzzleHttp\Client;
+use SendinBlue\Client\Api\TransactionalEmailsApi;
 use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\CreateSmtpEmail;
 use SendinBlue\Client\Model\SendSmtpEmail;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface as Twig;
 use Symfony\Component\Routing\RouterInterface as Router;
 use Symfony\Component\Translation\TranslatorInterface as Translator;
+use Twig\Environment as Twig;
 
 /**
  * Smtp Emails Manager for SendingBlue Api.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SmtpManager
 {
@@ -39,9 +41,9 @@ class SmtpManager
     use \BadPixxel\SendinblueBridge\Models\Managers\EmailsUpdaterTrait;
 
     /**
-     * Smtp API Service.
+     * Transactional Emails API Service.
      *
-     * @var SMTPApi
+     * @var TransactionalEmailsApi
      */
     protected $smtpApi;
 
@@ -58,15 +60,14 @@ class SmtpManager
     private static $staticInstance;
 
     /**
-     * @param SMTPApi       $api
      * @param Configuration $config
      * @param EntityManager $doctrine
      * @param UserManager   $users
      * @param Twig          $twig
      * @param Translator    $translator
+     * @param Router        $router
      */
     public function __construct(
-        SMTPApi $api,
         Configuration $config,
         EntityManager $doctrine,
         UserManager $users,
@@ -77,9 +78,6 @@ class SmtpManager
         //==============================================================================
         // Connect to Bridge Configuration Service
         $this->config = $config;
-        //==============================================================================
-        // Connect to Smtp API Service
-        $this->smtpApi = $api;
         //==============================================================================
         // Connect to FOS User Manager
         $this->setUserManager($users);
@@ -109,17 +107,7 @@ class SmtpManager
     }
 
     /**
-     * Access to SendinBlue API Service.
-     *
-     * @return SMTPApi
-     */
-    public function getApi(): SMTPApi
-    {
-        return $this->smtpApi;
-    }
-
-    /**
-     * Create a new Transactionnal Email.
+     * Create a new Transactional Email.
      *
      * @return SendSmtpEmail
      */
@@ -139,7 +127,11 @@ class SmtpManager
     }
 
     /**
-     * Send a Transactionnal Email from Api.
+     * Send a Transactional Email from Api.
+     *
+     * @param array         $toUser
+     * @param SendSmtpEmail $sendEmail
+     * @param bool          $demoMode
      *
      * @return null|CreateSmtpEmail
      */
@@ -159,7 +151,7 @@ class SmtpManager
             }
             //==============================================================================
             // Send the Email
-            $createEmail = $this->smtpApi->sendTransacEmail($sendEmail);
+            $createEmail = $this->getApi()->sendTransacEmail($sendEmail);
             //==============================================================================
             // Save the Email to DataBase
             $this->saveSendEmail($filteredUsers, $sendEmail, $createEmail);
@@ -185,7 +177,6 @@ class SmtpManager
         //==============================================================================
         // Update Email Events
         $this->updateEvents($storageEmail, $force);
-
         //==============================================================================
         // Update Email Html Contents
         $this->updateContents($storageEmail, $force);
@@ -221,5 +212,22 @@ class SmtpManager
     protected function getConfig(): Configuration
     {
         return $this->config;
+    }
+
+    /**
+     * Access to SendinBlue API Service.
+     *
+     * @return TransactionalEmailsApi
+     */
+    private function getApi(): TransactionalEmailsApi
+    {
+        if (!isset($this->smtpApi)) {
+            $this->smtpApi = new TransactionalEmailsApi(
+                new Client(),
+                $this->config->getSdkConfig()
+            );
+        }
+
+        return $this->smtpApi;
     }
 }

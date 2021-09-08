@@ -18,7 +18,8 @@ use BadPixxel\SendinblueBridge\Interfaces\HtmlTemplateProviderInterface;
 use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
 use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
 use Exception;
-use SendinBlue\Client\Api\SMTPApi;
+use GuzzleHttp\Client;
+use SendinBlue\Client\Api\TransactionalEmailsApi;
 use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\UpdateSmtpTemplate;
 use Symfony\Component\Security\Core\User\UserInterface as User;
@@ -33,7 +34,7 @@ class TemplateManager
     /**
      * Smtp API Service.
      *
-     * @var SMTPApi
+     * @var TransactionalEmailsApi
      */
     protected $smtpApi;
 
@@ -45,19 +46,13 @@ class TemplateManager
     private $config;
 
     /**
-     * @param SMTPApi       $api
      * @param Configuration $config
      */
-    public function __construct(
-        SMTPApi $api,
-        Configuration $config
-    ) {
+    public function __construct(Configuration $config)
+    {
         //==============================================================================
         // Connect to Bridge Configuration Service
         $this->config = $config;
-        //==============================================================================
-        // Connect to Smtp API Service
-        $this->smtpApi = $api;
     }
 
     //==============================================================================
@@ -126,7 +121,7 @@ class TemplateManager
             $updateTmpl = new UpdateSmtpTemplate(array("htmlContent" => $htmlTemplate));
             //==============================================================================
             // Update the Email Template
-            $this->smtpApi->updateSmtpTemplate(
+            $this->getApi()->updateSmtpTemplate(
                 (int) $emailClass::getTemplateId(),
                 $updateTmpl
             );
@@ -179,7 +174,7 @@ class TemplateManager
     public function getMjmlConverter(): ?MjmlConverter
     {
         //==============================================================================
-        // Check Mjml API is Setuped
+        // Check Mjml API is Setup
         if (!$this->config->isMjmlAllowed()) {
             return $this->setError("Mjml Api is not configured");
         }
@@ -196,7 +191,7 @@ class TemplateManager
      *
      * @return null|string
      */
-    public function convertMjmltoHtml(string $rawMjml): ?string
+    public function convertMjmlToHtml(string $rawMjml): ?string
     {
         //==============================================================================
         // Get Mjml Converter
@@ -234,5 +229,22 @@ class TemplateManager
     public function getAllEmails(): array
     {
         return $this->config->getAllEmails();
+    }
+
+    /**
+     * Access to SendinBlue API Service.
+     *
+     * @return TransactionalEmailsApi
+     */
+    private function getApi(): TransactionalEmailsApi
+    {
+        if (!isset($this->smtpApi)) {
+            $this->smtpApi = new TransactionalEmailsApi(
+                new Client(),
+                $this->config->getSdkConfig()
+            );
+        }
+
+        return $this->smtpApi;
     }
 }

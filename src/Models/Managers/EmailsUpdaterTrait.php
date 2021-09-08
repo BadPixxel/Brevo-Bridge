@@ -42,6 +42,10 @@ trait EmailsUpdaterTrait
         // Collect Events
         $events = $this->getEventsfromApi($storageEmail->getMessageId(), $storageEmail->getEmail());
         if (empty($events)) {
+            if (!empty($storageEmail->getEvents())) {
+                return $this;
+            }
+
             return $this->updateSendEmailEventsErrored($storageEmail);
         }
         //==============================================================================
@@ -127,8 +131,8 @@ trait EmailsUpdaterTrait
      */
     protected function getEmailContents(string $uuid): ?string
     {
-        $host = $this->getApi()->getApiClient()->getConfig()->getHost();
-        $apiKey = $this->getApi()->getApiClient()->getConfig()->getApiKey('api-key');
+        $host = $this->getApi()->getConfig()->getHost();
+        $apiKey = $this->getApi()->getConfig()->getApiKey('api-key');
         //==============================================================================
         // Safety Checks
         if (empty($host) || empty($apiKey) || empty($uuid)) {
@@ -174,8 +178,8 @@ trait EmailsUpdaterTrait
      */
     protected function getEmailUuid(string $messageId): ?string
     {
-        $host = $this->getApi()->getApiClient()->getConfig()->getHost();
-        $apiKey = $this->getApi()->getApiClient()->getConfig()->getApiKey('api-key');
+        $host = $this->getApi()->getConfig()->getHost();
+        $apiKey = $this->getApi()->getConfig()->getApiKey('api-key');
         //==============================================================================
         // Safety Checks
         if (empty($host) || empty($apiKey)) {

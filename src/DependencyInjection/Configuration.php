@@ -34,6 +34,7 @@ class Configuration implements ConfigurationInterface
         // @phpstan-ignore-next-line
         $rootNode
             ->children()
+            ->scalarNode('api_key')->defaultValue("%sendinblue_api_key%")->cannotBeEmpty()->end()
             ->scalarNode('cli_host')->defaultValue("http://localhost")->cannotBeEmpty()->end()
             ->arrayNode('sender')
             ->children()

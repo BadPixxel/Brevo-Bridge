@@ -1,4 +1,6 @@
 services:
+    _defaults:
+        autowire:   true
 
     ########################################################################
     # Declare & AutoWire Bundle Commands
@@ -13,26 +15,28 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    # Bridge Configurations Manager    
+    ################################################################################
+    # Bridge Configurations Manager
     BadPixxel\SendinblueBridge\Services\ConfigurationManager:
         arguments:
             - "%sendinblue_bridge%"
             - "%swiftmailer.delivery.enabled%"
     
-    # SendInBlue API Account Manager    
-    BadPixxel\SendinblueBridge\Services\AccountManager:
-        autowire: true
-        
-    # SendInBlue Emails SMTP Manager    
+    ################################################################################
+    # SendInBlue API Account Manager
+    BadPixxel\SendinblueBridge\Services\AccountManager: ~
+
+    ################################################################################
+    # SendInBlue Emails SMTP Manager
     BadPixxel\SendinblueBridge\Services\SmtpManager:
-        autowire: true
         public: true
 
-    # SendInBlue Emails Templates Manager    
+    ################################################################################
+    # SendInBlue Emails Templates Manager
     BadPixxel\SendinblueBridge\Services\TemplateManager:
-        autowire: true
         public: true
 
+    ################################################################################
     # SendInBlue Emails Templates Twig Extension
     badpixxel.sendinblue.extension:
         class: BadPixxel\SendinblueBridge\Twig\SendinblueBridgeExtension

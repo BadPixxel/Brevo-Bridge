@@ -16,7 +16,7 @@ namespace BadPixxel\SendinblueBridge\Command;
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use FOS\UserBundle\Model\UserInterface as User;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,12 +25,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Test Command for Sending an Dummy Emails.
  */
-class MailTestCommand extends ContainerAwareCommand
+class MailTestCommand extends Command
 {
     /**
      * @var SmtpManager
      */
     private $smtpManager;
+
+    /**
+     * Command Constructor
+     *
+     * @param SmtpManager $smtpManager
+     * @param null|string $name
+     */
+    public function __construct(SmtpManager $smtpManager, string $name = null)
+    {
+        $this->smtpManager = $smtpManager;
+        parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
@@ -59,15 +71,11 @@ class MailTestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var SmtpManager $smtpManager */
-        $smtpManager = $this->getContainer()->get(SmtpManager::class);
-        $this->smtpManager = $smtpManager;
-
         /** @var string $targetEmail */
         $targetEmail = $input->getArgument('target');
         //==============================================================================
         // Identify User in Database
-        $user = $smtpManager->getUserByEmail($targetEmail);
+        $user = $this->smtpManager->getUserByEmail($targetEmail);
         if (is_null($user)) {
             return self::showResult($output, false, 'Init', 'Unable to identify User');
         }
@@ -76,7 +84,7 @@ class MailTestCommand extends ContainerAwareCommand
         /** @var string $action */
         $action = $input->getOption('send');
         if ("all" == $action) {
-            foreach (array_keys($smtpManager->getAllEmails()) as $emailCode) {
+            foreach (array_keys($this->smtpManager->getAllEmails()) as $emailCode) {
                 if (null != $this->sendEmail($user, $emailCode, $output)) {
                     return -1;
                 }

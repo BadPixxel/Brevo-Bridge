@@ -15,6 +15,7 @@ namespace BadPixxel\SendinblueBridge\Models\UserEmails;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use SendinBlue\Client\Model\GetEmailEventReportEvents;
 use SendinBlue\Client\Model\GetEmailEventReportEvents as Event;
 
 /**
@@ -73,7 +74,7 @@ trait MetadataTrait
     private $refreshedAt;
 
     /**
-     * @var null|array
+     * @var null|GetEmailEventReportEvents[]
      *
      * @ORM\Column(name="events", type="array", nullable=true)
      */
@@ -93,8 +94,8 @@ trait MetadataTrait
         //==============================================================================
         // Was Refreshed within Last 12 Hour => Not OutDated
         if (null != $this->refreshedAt) {
-            $oudatedDate = new DateTime('-12 hour');
-            if ($oudatedDate < $this->refreshedAt) {
+            $ouDatedDate = new DateTime('-12 hour');
+            if ($ouDatedDate < $this->refreshedAt) {
                 return false;
             }
         }
@@ -132,9 +133,10 @@ trait MetadataTrait
         //==============================================================================
         // Detect Email OpenedAt
         if (is_null($this->openAt)) {
+            /** @var GetEmailEventReportEvents $event */
             foreach ($events as $event) {
                 if (Event::EVENT_OPENED == $event->getEvent()) {
-                    $this->setOpenAt($event->getDate());
+                    $this->setOpenAt(new \DateTime($event->getDate()));
 
                     break;
                 }

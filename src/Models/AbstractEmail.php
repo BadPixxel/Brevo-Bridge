@@ -349,7 +349,7 @@ abstract class AbstractEmail extends GenericEvent
             //==============================================================================
             // Resolve
             $emailParams = (array) $this->email->getParams();
-            $this->email->setParams($resolver->resolve($emailParams));
+            $this->email->setParams((object) $resolver->resolve($emailParams));
         } catch (Exception $ex) {
             echo $ex->getMessage();
 

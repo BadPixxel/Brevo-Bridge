@@ -14,19 +14,31 @@
 namespace BadPixxel\SendinblueBridge\Command;
 
 use BadPixxel\SendinblueBridge\Services\TemplateManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command for Compiling and Updating SendInBlue Templates from Sources.
  */
-class CompileCommand extends ContainerAwareCommand
+class CompileCommand extends Command
 {
     /**
      * @var TemplateManager
      */
     private $tmplManager;
+
+    /**
+     * Command Constructor
+     *
+     * @param TemplateManager $tmplManager
+     * @param null|string     $name
+     */
+    public function __construct(TemplateManager $tmplManager, string $name = null)
+    {
+        $this->tmplManager = $tmplManager;
+        parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
@@ -44,12 +56,9 @@ class CompileCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var TemplateManager $tmplManager */
-        $tmplManager = $this->getContainer()->get(TemplateManager::class);
-        $this->tmplManager = $tmplManager;
         //==============================================================================
-        // Compile All Avalaible Emails
-        foreach (array_keys($tmplManager->getAllEmails()) as $emailCode) {
+        // Compile All Available Emails
+        foreach (array_keys($this->tmplManager->getAllEmails()) as $emailCode) {
             if (null != $this->compileEmail($emailCode, $output)) {
                 return -1;
             }
