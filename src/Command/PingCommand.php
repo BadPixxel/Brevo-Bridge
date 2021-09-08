@@ -15,15 +15,32 @@ namespace BadPixxel\SendinblueBridge\Command;
 
 use ArrayAccess;
 use BadPixxel\SendinblueBridge\Services\AccountManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Just Check Connection to User Sendinblue Api.
  */
-class PingCommand extends ContainerAwareCommand
+class PingCommand extends Command
 {
+    /**
+     * @var AccountManager
+     */
+    private $accountManager;
+
+    /**
+     * Command Constructor
+     *
+     * @param AccountManager $accountManager
+     * @param null|string    $name
+     */
+    public function __construct(AccountManager $accountManager, string $name = null)
+    {
+        $this->accountManager = $accountManager;
+        parent::__construct($name);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,13 +57,12 @@ class PingCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var AccountManager $accountManager */
-        $accountManager = $this->getContainer()->get(AccountManager::class);
         /** @var null|ArrayAccess $result */
-        $result = $accountManager->getAccount();
+        $result = $this->accountManager->getAccount();
         if (!$result) {
             $output->writeln(
-                '<error>Exception when calling AccountApi->getAccount: '.$accountManager->getLastError().'</error>'
+                '<error>Exception when calling AccountApi->getAccount: '
+                .$this->accountManager->getLastError().'</error>'
             );
 
             return -1;
