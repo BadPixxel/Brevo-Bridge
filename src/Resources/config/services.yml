@@ -32,6 +32,11 @@ services:
         public: true
 
     ################################################################################
+    # SendInBlue Events Tracker Manager
+    BadPixxel\SendinblueBridge\Services\EventManager:
+        public: true
+
+    ################################################################################
     # SendInBlue Emails Templates Manager
     BadPixxel\SendinblueBridge\Services\TemplateManager:
         public: true

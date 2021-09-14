@@ -15,7 +15,6 @@ namespace BadPixxel\SendinblueBridge\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -24,22 +23,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @see http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class SendinblueBridgeExtension extends Extension implements PrependExtensionInterface
+class SendinblueBridgeExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function prepend(ContainerBuilder $container): void
-    {
-        if ($container->hasExtension('twig')) {
-            // add custom form widgets
-            $container->prependExtensionConfig(
-                'twig',
-                array('form_themes' => array('@SendinblueBridge/Form/form_admin_fields.html.twig'))
-            );
-        }
-    }
-
     /**
      * {@inheritdoc}
      */

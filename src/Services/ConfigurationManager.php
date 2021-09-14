@@ -34,6 +34,11 @@ class ConfigurationManager
     private $sdkConfig;
 
     /**
+     * @var array
+     */
+    private $eventsCurlConfig;
+
+    /**
      * @var bool
      */
     private $enabled;
@@ -49,7 +54,7 @@ class ConfigurationManager
     }
 
     /**
-     * Get SendInBlue Sdl Configuration
+     * Get SendInBlue Sdk Configuration
      *
      * @return Configuration
      */
@@ -62,6 +67,41 @@ class ConfigurationManager
         }
 
         return $this->sdkConfig;
+    }
+
+    /**
+     * Get SendInBlue Events Curl Configuration
+     *
+     * @return array
+     */
+    public function getEventsCurlConfig(): array
+    {
+        //==============================================================================
+        // Already Generated
+        if (isset($this->eventsCurlConfig)) {
+            return $this->eventsCurlConfig;
+        }
+        //==============================================================================
+        // Safety Check
+        if (empty($this->config["track_key"])) {
+            return $this->eventsCurlConfig = array();
+        }
+        //==============================================================================
+        // Generate Curl Options Array
+        return $this->eventsCurlConfig = array(
+            CURLOPT_URL => "https://in-automate.sendinblue.com/api/v2/trackEvent",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "Content-Type: application/json",
+                "ma-key: ".$this->config["track_key"],
+            ),
+        );
     }
 
     /**
@@ -182,6 +222,30 @@ class ConfigurationManager
     public function getAllEmails(): array
     {
         return $this->config['emails'];
+    }
+
+    /**
+     * Find an Event Class by Code
+     *
+     * @param string $eventCode
+     *
+     * @return null|string
+     */
+    public function getEventByCode(string $eventCode): ?string
+    {
+        return isset($this->config['events'][$eventCode])
+            ? $this->config['events'][$eventCode]
+            : null;
+    }
+
+    /**
+     * Get All Events Class
+     *
+     * @return array
+     */
+    public function getAllEvents(): array
+    {
+        return $this->config['events'];
     }
 
     /**

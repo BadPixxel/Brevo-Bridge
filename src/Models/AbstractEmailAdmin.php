@@ -15,6 +15,7 @@ namespace BadPixxel\SendinblueBridge\Models;
 
 use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use Exception;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -43,6 +44,45 @@ abstract class AbstractEmailAdmin extends Admin
 
         return $list;
     }
+
+    /**
+     * Dynamically Adjust default filters.
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public function getFilterParameters()
+    {
+        $extraFilters = array();
+        //==============================================================================
+        // Filter List on User Email
+        if ($this->hasRequest() && !empty($this->getRequest()->get('email'))) {
+            $extraFilters['email'] = array(
+                'value' => $this->getRequest()->get('email'),
+            );
+        }
+
+        return array_replace_recursive(parent::getFilterParameters(), $extraFilters);
+    }
+
+    /**
+     * Configure batch Actions
+     *
+     * @return array
+     */
+    public function getBatchActions(): array
+    {
+        $actions = array();
+        if ($this->hasRoute('show') && $this->isGranted('SHOW')) {
+            $actions['refresh'] = array(
+                'label' => "Refresh",
+                'ask_confirmation' => false
+            );
+        }
+
+        return array_replace_recursive($actions, parent::getBatchActions());
+    }
     /**
      * {@inheritdoc}
      */
@@ -70,6 +110,9 @@ abstract class AbstractEmailAdmin extends Admin
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'show' => array(),
+                    'refresh' => array(
+                        'template' => '@SendinblueBridge/Admin/list__action_email_refresh.html.twig',
+                    )
                 ),
             ))
         ;

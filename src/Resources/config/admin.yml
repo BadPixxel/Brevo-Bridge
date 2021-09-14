@@ -1,11 +1,12 @@
 services:
-
+    _defaults:
+        autowire:   true
 
     ############################################################################
     # Sendinblue Bridge Send Emails Admin Extension 
     badpixxel.sendinblue.admin.emails:
         class: BadPixxel\SendinblueBridge\Admin\UserEmailsAdmin
-        arguments: 
+        arguments:
             - ~
             - "%sendinblue_bridge.emails.class%"
             - BadPixxel\SendinblueBridge\Controller\EmailAdminController

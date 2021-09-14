@@ -15,8 +15,12 @@ namespace BadPixxel\SendinblueBridge\Controller;
 
 use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as Email;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Sonata Admin Emails Controller.
@@ -68,6 +72,7 @@ class EmailAdminController extends CRUDController
         //==============================================================================
         // Refresh Email (Forced)
         $smtpManager->update($email, true);
+        $this->addFlash('sonata_flash_success', 'Email Status Refreshed');
         //==============================================================================
         // Load Referer Url
         /** @var string $referer */
@@ -77,9 +82,54 @@ class EmailAdminController extends CRUDController
         }
         //====================================================================//
         // Redirect to View Page
-        return $this->redirectToRoute(
-            'admin_application_sendinbluebridge_email_show',
-            array('id' => $email->getId())
+        return $this->redirect(
+            $this->admin->generateObjectUrl("show", $email)
+        );
+    }
+
+    /**
+     * Refresh Email Events.
+     *
+     * @param ProxyQueryInterface $selectedModelQuery
+     *
+     * @return RedirectResponse
+     */
+    public function batchActionRefresh(ProxyQueryInterface $selectedModelQuery): RedirectResponse
+    {
+        //==============================================================================
+        // Security Check
+        if (!$this->admin->isGranted('SHOW')) {
+            throw new AccessDeniedException();
+        }
+        //==============================================================================
+        // Load Selected Models
+        $selectedModels = $selectedModelQuery->execute();
+        //==============================================================================
+        // Refresh Email (Forced)
+        try {
+            foreach ($selectedModels as $selectedModel) {
+                if (!($selectedModel instanceof Email)) {
+                    throw new Exception();
+                }
+                SmtpManager::getInstance()->update($selectedModel, true);
+            }
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'sonata_flash_error',
+                sprintf("Email refresh failed: %s", $exception->getMessage())
+            );
+
+            return new RedirectResponse(
+                $this->admin->generateUrl('list', $this->admin->getFilterParameters())
+            );
+        }
+        $this->addFlash(
+            'sonata_flash_success',
+            sprintf("%d Emails refreshed", count((array) $selectedModels))
+        );
+
+        return new RedirectResponse(
+            $this->admin->generateUrl('list', $this->admin->getFilterParameters())
         );
     }
 }
