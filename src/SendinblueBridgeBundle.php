@@ -14,11 +14,12 @@
 namespace BadPixxel\SendinblueBridge;
 
 use BadPixxel\SendinblueBridge\Services\EventManager;
+use BadPixxel\SendinblueBridge\Services\SmsManager;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * A Small Bundle to Manage Sending User Email via Sendinblue Transactionnal API.
+ * A Small Bundle to Manage Sending User Email, Events & Sms via Sendinblue Transactional API.
  */
 class SendinblueBridgeBundle extends Bundle
 {
@@ -33,5 +34,8 @@ class SendinblueBridgeBundle extends Bundle
         //==============================================================================
         // Force Loading of SendInBlue Events Service
         $this->container->get(EventManager::class);
+        //==============================================================================
+        // Force Loading of SendInBlue Sms Service
+        $this->container->get(SmsManager::class);
     }
 }
