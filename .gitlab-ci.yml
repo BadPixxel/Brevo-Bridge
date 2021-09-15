@@ -64,7 +64,3 @@ tests:php-7.4:
 tests:php-7.3:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.3
     <<: *core_tests
-
-tests:php-7.2:
-    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.2
-    <<: *core_tests

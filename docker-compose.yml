@@ -51,17 +51,7 @@ services:
             - ./:/var/www/html
             - vendor-php73:/var/www/html/vendor
 
-    ################################################################################
-    # PHP 7.2
-    php-7.2:
-        image:      registry.gitlab.com/badpixxel-projects/php-sdk:php-7.2
-        container_name: sendinblue-bridge-7.2
-        volumes:
-            - ./:/var/www/html
-            - vendor-php72:/var/www/html/vendor
-
 volumes:
     vendor-php80: ~
     vendor-php74: ~
     vendor-php73: ~
-    vendor-php72: ~
