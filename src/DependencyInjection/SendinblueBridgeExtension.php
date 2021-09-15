@@ -43,5 +43,6 @@ class SendinblueBridgeExtension extends Extension
 
         $container->setParameter('sendinblue_bridge', $config);
         $container->setParameter('sendinblue_bridge.emails.class', $config["storage"]["emails"]);
+        $container->setParameter('sendinblue_bridge.sms.class', $config["storage"]["sms"]);
     }
 }

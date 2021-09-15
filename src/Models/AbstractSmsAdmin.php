@@ -22,27 +22,10 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 
 /**
- * Sonata Admin Class for Emails.
+ * Sonata Admin Class for Sms.
  */
-abstract class AbstractEmailAdmin extends Admin
+abstract class AbstractSmsAdmin extends Admin
 {
-    /**
-     * @param string $action
-     * @param mixed  $object
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function configureActionButtons($action, $object = null): array
-    {
-        $list = parent::configureActionButtons($action, $object);
-
-        $list['refresh']['template'] = '@SendinblueBridge/Admin/action_refresh.html.twig';
-
-        return $list;
-    }
-
     /**
      * Dynamically Adjust default filters.
      *
@@ -65,34 +48,12 @@ abstract class AbstractEmailAdmin extends Admin
     }
 
     /**
-     * Configure batch Actions
-     *
-     * @return array
-     */
-    public function getBatchActions(): array
-    {
-        $actions = array();
-        if ($this->hasRoute('show') && $this->isGranted('SHOW')) {
-            $actions['refresh'] = array(
-                'label' => "Refresh",
-                'ask_confirmation' => false
-            );
-        }
-
-        return array_replace_recursive($actions, parent::getBatchActions());
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function configureRoutes(RouteCollection $collection): void
     {
         $collection->remove('edit');
         $collection->remove('create');
-        // Email Preview
-        $collection->add('preview', $this->getRouterIdParameter().'/preview');
-        // Refresh Email Events
-        $collection->add('refresh', $this->getRouterIdParameter().'/refresh');
     }
 
     /**
@@ -101,19 +62,11 @@ abstract class AbstractEmailAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('subject')
+            ->addIdentifier('sendAt')
             ->add('email')
-            ->add('md5')
-            ->add('sendAt')
-            ->add('openAt')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'refresh' => array(
-                        'template' => '@SendinblueBridge/Admin/list__action_email_refresh.html.twig',
-                    )
-                ),
-            ))
+            ->add('subject')
+            ->add('textContent')
+            ->add('')
         ;
     }
 
@@ -124,6 +77,7 @@ abstract class AbstractEmailAdmin extends Admin
     {
         $datagridMapper
             ->add('email')
+            ->add('subject')
             ->add('md5')
             ->add('sendAt')
         ;
@@ -151,20 +105,14 @@ abstract class AbstractEmailAdmin extends Admin
     {
         $showMapper
             ->with('Contents', array('class' => 'col-md-8'))
-            ->add('htmlContent', null, array(
-                'template' => '@SendinblueBridge/Admin/html_content.html.twig',
-            ))
+            ->add('textContent', null)
             ->end()
             ->with('Metadatas', array('class' => 'col-md-4'))
             ->add('email')
+            ->add('subject')
             ->add('md5')
             ->add('sendAt')
-            ->add('openAt')
             ->add('messageId')
-            ->add('uuid')
-            ->add('events', null, array(
-                'template' => '@SendinblueBridge/Admin/events_list.html.twig',
-            ))
             ->end()
         ;
     }

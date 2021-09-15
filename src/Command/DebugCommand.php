@@ -13,6 +13,8 @@
 
 namespace BadPixxel\SendinblueBridge\Command;
 
+use BadPixxel\SendinblueBridge\Models\AbstractEmail;
+use BadPixxel\SendinblueBridge\Models\AbstractSms;
 use BadPixxel\SendinblueBridge\Services\ConfigurationManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -60,6 +62,7 @@ class DebugCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->showAllEmailsType($output);
+        $this->showAllSmsType($output);
         $this->showAllEventsType($output);
 
         return 0;
@@ -82,11 +85,44 @@ class DebugCommand extends Command
         //====================================================================//
         // Show Emails List
         $table = new Table($output);
-        $table->setHeaders(array('Code', 'Class'));
+        $table->setHeaders(array('Code', 'Status', 'Class'));
         foreach ($emails as $code => $emailClass) {
             $table->addRow(array(
                 $code,
+                class_exists($emailClass) && is_subclass_of($emailClass, AbstractEmail::class)
+                    ? "<info>Ok</info>"
+                    : "<error>Ko</error>",
                 $emailClass
+            ));
+        }
+        $table->render();
+    }
+
+    /**
+     * Show All Sms Types Table
+     *
+     * @param OutputInterface $output
+     */
+    private function showAllSmsType(OutputInterface $output): void
+    {
+        //====================================================================//
+        // Load List of Available Sms
+        $allSms = $this->config->getAllSms();
+        $output->writeln(sprintf('<comment>Found %s Sms Classes</comment>', count($allSms)));
+        if (empty($allSms)) {
+            return;
+        }
+        //====================================================================//
+        // Show Emails List
+        $table = new Table($output);
+        $table->setHeaders(array('Code', 'Status', 'Class'));
+        foreach ($allSms as $code => $smsClass) {
+            $table->addRow(array(
+                $code,
+                class_exists($smsClass) && is_subclass_of($smsClass, AbstractSms::class)
+                    ? "<info>Ok</info>"
+                    : "<error>Ko</error>",
+                $smsClass
             ));
         }
         $table->render();

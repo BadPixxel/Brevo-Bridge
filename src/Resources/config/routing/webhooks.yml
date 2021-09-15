@@ -1,0 +1,4 @@
+# Emails Events Webhooks
+badpixxel_sendinblue_webhooks:
+    path:       /sibwh
+    defaults:   { _controller: SendinblueBridgeBundle:WebHooks:index }

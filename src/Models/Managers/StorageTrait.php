@@ -32,6 +32,28 @@ trait StorageTrait
     private $entityManager;
 
     /**
+     * Search for Send Email by Message Id
+     *
+     * @param string $messageId
+     *
+     * @return null|EmailStorage
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function findByMessageId(string $messageId): ?EmailStorage
+    {
+        /** @var EmailRepository $repository */
+        $repository = $this->entityManager
+            ->getRepository($this->config->getEmailStorageClass());
+
+        $storageEmail = $repository->findOneBy(array(
+            "messageId" => "<".$messageId.">"
+        ));
+
+        return ($storageEmail instanceof EmailStorage) ? $storageEmail : null;
+    }
+
+    /**
      * Setup Entity Manager for Storage
      *
      * @param EntityManager $manager

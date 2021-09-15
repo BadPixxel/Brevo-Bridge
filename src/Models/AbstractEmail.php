@@ -68,7 +68,7 @@ abstract class AbstractEmail extends GenericEvent
     }
 
     /**
-     * Send a Transactionnal Email.
+     * Send a Transactional Email.
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
      *

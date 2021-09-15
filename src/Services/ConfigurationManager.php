@@ -167,7 +167,7 @@ class ConfigurationManager
     /**
      * Get Sms Storage Class.
      *
-     * @return string
+     * @return class-string
      */
     public function getSmsStorageClass(): string
     {
@@ -246,6 +246,30 @@ class ConfigurationManager
     public function getAllEvents(): array
     {
         return $this->config['events'];
+    }
+
+    /**
+     * Find a Sms Class by Code
+     *
+     * @param string $smsCode
+     *
+     * @return null|string
+     */
+    public function getSmsByCode(string $smsCode): ?string
+    {
+        return isset($this->config['sms'][$smsCode])
+            ? $this->config['sms'][$smsCode]
+            : null;
+    }
+
+    /**
+     * Get All Sms Class
+     *
+     * @return array
+     */
+    public function getAllSms(): array
+    {
+        return $this->config['sms'];
     }
 
     /**

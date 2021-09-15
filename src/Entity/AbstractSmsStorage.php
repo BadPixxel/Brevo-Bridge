@@ -13,18 +13,18 @@
 
 namespace BadPixxel\SendinblueBridge\Entity;
 
-use BadPixxel\SendinblueBridge\Helpers\EmailExtractor;
+use BadPixxel\SendinblueBridge\Helpers\SmsExtractor;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\UserInterface as User;
-use SendinBlue\Client\Model\CreateSmtpEmail;
-use SendinBlue\Client\Model\SendSmtpEmail;
+use SendinBlue\Client\Model\SendSms;
+use SendinBlue\Client\Model\SendTransacSms;
 
 /**
- * Base Class for User Email Historic Storage.
+ * Base Class for User Sms Historic Storage.
  *
  * @ORM\MappedSuperclass
  */
-abstract class AbstractEmailStorage
+abstract class AbstractSmsStorage
 {
     use \BadPixxel\SendinblueBridge\Models\UserEmails\ContentsTrait;
     use \BadPixxel\SendinblueBridge\Models\UserEmails\MetadataTrait;
@@ -52,24 +52,25 @@ abstract class AbstractEmailStorage
     /**
      * Create Storage Class from Api Results
      *
-     * @return self
+     * @param User           $user
+     * @param SendTransacSms $sendSms
+     * @param SendSms        $createSms
      *
+     * @return self
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public static function fromApiResults(User $toUser, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail)
+    public static function fromApiResults(User $user, SendTransacSms $sendSms, SendSms $createSms)
     {
         $storage = new static();
         $storage
             ->setSendAt()
-            ->setUser($toUser)
-            ->setEmail($toUser->getEmailCanonical())
-            ->setSubject($sendEmail->getSubject())
-            ->setHtmlContent($sendEmail->getHtmlContent())
-            ->setTextContent($sendEmail->getTextContent())
-            ->setTemplateId($sendEmail->getTemplateId())
-            ->setParameters((array) $sendEmail->getParams())
-            ->setMd5(EmailExtractor::md5($sendEmail))
-            ->setMessageId($createEmail->getMessageId())
+            ->setUser($user)
+            ->setEmail($user->getEmailCanonical())
+            ->setSubject($sendSms->getRecipient())
+            ->setTextContent($sendSms->getContent())
+            ->setMd5(SmsExtractor::md5($sendSms))
+            ->setMessageId((string) $createSms->getMessageId())
+            ->setUuid($createSms->getReference())
         ;
 
         return $storage;

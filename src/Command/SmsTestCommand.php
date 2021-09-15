@@ -13,8 +13,8 @@
 
 namespace BadPixxel\SendinblueBridge\Command;
 
-use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use BadPixxel\SendinblueBridge\Models\AbstractSms;
+use BadPixxel\SendinblueBridge\Services\SmsManager;
 use FOS\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,24 +23,24 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Test Command for Sending an Dummy Emails.
+ * Test Command for Sending an Dummy Sms.
  */
-class MailTestCommand extends Command
+class SmsTestCommand extends Command
 {
     /**
-     * @var SmtpManager
+     * @var SmsManager
      */
-    private $smtpManager;
+    private $smsManager;
 
     /**
      * Command Constructor
      *
-     * @param SmtpManager $smtpManager
+     * @param SmsManager  $smsManager
      * @param null|string $name
      */
-    public function __construct(SmtpManager $smtpManager, string $name = null)
+    public function __construct(SmsManager $smsManager, string $name = null)
     {
-        $this->smtpManager = $smtpManager;
+        $this->smsManager = $smsManager;
         parent::__construct($name);
     }
 
@@ -50,8 +50,8 @@ class MailTestCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('sendinblue:email:test')
-            ->setDescription("Email Sending test: require user email & email Code")
+            ->setName('sendinblue:sms:test')
+            ->setDescription("Sms Sending test: require user email & sms Code")
             ->addArgument(
                 'target',
                 InputArgument::REQUIRED,
@@ -61,7 +61,7 @@ class MailTestCommand extends Command
                 'send',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Email to send (\"all\" to send all registered emails)'
+                'Sms to send (\"all\" to send all registered sms)'
             )
         ;
     }
@@ -75,17 +75,17 @@ class MailTestCommand extends Command
         $targetEmail = $input->getArgument('target');
         //==============================================================================
         // Identify User in Database
-        $user = $this->smtpManager->getUserByEmail($targetEmail);
+        $user = $this->smsManager->getUserByEmail($targetEmail);
         if (is_null($user)) {
             return self::showResult($output, false, 'Init', 'Unable to identify User');
         }
         //==============================================================================
-        // Send All Available Emails
+        // Send All Available Sms
         /** @var string $action */
         $action = $input->getOption('send');
         if ("all" == $action) {
-            foreach (array_keys($this->smtpManager->getAllEmails()) as $emailCode) {
-                if (null != $this->sendEmail($user, $emailCode, $output)) {
+            foreach (array_keys($this->smsManager->getAllSms()) as $emailCode) {
+                if (null != $this->sendSms($user, $emailCode, $output)) {
                     return -1;
                 }
             }
@@ -94,49 +94,49 @@ class MailTestCommand extends Command
         }
 
         //==============================================================================
-        // Send Only One Email by Code
-        return $this->sendEmail($user, $action, $output);
+        // Send Only One Sms by Code
+        return $this->sendSms($user, $action, $output);
     }
 
     /**
-     * Test Sending an Email By Code
+     * Test Sending an Sms By Code
      *
      * @param User            $user
-     * @param string          $emailCode
+     * @param string          $smsCode
      * @param OutputInterface $output
      *
      * @return int
      */
-    protected function sendEmail(User $user, string $emailCode, OutputInterface $output): int
+    protected function sendSms(User $user, string $smsCode, OutputInterface $output): int
     {
         //==============================================================================
-        // Identify Email Class
-        $emailClass = $this->smtpManager->getEmailByCode($emailCode);
-        if (is_null($emailClass)) {
-            return self::showResult($output, false, $emailCode, 'Unable to identify Email: '.$emailCode);
+        // Identify Sms Class
+        $smsClass = $this->smsManager->getSmsByCode($smsCode);
+        if (is_null($smsClass)) {
+            return self::showResult($output, false, $smsCode, 'Unable to identify Sms: '.$smsCode);
         }
         //==============================================================================
-        // Verify Email Class
-        if (!class_exists($emailClass)) {
-            return self::showResult($output, false, $emailCode, 'Email Class: '.$emailClass.' was not found');
+        // Verify Sms Class
+        if (!class_exists($smsClass)) {
+            return self::showResult($output, false, $smsCode, 'Sms Class: '.$smsClass.' was not found');
         }
-        if (!is_subclass_of($emailClass, AbstractEmail::class)) {
+        if (!is_subclass_of($smsClass, AbstractSms::class)) {
             return self::showResult(
                 $output,
                 false,
-                $emailCode,
-                'Email Class: '.$emailCode.' is not an '.AbstractEmail::class
+                $smsCode,
+                'Sms Class: '.$smsCode.' is not an '.AbstractSms::class
             );
         }
         //==============================================================================
-        // Send Test Email
-        $email = $emailClass::sendDemo($user);
-        if (is_null($email)) {
+        // Send Test Sms
+        $sms = $smsClass::sendDemo($user);
+        if (is_null($sms)) {
             return self::showResult(
                 $output,
                 false,
-                $emailCode,
-                'Exception => '.$emailClass::getLastError()
+                $smsCode,
+                'Exception => '.$smsClass::getLastError()
             );
         }
         //==============================================================================
@@ -145,7 +145,7 @@ class MailTestCommand extends Command
             ? $user->__toString()
             : $user->getUsername();
 
-        return self::showResult($output, true, $emailCode, ' Email send to '.$username);
+        return self::showResult($output, true, $smsCode, ' Sms send to '.$username);
     }
 
     /**
