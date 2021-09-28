@@ -47,7 +47,7 @@ trait StorageTrait
             ->getRepository($this->config->getEmailStorageClass());
 
         $storageEmail = $repository->findOneBy(array(
-            "messageId" => "<".$messageId.">"
+            "messageId" => $messageId
         ));
 
         return ($storageEmail instanceof EmailStorage) ? $storageEmail : null;
