@@ -34,11 +34,11 @@ class UserSmsExtension extends AbstractAdminExtension
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function configureSideMenu(
-        AdminInterface $admin,
+    public function configureTabMenu(
+        AdminInterface    $admin,
         MenuItemInterface $menu,
-        $action,
-        ?AdminInterface $childAdmin = null
+        string            $action,
+        ?AdminInterface   $childAdmin = null
     ): void {
         //==============================================================================
         // Only in EDIT & SHOW Modes
@@ -60,13 +60,11 @@ class UserSmsExtension extends AbstractAdminExtension
             //==============================================================================
             // Detect Storage Class Admin
             $emailAdmin = $admin->getConfigurationPool()->getAdminByClass(get_class($first));
-            if ($emailAdmin) {
-                $menu->addChild($subject->getSendSms()->count().' Sms', array(
-                    'uri' => $emailAdmin->generateObjectUrl('list', $first, array('email' => $subject->getEmail())),
-                ))
-                    ->setAttribute('icon', 'fa fa-envelope text-primary')
-                ;
-            }
+            $menu->addChild($subject->getSendSms()->count().' Sms', array(
+                'uri' => $emailAdmin->generateObjectUrl('list', $first, array('email' => $subject->getEmail())),
+            ))
+                ->setAttribute('icon', 'fa fa-envelope text-primary')
+            ;
         }
     }
 }

@@ -24,7 +24,7 @@ use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\CreateSmtpEmail;
 use SendinBlue\Client\Model\SendSmtpEmail;
 use Symfony\Component\Routing\RouterInterface as Router;
-use Symfony\Component\Translation\TranslatorInterface as Translator;
+use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Twig\Environment as Twig;
 
 /**

@@ -13,7 +13,9 @@
 
 namespace BadPixxel\SendinblueBridge\Helpers;
 
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * Description of MjmlConverter
@@ -41,7 +43,7 @@ class MjmlConverter
     /**
      * Simple cache
      *
-     * @var null|FilesystemCache
+     * @var FilesystemAdapter
      */
     private $cache;
 
@@ -55,26 +57,43 @@ class MjmlConverter
     {
         $this->endpoint = $endpoint;
         $this->appUser = $appUser;
-        //==============================================================================
-        // Check if Cache is Available
-        if (class_exists(FilesystemCache::class, false)) {
-            $this->cache = new FilesystemCache();
-        }
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
      * Convert Mjml to Html using API.
+     *
+     * @param string $rawMjml
+     *
+     * @throws InvalidArgumentException
      *
      * @return null|string
      */
     public function toHtml(string $rawMjml): ?string
     {
         //==============================================================================
-        // CONVERT MJML TEMPLATES FROM CACHE
-        $cachedHtml = $this->fromCache($rawMjml);
-        if ($cachedHtml) {
-            return $cachedHtml;
-        }
+        // CONVERT MJML TEMPLATES FROM API OR CACHE
+        $value = $this->cache->get(
+            self::getCacheKey($rawMjml),
+            function (ItemInterface $item) use ($rawMjml) {
+                $item->expiresAfter(3600);
+
+                return $this->toHtmlViaApi($rawMjml);
+            }
+        );
+
+        return is_scalar($value) ? (string) $value : null;
+    }
+
+    /**
+     * Convert Mjml to Html using API.
+     *
+     * @param string $rawMjml
+     *
+     * @return null|string
+     */
+    public function toHtmlViaApi(string $rawMjml): ?string
+    {
         //==============================================================================
         // CONVERT MJML TEMPLATES FROM API
         $chr = curl_init($this->endpoint);
@@ -90,7 +109,7 @@ class MjmlConverter
         )));
         $response = curl_exec($chr);
         //==============================================================================
-        // CURL REQUEST FAILLED
+        // CURL REQUEST FAILED
         if (!is_string($response) || curl_error($chr)) {
             return $this->setError(curl_error($chr));
         }
@@ -105,59 +124,12 @@ class MjmlConverter
         // ERROR RESPONSE
         if (!isset($decoded['html'])) {
             return $this->setError(
-                isset($decoded['message'])
-                ? $decoded['message']
-                : "An Error Occured during Mjml Parsing"
+                $decoded['message'] ?? "An Error Occurred during Mjml Parsing"
             );
         }
         curl_close($chr);
-        //==============================================================================
-        // STORE CONVERTED MJML TO CACHE
-        $this->toCache($rawMjml, (string) $decoded['html']);
 
         return (string) $decoded['html'];
-    }
-
-    /**
-     * Check if Cache is Avaiable for raw Mjml.
-     *
-     * @return null|string
-     */
-    private function fromCache(string $rawMjml): ?string
-    {
-        //==============================================================================
-        // Check if Cache is Available
-        if (!isset($this->cache)) {
-            return null;
-        }
-        $cacheKey = self::getCacheKey($rawMjml);
-        //==============================================================================
-        // Check if Html is Already in Cache
-        if (!$this->cache->has($cacheKey)) {
-            return null;
-        }
-
-        /** @phpstan-ignore-next-line */
-        return (string) $this->cache->get($cacheKey);
-    }
-
-    /**
-     * Stroe Raw Html result in Cache
-     *
-     * @param string $rawMjml
-     * @param string $rawHtml
-     *
-     * @return void
-     */
-    private function toCache(string $rawMjml, string $rawHtml): void
-    {
-        //==============================================================================
-        // Check if Cache is Available
-        if (!isset($this->cache)) {
-            return;
-        }
-
-        $this->cache->set(self::getCacheKey($rawMjml), $rawHtml, 3600);
     }
 
     /**

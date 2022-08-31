@@ -18,6 +18,7 @@ use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use BadPixxel\SendinblueBridge\Services\TemplateManager;
 use FOS\UserBundle\Model\UserInterface as User;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Kernel;
@@ -43,9 +44,11 @@ class TemplatesAdminController extends Controller
     /**
      * Render User Dashboard.
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function listAction()
+    public function listAction(Request $request): Response
     {
         /** @var TemplateManager $tmplManager */
         $tmplManager = $this->get(TemplateManager::class);
@@ -119,15 +122,16 @@ class TemplatesAdminController extends Controller
     /**
      * Update Email Template on SendInBlue
      *
+     * @param Request         $request
      * @param TemplateManager $tmplManager
      * @param null|string     $emailCode
      *
      * @return Response
      */
-    public function updateAction(TemplateManager $tmplManager, $emailCode = null): Response
+    public function updateAction(Request $request, TemplateManager $tmplManager, $emailCode = null): Response
     {
         /** @var Session $session */
-        $session = $this->getRequest()->getSession();
+        $session = $request->getSession();
         //==============================================================================
         // Identify Email Class
         $emailClass = $tmplManager->getEmailByCode((string) $emailCode);
@@ -178,10 +182,10 @@ class TemplatesAdminController extends Controller
      *
      * @return Response
      */
-    public function sendAction(SmtpManager $smtpManager, string $emailCode): Response
+    public function sendAction(Request $request, SmtpManager $smtpManager, string $emailCode): Response
     {
         /** @var Session $session */
-        $session = $this->getRequest()->getSession();
+        $session = $request->getSession();
         /** @var User $user */
         $user = $this->getUser();
         //==============================================================================

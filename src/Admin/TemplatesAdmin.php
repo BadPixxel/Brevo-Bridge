@@ -14,7 +14,7 @@
 namespace BadPixxel\SendinblueBridge\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
  * Admin Class for SendInBlue Bridge Emails Templates Management
@@ -43,11 +43,11 @@ class TemplatesAdmin extends Admin
     protected $searchResultActions = array();
 
     /**
-     * {@inheritdoc}
+     * @param RouteCollectionInterface $collection
      *
      * @return void
      */
-    protected function configureRoutes(RouteCollection $collection)
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('create');
         $collection->remove('batch');

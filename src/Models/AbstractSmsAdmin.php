@@ -13,7 +13,6 @@
 
 namespace BadPixxel\SendinblueBridge\Models;
 
-use Exception;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -27,28 +26,23 @@ use Sonata\AdminBundle\Show\ShowMapper;
 abstract class AbstractSmsAdmin extends Admin
 {
     /**
-     * Dynamically Adjust default filters.
-     *
-     * @throws Exception
-     *
-     * @return array<string, mixed>
+     * {@inheritdoc}
      */
-    public function getFilterParameters(): array
+    protected function configureDefaultFilterValues(array &$filterValues): void
     {
-        $extraFilters = array();
         //==============================================================================
         // Filter List on User Email
         if ($this->hasRequest() && !empty($this->getRequest()->get('email'))) {
-            $extraFilters['email'] = array(
+            $filterValues['email'] = array(
                 'value' => $this->getRequest()->get('email'),
             );
         }
-
-        return array_replace_recursive(parent::getFilterParameters(), $extraFilters);
     }
 
     /**
-     * {@inheritdoc}
+     * @param RouteCollectionInterface $collection
+     *
+     * @return void
      */
     protected function configureRoutes(RouteCollectionInterface $collection): void
     {
@@ -59,9 +53,9 @@ abstract class AbstractSmsAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('sendAt')
             ->add('email')
             ->add('subject')
@@ -73,9 +67,9 @@ abstract class AbstractSmsAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add('email')
             ->add('subject')
             ->add('md5')
@@ -101,9 +95,9 @@ abstract class AbstractSmsAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureShowFields(ShowMapper $showMapper): void
+    protected function configureShowFields(ShowMapper $show): void
     {
-        $showMapper
+        $show
             ->with('Contents', array('class' => 'col-md-8'))
             ->add('textContent', null)
             ->end()

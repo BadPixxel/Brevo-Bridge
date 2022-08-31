@@ -13,12 +13,11 @@
 
 namespace BadPixxel\SendinblueBridge\Models;
 
-use Exception;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 
 /**
@@ -27,16 +26,13 @@ use Sonata\AdminBundle\Show\ShowMapper;
 abstract class AbstractEmailAdmin extends Admin
 {
     /**
-     * @param string      $action
-     * @param null|object $object
-     *
-     * @return array
+     * {@inheritdoc}
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function configureActionButtons($action, $object = null): array
+    protected function configureActionButtons(array $buttonList, string $action, ?object $object = null): array
     {
-        $list = parent::configureActionButtons($action, $object);
+        $list = parent::configureActionButtons($buttonList, $action, $object);
 
         $list['refresh']['template'] = '@SendinblueBridge/Admin/action_refresh.html.twig';
 
@@ -44,34 +40,24 @@ abstract class AbstractEmailAdmin extends Admin
     }
 
     /**
-     * Dynamically Adjust default filters.
-     *
-     * @throws Exception
-     *
-     * @return array<string, mixed>
+     * {@inheritdoc}
      */
-    public function getFilterParameters(): array
+    protected function configureDefaultFilterValues(array &$filterValues): void
     {
-        $extraFilters = array();
         //==============================================================================
         // Filter List on User Email
         if ($this->hasRequest() && !empty($this->getRequest()->get('email'))) {
-            $extraFilters['email'] = array(
+            $filterValues['email'] = array(
                 'value' => $this->getRequest()->get('email'),
             );
         }
-
-        return array_replace_recursive(parent::getFilterParameters(), $extraFilters);
     }
 
     /**
-     * Configure batch Actions
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getBatchActions(): array
+    protected function configureBatchActions(array $actions): array
     {
-        $actions = array();
         if ($this->hasRoute('show') && $this->isGranted('SHOW')) {
             $actions['refresh'] = array(
                 'label' => "Refresh",
@@ -79,13 +65,16 @@ abstract class AbstractEmailAdmin extends Admin
             );
         }
 
-        return array_replace_recursive($actions, parent::getBatchActions());
+        return $actions;
     }
 
     /**
-     * {@inheritdoc}
+     * @param RouteCollectionInterface $collection
+     *
+     * @return void
      */
-    protected function configureRoutes(RouteCollection $collection): void
+
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('edit');
         $collection->remove('create');
@@ -98,9 +87,9 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $listMapper
+        $list
             ->addIdentifier('subject')
             ->add('email')
             ->add('md5')
@@ -120,9 +109,9 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $datagridMapper
+        $filter
             ->add('email')
             ->add('md5')
             ->add('sendAt')
@@ -147,9 +136,9 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureShowFields(ShowMapper $showMapper): void
+    protected function configureShowFields(ShowMapper $show): void
     {
-        $showMapper
+        $show
             ->with('Contents', array('class' => 'col-md-8'))
             ->add('htmlContent', null, array(
                 'template' => '@SendinblueBridge/Admin/html_content.html.twig',

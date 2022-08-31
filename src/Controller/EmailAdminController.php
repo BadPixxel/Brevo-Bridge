@@ -19,6 +19,7 @@ use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -30,13 +31,13 @@ class EmailAdminController extends CRUDController
     /**
      * Preview Email Contents.
      *
-     * @param null|string $id
+     * @param null|int $id
      *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    public function previewAction($id = null): Response
+    public function previewAction(int $id = null): Response
     {
         //====================================================================//
         // Load Email Object
@@ -54,13 +55,13 @@ class EmailAdminController extends CRUDController
      * Refresh Email Events.
      *
      * @param SmtpManager $smtpManager
-     * @param null|string $id
+     * @param null|int    $id
      *
      * @return Response
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    public function refreshAction(SmtpManager $smtpManager, $id = null): Response
+    public function refreshAction(Request $request, SmtpManager $smtpManager, int $id = null): Response
     {
         //====================================================================//
         // Load Email Object
@@ -76,7 +77,7 @@ class EmailAdminController extends CRUDController
         //==============================================================================
         // Load Referer Url
         /** @var string $referer */
-        $referer = $this->getRequest()->headers->get('referer');
+        $referer = $request->headers->get('referer');
         if ($referer) {
             return $this->redirect($referer);
         }

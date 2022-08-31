@@ -15,7 +15,7 @@ namespace BadPixxel\SendinblueBridge\Models\Managers;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface as Router;
-use Symfony\Component\Translation\TranslatorInterface as Translator;
+use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Twig\Environment as Twig;
 
 /**

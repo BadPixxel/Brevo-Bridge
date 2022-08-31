@@ -17,7 +17,6 @@ use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\TemplateManager as Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,7 +72,7 @@ class DebugController extends AbstractController
         $kernel = $this->get('kernel');
         //==============================================================================
         // Compile Mjml Block Template to Html
-        /** @var EngineInterface $twig */
+        /** @var Environment $twig */
         $twig = $this->get('templating');
         $tmplMjml = (string) $twig->render("@SendinblueBridge/Debug/mjml_block.html.twig", array(
             "tmplStyles" => $styles,
