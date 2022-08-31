@@ -47,7 +47,13 @@
         "phpunit/phpunit":                              ">5",
         "symfony/phpunit-bridge":                       "^5.0"
     },
-    
+
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
+    },
+
     "scripts": {
         "post-install-cmd": [
             "php vendor/bin/grumphp git:deinit"            
