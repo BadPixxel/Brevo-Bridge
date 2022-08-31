@@ -46,7 +46,7 @@ class EventManager
         $this->config = $config;
         //==============================================================================
         // Store Static Instance for Access as Static
-        static::$staticInstance = $this;
+        self::$staticInstance = $this;
     }
 
     /**
@@ -56,7 +56,7 @@ class EventManager
      */
     public static function getInstance(): EventManager
     {
-        return static::$staticInstance;
+        return self::$staticInstance;
     }
 
     /**

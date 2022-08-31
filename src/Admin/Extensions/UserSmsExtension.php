@@ -54,6 +54,7 @@ class UserSmsExtension extends AbstractAdminExtension
         }
         //==============================================================================
         // Subject Has Sms
+        /** @var null|object $first */
         $first = $subject->getSendSms()->first();
         if ($first) {
             //==============================================================================

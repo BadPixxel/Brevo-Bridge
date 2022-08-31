@@ -41,7 +41,7 @@ class MjmlConverter
     /**
      * Simple cache
      *
-     * @var FilesystemCache
+     * @var null|FilesystemCache
      */
     private $cache;
 
@@ -96,6 +96,7 @@ class MjmlConverter
         }
         //==============================================================================
         // DECODE RESPONSE
+        /** @var null|array $decoded */
         $decoded = json_decode($response, true);
         if (null == $decoded) {
             return $this->setError("Unable to decode Mjml Response");
@@ -136,6 +137,7 @@ class MjmlConverter
             return null;
         }
 
+        /** @phpstan-ignore-next-line */
         return (string) $this->cache->get($cacheKey);
     }
 

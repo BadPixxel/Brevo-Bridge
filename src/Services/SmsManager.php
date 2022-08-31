@@ -42,7 +42,7 @@ class SmsManager
     /**
      * Transactional Sms API Service.
      *
-     * @var TransactionalSMSApi
+     * @var null|TransactionalSMSApi
      */
     protected $smsApi;
 
@@ -92,7 +92,7 @@ class SmsManager
         );
         //==============================================================================
         // Store Static Instance for Access as Static
-        static::$staticInstance = $this;
+        self::$staticInstance = $this;
     }
 
     /**
@@ -102,7 +102,7 @@ class SmsManager
      */
     public static function getInstance(): SmsManager
     {
-        return static::$staticInstance;
+        return self::$staticInstance;
     }
 
     /**

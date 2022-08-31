@@ -43,7 +43,7 @@ class SmtpManager
     /**
      * Transactional Emails API Service.
      *
-     * @var TransactionalEmailsApi
+     * @var null|TransactionalEmailsApi
      */
     protected $smtpApi;
 
@@ -93,7 +93,7 @@ class SmtpManager
         );
         //==============================================================================
         // Store Static Instance for Access as Static
-        static::$staticInstance = $this;
+        self::$staticInstance = $this;
     }
 
     /**
@@ -103,7 +103,7 @@ class SmtpManager
      */
     public static function getInstance(): SmtpManager
     {
-        return static::$staticInstance;
+        return self::$staticInstance;
     }
 
     /**

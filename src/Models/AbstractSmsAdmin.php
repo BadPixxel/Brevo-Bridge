@@ -18,7 +18,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 
 /**
@@ -31,9 +31,9 @@ abstract class AbstractSmsAdmin extends Admin
      *
      * @throws Exception
      *
-     * @return mixed
+     * @return array<string, mixed>
      */
-    public function getFilterParameters()
+    public function getFilterParameters(): array
     {
         $extraFilters = array();
         //==============================================================================
@@ -50,7 +50,7 @@ abstract class AbstractSmsAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollection $collection): void
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('edit');
         $collection->remove('create');

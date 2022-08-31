@@ -76,7 +76,9 @@ class WebHooksController extends AbstractController
         if (empty($messageId)) {
             //====================================================================//
             // Fallback to Raw POST Contents
-            $messageId = json_decode((string) $request->getContent(), true)["message-id"];
+            /** @var array $contents */
+            $contents = json_decode((string) $request->getContent(), true);
+            $messageId = $contents["message-id"] ?? null;
         }
         if (empty($messageId) || !is_scalar($messageId)) {
             throw new BadRequestHttpException('No Message Id Found');

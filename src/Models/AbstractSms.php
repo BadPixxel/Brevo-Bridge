@@ -92,6 +92,7 @@ abstract class AbstractSms
         }
         //==============================================================================
         // Create a New Instance of the Email
+        /** @var AbstractSms $instance */
         $instance = call_user_func_array($callback, func_get_args());
         //==============================================================================
         // Create a New Instance of the Sms
@@ -117,6 +118,7 @@ abstract class AbstractSms
         }
         //==============================================================================
         // Create a New Instance of the Email
+        /** @var AbstractSms $instance */
         $instance = call_user_func_array($callback, func_get_args());
         //==============================================================================
         // Create a New Instance of the Sms

@@ -29,12 +29,12 @@ class ConfigurationManager
     private $config;
 
     /**
-     * @var Configuration
+     * @var null|Configuration
      */
     private $sdkConfig;
 
     /**
-     * @var array
+     * @var null|array
      */
     private $eventsCurlConfig;
 

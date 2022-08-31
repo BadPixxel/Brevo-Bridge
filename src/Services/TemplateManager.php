@@ -34,7 +34,7 @@ class TemplateManager
     /**
      * Smtp API Service.
      *
-     * @var TransactionalEmailsApi
+     * @var null|TransactionalEmailsApi
      */
     protected $smtpApi;
 

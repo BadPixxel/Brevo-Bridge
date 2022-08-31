@@ -14,6 +14,7 @@
 namespace BadPixxel\SendinblueBridge\Models\Managers;
 
 use SendinBlue\Client\ApiException;
+use stdClass;
 
 /**
  * Manage Errors Logging for Sendinblue Services
@@ -54,6 +55,7 @@ trait ErrorLoggerTrait
     {
         $this->lastError = $exception->getMessage();
 
+        /** @var null|stdClass $response */
         $response = $exception->getResponseBody();
         if (isset($response->message)) {
             $this->lastError .= ' : '.$response->message;

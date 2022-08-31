@@ -86,6 +86,7 @@ abstract class AbstractEmail extends GenericEvent
         }
         //==============================================================================
         // Create a New Instance of the Email
+        /** @var AbstractEmail $instance */
         $instance = call_user_func_array($callback, func_get_args());
         //==============================================================================
         // Create a New Instance of the Email
@@ -111,6 +112,7 @@ abstract class AbstractEmail extends GenericEvent
         }
         //==============================================================================
         // Create a New Instance of the Email
+        /** @var AbstractEmail $instance */
         $instance = call_user_func_array($callback, func_get_args());
         //==============================================================================
         // Create a New Instance of the Email
@@ -259,7 +261,7 @@ abstract class AbstractEmail extends GenericEvent
         // Verify & Store List of Target Users
         $this->toUsers = array();
         foreach ($toUsers as $toUser) {
-            if (!is_subclass_of($toUser, User::class)) {
+            if (!$toUser instanceof User) {
                 continue;
             }
             $this->addToUser($toUser);
@@ -283,7 +285,8 @@ abstract class AbstractEmail extends GenericEvent
         // Extract User Name
         $name = method_exists($toUser, "__toString")
             ? $toUser->__toString()
-            : $toUser->getUsername();
+            : $toUser->getUsername()
+        ;
         //==============================================================================
         // Create To User Array
         $emailUser = array(array(
@@ -312,7 +315,9 @@ abstract class AbstractEmail extends GenericEvent
     {
         //==============================================================================
         // Verify Sender
-        if (empty($this->email->getSender())) {
+        /** @var null|\SendinBlue\Client\Model\SendSmtpEmailSender $sender */
+        $sender = $this->email->getSender();
+        if (empty($sender)) {
             return false;
         }
         //==============================================================================

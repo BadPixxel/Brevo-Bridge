@@ -70,7 +70,8 @@ class PingCommand extends Command
 
         $message = 'Sendinblue Connected: ';
         $message .= ' Compte '.$result['companyName'];
-        foreach ($result['plan'] as $plan) {
+        /** @var array $plan */
+        foreach (is_iterable($result['plan']) ? $result['plan'] : array() as $plan) {
             $message .= ' ['.ucwords($plan['type']).': '.$plan['credits'].' Credits] ';
         }
         $output->writeln('<info>'.$message.'</info>');

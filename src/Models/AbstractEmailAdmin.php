@@ -27,8 +27,8 @@ use Sonata\AdminBundle\Show\ShowMapper;
 abstract class AbstractEmailAdmin extends Admin
 {
     /**
-     * @param string $action
-     * @param mixed  $object
+     * @param string      $action
+     * @param null|object $object
      *
      * @return array
      *
@@ -48,9 +48,9 @@ abstract class AbstractEmailAdmin extends Admin
      *
      * @throws Exception
      *
-     * @return mixed
+     * @return array<string, mixed>
      */
-    public function getFilterParameters()
+    public function getFilterParameters(): array
     {
         $extraFilters = array();
         //==============================================================================

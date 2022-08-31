@@ -54,6 +54,7 @@ class UserEmailsExtension extends AbstractAdminExtension
         }
         //==============================================================================
         // Subject Has Emails
+        /** @var null|object $first */
         $first = $subject->getEmails()->first();
         if ($first) {
             //==============================================================================

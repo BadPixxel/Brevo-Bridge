@@ -17,6 +17,7 @@ use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use Exception;
 use SendinBlue\Client\ApiException;
 use SendinBlue\Client\Model\GetEmailEventReport;
+use stdClass;
 
 /**
  * Functions Collection to Update Emails Metadatas from SendInBlue API.
@@ -165,6 +166,7 @@ trait EmailsUpdaterTrait
         }
         //==============================================================================
         // Parse response
+        /** @var null|stdClass $decoded */
         $decoded = json_decode($response);
         if (isset($decoded->body)) {
             return $decoded->body;
@@ -212,6 +214,7 @@ trait EmailsUpdaterTrait
         }
         //==============================================================================
         // Parse response
+        /** @var null|stdClass $decoded */
         $decoded = json_decode($response);
         if (isset($decoded->transactionalEmails[0]->uuid)) {
             return $decoded->transactionalEmails[0]->uuid;

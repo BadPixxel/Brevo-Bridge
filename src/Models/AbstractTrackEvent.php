@@ -102,6 +102,7 @@ abstract class AbstractTrackEvent
         }
         //==============================================================================
         // Create a New Instance of the Event
+        /** @var AbstractTrackEvent $instance */
         $instance = call_user_func_array($callback, func_get_args());
         //==============================================================================
         // Create a New Instance of the Event
@@ -127,6 +128,7 @@ abstract class AbstractTrackEvent
         }
         //==============================================================================
         // Create a New Instance of the Event
+        /** @var AbstractTrackEvent $instance */
         $instance = call_user_func_array($callback, func_get_args());
         //==============================================================================
         // Send Event to SendInBlue API
