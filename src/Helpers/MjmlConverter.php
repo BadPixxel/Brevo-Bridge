@@ -13,7 +13,6 @@
 
 namespace BadPixxel\SendinblueBridge\Helpers;
 
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -31,21 +30,21 @@ class MjmlConverter
      *
      * @var string
      */
-    private $appUser;
+    private string $appUser;
 
     /**
      * Mjml API Endpoint Url
      *
      * @var string
      */
-    private $endpoint;
+    private string $endpoint;
 
     /**
      * Simple cache
      *
      * @var FilesystemAdapter
      */
-    private $cache;
+    private FilesystemAdapter $cache;
 
     /**
      * Class constructor
@@ -64,8 +63,6 @@ class MjmlConverter
      * Convert Mjml to Html using API.
      *
      * @param string $rawMjml
-     *
-     * @throws InvalidArgumentException
      *
      * @return null|string
      */
