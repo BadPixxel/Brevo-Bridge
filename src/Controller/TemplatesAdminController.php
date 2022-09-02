@@ -47,6 +47,8 @@ class TemplatesAdminController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function listAction(Request $request): Response
     {
