@@ -57,6 +57,7 @@ abstract class AbstractSmsStorage
      * @param SendSms        $createSms
      *
      * @return self
+     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public static function fromApiResults(User $user, SendTransacSms $sendSms, SendSms $createSms)
