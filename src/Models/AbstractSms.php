@@ -145,32 +145,6 @@ abstract class AbstractSms
         return $this->sms;
     }
 
-    /**
-     * Create Event Instance.
-     *
-     * @param User $user
-     *
-     * @return self
-     */
-    protected static function getInstance(User $user): self
-    {
-        $class = static::class;
-
-        return new $class($user);
-    }
-
-    /**
-     * Create Demo Event Instance.
-     *
-     * @param User $user
-     *
-     * @return self
-     */
-    protected static function getDemoInstance(User $user): self
-    {
-        return self::getInstance($user);
-    }
-
     //==============================================================================
     // BASIC SMS CRUD ACTIONS
     //==============================================================================

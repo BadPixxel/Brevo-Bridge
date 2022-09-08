@@ -20,7 +20,7 @@ services:
     BadPixxel\SendinblueBridge\Services\ConfigurationManager:
         arguments:
             - "%sendinblue_bridge%"
-            - "%swiftmailer.delivery.enabled%"
+            - "%mailer_disable%"
     
     ################################################################################
     # SendInBlue API Account Manager
