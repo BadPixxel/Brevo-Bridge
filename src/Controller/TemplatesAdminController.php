@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -92,11 +93,7 @@ class TemplatesAdminController extends Controller
         file_put_contents($tmplPath.self::TMPL_PATH, $tmplHtml);
         //==============================================================================
         // Add Temporary Path to Twig Loader
-        /** @var Environment $twig */
-        $twig = $this->get('twig');
-        /** @var FilesystemLoader $loader */
-        $loader = $twig->getLoader();
-        $loader->addPath($tmplPath);
+        $this->ensureTwigLoaderPath($tmplPath);
         //==============================================================================
         // Find All Available Emails
         $tmplEmails = array();
@@ -228,5 +225,38 @@ class TemplatesAdminController extends Controller
     private function redirectToIndex(): Response
     {
         return $this->redirectToRoute("admin_badpixxel_sendinblue_templates_list");
+    }
+
+    /**
+     * Ensure Bundle Local Views Path are Registered in Twig
+     *
+     * @param string $tmplPath
+     *
+     * @throws \Twig\Error\LoaderError
+     *
+     * @return void
+     */
+    private function ensureTwigLoaderPath(string $tmplPath): void
+    {
+        /** @var Environment $twig */
+        $twig = $this->get('twig');
+        /** @var FilesystemLoader $loader */
+        $loader = $twig->getLoader();
+        /** @var ChainLoader|FilesystemLoader $loaders */
+        $loaders = $twig->getLoader();
+        if ($loaders instanceof FilesystemLoader) {
+            if (!in_array($tmplPath, $loaders->getPaths(), true)) {
+                $loaders->addPath($tmplPath);
+            }
+
+            return;
+        }
+        foreach ($loaders->getLoaders() as $loader) {
+            if ($loader instanceof FilesystemLoader) {
+                if (!in_array($tmplPath, $loader->getPaths(), true)) {
+                    $loader->addPath($tmplPath);
+                }
+            }
+        }
     }
 }
