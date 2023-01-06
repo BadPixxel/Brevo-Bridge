@@ -18,10 +18,12 @@ use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\TemplateManager as Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -44,15 +46,25 @@ class DebugController extends AbstractController
      *
      * @Route("/{emailCode}/mjml/{tmplCode}", name="badpixxel_sendinblue_tmpl_debug_mjml")
      *
-     * @param Manager     $manager
-     * @param string      $emailCode Email Code for Parameters Generation
-     * @param string      $tmplCode  Twig Source Mjml Block Template
-     * @param null|string $styles    Twig Source Mjml Styles
+     * @param KernelInterface $kernel
+     * @param EngineInterface $twig
+     * @param Manager         $manager
+     * @param string          $emailCode Email Code for Parameters Generation
+     * @param string          $tmplCode  Twig Source Mjml Block Template
+     * @param null|string     $styles    Twig Source Mjml Styles
+     *
+     * @throws LoaderError
      *
      * @return Response
      */
-    public function mjmlAction(Manager $manager, string $emailCode, string $tmplCode, string $styles = null): Response
-    {
+    public function mjmlAction(
+        KernelInterface $kernel,
+        EngineInterface $twig,
+        Manager $manager,
+        string $emailCode,
+        string $tmplCode,
+        string $styles = null
+    ): Response {
         //==============================================================================
         // Identify Email Class
         $emailClass = $manager->getEmailByCode($emailCode);
@@ -68,12 +80,8 @@ class DebugController extends AbstractController
         if (!$mjmlConverter) {
             return new Response("Error: Mjml Converter not Available");
         }
-        /** @var Kernel $kernel */
-        $kernel = $this->get('kernel');
         //==============================================================================
         // Compile Mjml Block Template to Html
-        /** @var Environment $twig */
-        $twig = $this->get('templating');
         $tmplMjml = (string) $twig->render("@SendinblueBridge/Debug/mjml_block.html.twig", array(
             "tmplStyles" => $styles,
             "tmplPath" => $tmplCode,
@@ -88,7 +96,6 @@ class DebugController extends AbstractController
         //==============================================================================
         // Add Temporary Path to Twig Loader
         /** @var Environment $twig */
-        $twig = $this->get('twig');
         /** @var FilesystemLoader $loader */
         $loader = $twig->getLoader();
         $loader->addPath($tmplPath);
@@ -102,13 +109,21 @@ class DebugController extends AbstractController
     /**
      * Debug of a Complete Mjml Email
      *
-     * @param Manager       $tmplManager
-     * @param AbstractEmail $email
+     * @param KernelInterface $kernel
+     * @param EngineInterface $twig
+     * @param Manager         $tmplManager
+     * @param AbstractEmail   $email
+     *
+     * @throws LoaderError
      *
      * @return Response
      */
-    public function emailAction(Manager $tmplManager, AbstractEmail $email): Response
-    {
+    public function emailAction(
+        KernelInterface $kernel,
+        EngineInterface $twig,
+        Manager $tmplManager,
+        AbstractEmail $email
+    ): Response {
         //==============================================================================
         // Safety Check
         if (!$tmplManager->isTemplateAware(get_class($email))) {
@@ -123,8 +138,6 @@ class DebugController extends AbstractController
         if (!$mjmlConverter) {
             return new Response("Error: Mjml Converter not Available");
         }
-        /** @var Kernel $kernel */
-        $kernel = $this->get('kernel');
         //==============================================================================
         // Compile Mjml Template to Html
         $tmplHtml = $mjmlConverter->toHtml($email::getTemplateHtml());
@@ -136,7 +149,6 @@ class DebugController extends AbstractController
         //==============================================================================
         // Add Temporary Path to Twig Loader
         /** @var Environment $twig */
-        $twig = $this->get('twig');
         /** @var FilesystemLoader $loader */
         $loader = $twig->getLoader();
         $loader->addPath($tmplPath);
