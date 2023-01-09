@@ -45,12 +45,12 @@ class ConfigurationManager
 
     /**
      * @param array $configuration
-     * @param bool  $enabled
+     * @param bool  $disabled
      */
-    public function __construct(array $configuration, bool $enabled)
+    public function __construct(array $configuration, bool $disabled)
     {
         $this->config = $configuration;
-        $this->enabled = $enabled;
+        $this->enabled = !$disabled;
     }
 
     /**

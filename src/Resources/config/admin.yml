@@ -11,7 +11,7 @@ services:
             - "%sendinblue_bridge.emails.class%"
             - BadPixxel\SendinblueBridge\Controller\EmailAdminController
         tags:
-            - { name: sonata.admin, manager_type: orm, label: SendInBlue Emails, group: System, icon: '<i class="fa fa-server"></i>', pager_type: 'simple'  }
+            - { name: sonata.admin, manager_type: orm, label: SendInBlue Emails, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>', pager_type: 'simple'  }
 
     ############################################################################
     # Sendinblue Bridge Send Sms Admin Extension
@@ -22,7 +22,7 @@ services:
             - "%sendinblue_bridge.sms.class%"
             - ~
         tags:
-            - { name: sonata.admin, manager_type: orm, label: SendInBlue Sms, group: System, icon: '<i class="fa fa-server"></i>', pager_type: 'simple'  }
+            - { name: sonata.admin, manager_type: orm, label: SendInBlue Sms, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>', pager_type: 'simple'  }
 
     ############################################################################
     # Sendinblue Bridge Emails Admin Extension for Users 
@@ -47,5 +47,5 @@ services:
             - BadPixxel\SendinblueBridge\Models\AbstractEmail
             - BadPixxel\SendinblueBridge\Controller\TemplatesAdminController
         tags:
-            - { name: sonata.admin, manager_type: orm, label: SendInBlue Templates, group: System, icon: '<i class="fa fa-desktop"></i>'  }
+            - { name: sonata.admin, manager_type: orm, label: SendInBlue Templates, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>'  }
             
