@@ -20,7 +20,7 @@ services:
         arguments:
             - ~
             - "%sendinblue_bridge.sms.class%"
-            - ~
+            - BadPixxel\SendinblueBridge\Controller\SmsAdminController
         tags:
             - { name: sonata.admin, manager_type: orm, label: SendInBlue Sms, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>', pager_type: 'simple'  }
 

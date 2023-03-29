@@ -6,7 +6,8 @@
     "homepage":     "http://www.badpixxel.com",
     "license":      "MIT",
     "prefer-stable": true,
-    
+    "minimum-stability": "dev",
+
     "authors": [
         {
             "name": "BadPixxel",
@@ -31,8 +32,9 @@
         "doctrine/orm":                                 "^2.5",
         "doctrine/doctrine-bundle":                     "^2.0",
 
+        "badpixxel/paddock-mysql":                      "dev-main",
         "sendinblue/api-v3-sdk":                        "^7.0",
-        
+
         "knplabs/knp-time-bundle":                      ">1.0",
         "psr/simple-cache":                             "^1.0"
     },    

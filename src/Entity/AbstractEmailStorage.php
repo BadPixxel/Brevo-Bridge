@@ -28,6 +28,7 @@ abstract class AbstractEmailStorage
 {
     use \BadPixxel\SendinblueBridge\Models\UserEmails\ContentsTrait;
     use \BadPixxel\SendinblueBridge\Models\UserEmails\MetadataTrait;
+    use \BadPixxel\SendinblueBridge\Models\Gdpr\GdprEntityTrait;
 
     //==============================================================================
     // DATA STORAGE DEFINITION
@@ -43,6 +44,16 @@ abstract class AbstractEmailStorage
      */
     final public function __construct()
     {
+    }
+
+    /**
+     * Implement toString Magic Method
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getSubject();
     }
 
     //==============================================================================
