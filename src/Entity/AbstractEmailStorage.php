@@ -45,6 +45,16 @@ abstract class AbstractEmailStorage
     {
     }
 
+    /**
+     * Implement toString Magic Method
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getSubject();
+    }
+
     //==============================================================================
     // MAIN FUNCTIONS
     //==============================================================================

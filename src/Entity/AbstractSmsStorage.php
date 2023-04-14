@@ -45,6 +45,16 @@ abstract class AbstractSmsStorage
     {
     }
 
+    /**
+     * Implement toString Magic Method
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getSubject();
+    }
+
     //==============================================================================
     // MAIN FUNCTIONS
     //==============================================================================

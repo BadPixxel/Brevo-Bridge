@@ -13,6 +13,7 @@
 
 namespace BadPixxel\SendinblueBridge\Controller;
 
+use BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait;
 use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as Email;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Exception;
@@ -28,6 +29,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class EmailAdminController extends CRUDController
 {
+    use GdprAdminActionsTrait;
+
     /**
      * Preview Email Contents.
      *

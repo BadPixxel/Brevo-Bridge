@@ -51,7 +51,7 @@ trait GdprEntityTrait
         //==============================================================================
         // Not Updated for a Long Time
         if ($this->getSendAt() < self::gdprOutdatedDate()) {
-            return $logger->warning("Estimation trop ancienne, à Supprimer!");
+            return $logger->warning("Email | SMS is Too Old, to Delete!");
         }
 
         return false;
