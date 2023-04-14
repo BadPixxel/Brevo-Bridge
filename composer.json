@@ -6,6 +6,7 @@
     "homepage":     "http://www.badpixxel.com",
     "license":      "MIT",
     "prefer-stable": true,
+    "minimum-stability": "dev",
     
     "authors": [
         {
@@ -42,6 +43,7 @@
     
     "require-dev": {
         "badpixxel/php-sdk":                            "dev-main",
+        "badpixxel/paddock-mysql":                      "dev-main",
 
         "sonata-project/admin-bundle":                  "^4.0",
         "sonata-project/user-bundle":                   ">4.0",
