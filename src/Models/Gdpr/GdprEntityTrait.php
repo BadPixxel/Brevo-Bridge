@@ -14,6 +14,7 @@
 namespace BadPixxel\SendinblueBridge\Models\Gdpr;
 
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Monolog\Logger;
 
@@ -55,6 +56,14 @@ trait GdprEntityTrait
         }
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function preGdprRemove(EntityManagerInterface $manager): bool
+    {
+        return true;
     }
 
     /**
