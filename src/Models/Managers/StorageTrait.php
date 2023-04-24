@@ -17,9 +17,9 @@ use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use BadPixxel\SendinblueBridge\Helpers\EmailExtractor;
 use BadPixxel\SendinblueBridge\Repository\EmailRepository;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\CreateSmtpEmail;
 use SendinBlue\Client\Model\SendSmtpEmail;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Manage Storage of User Emails in Database.
@@ -29,7 +29,26 @@ trait StorageTrait
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
+
+    /**
+     * Find a User by Email
+     *
+     * @param string $userEmail
+     *
+     * @return null|User
+     */
+    public function getUserByEmail(string $userEmail): ?User
+    {
+        $repository = $this->entityManager
+            ->getRepository($this->config->getUserStorageClass())
+        ;
+        $user = $repository->findOneBy(array(
+            "email" => $userEmail
+        ));
+
+        return ($user instanceof User) ? $user : null;
+    }
 
     /**
      * Search for Send Email by Message Id

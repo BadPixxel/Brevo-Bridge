@@ -16,9 +16,9 @@ namespace BadPixxel\SendinblueBridge\Models\Managers;
 use BadPixxel\SendinblueBridge\Helpers\SmsExtractor;
 use BadPixxel\SendinblueBridge\Repository\SmsRepository;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\SendSms;
 use SendinBlue\Client\Model\SendTransacSms;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Manage Storage of User Sms in Database.
@@ -28,7 +28,26 @@ trait SmsStorageTrait
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
+
+    /**
+     * Find a User by Email
+     *
+     * @param string $userEmail
+     *
+     * @return null|User
+     */
+    public function getUserByEmail(string $userEmail): ?User
+    {
+        $repository = $this->entityManager
+            ->getRepository($this->config->getUserStorageClass())
+        ;
+        $user = $repository->findOneBy(array(
+            "email" => $userEmail
+        ));
+
+        return ($user instanceof User) ? $user : null;
+    }
 
     /**
      * Setup Entity Manager for Storage
