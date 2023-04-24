@@ -51,6 +51,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->arrayNode('storage')
             ->children()
+            ->scalarNode('user')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('emails')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('sms')->isRequired()->cannotBeEmpty()->end()
             ->end()
