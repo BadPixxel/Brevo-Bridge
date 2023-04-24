@@ -36,7 +36,9 @@
         "doctrine/doctrine-bundle":                     "^2.0",
 
         "sendinblue/api-v3-sdk":                        "^7.0",
-        
+
+        "sonata-project/user-bundle":                   ">4.0",
+
         "knplabs/knp-time-bundle":                      ">1.0",
         "psr/simple-cache":                             "^1.0"
     },
@@ -46,12 +48,9 @@
         "badpixxel/paddock-mysql":                      "dev-main",
 
         "sonata-project/admin-bundle":                  "^4.0",
-        "sonata-project/user-bundle":                   ">4.0",
         "sonata-project/doctrine-orm-admin-bundle":     ">4.0",
         
-        "friendsofsymfony/user-bundle":                 "^3.0",
-
-        "phpunit/phpunit":                              ">5",
+        "phpunit/phpunit":                              ">9",
         "symfony/phpunit-bridge":                       ">5.0"
     },
 
