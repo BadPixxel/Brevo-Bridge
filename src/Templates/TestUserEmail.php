@@ -14,7 +14,7 @@
 namespace BadPixxel\SendinblueBridge\Templates;
 
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use FOS\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Just Send a Basic Email tu User
