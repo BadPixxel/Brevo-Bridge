@@ -17,7 +17,6 @@ use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
 use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Exception;
-use FOS\UserBundle\Model\UserManagerInterface as UserManager;
 use GuzzleHttp\Client;
 use SendinBlue\Client\Api\TransactionalEmailsApi;
 use SendinBlue\Client\ApiException;
@@ -35,7 +34,6 @@ use Twig\Environment as Twig;
 class SmtpManager
 {
     use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
-    use \BadPixxel\SendinblueBridge\Models\Managers\UserFinderTrait;
     use \BadPixxel\SendinblueBridge\Models\Managers\TemplatingTrait;
     use \BadPixxel\SendinblueBridge\Models\Managers\StorageTrait;
     use \BadPixxel\SendinblueBridge\Models\Managers\EmailsUpdaterTrait;
@@ -45,24 +43,23 @@ class SmtpManager
      *
      * @var null|TransactionalEmailsApi
      */
-    protected $smtpApi;
+    protected ?TransactionalEmailsApi $smtpApi;
 
     /**
      * Bridge Configuration.
      *
      * @var ConfigurationManager
      */
-    private $config;
+    private ConfigurationManager $config;
 
     /**
      * @var SmtpManager
      */
-    private static $staticInstance;
+    private static SmtpManager $staticInstance;
 
     /**
      * @param Configuration $config
      * @param EntityManager $doctrine
-     * @param UserManager   $users
      * @param Twig          $twig
      * @param Translator    $translator
      * @param Router        $router
@@ -70,7 +67,6 @@ class SmtpManager
     public function __construct(
         Configuration $config,
         EntityManager $doctrine,
-        UserManager $users,
         Twig $twig,
         Translator $translator,
         Router $router
@@ -78,9 +74,6 @@ class SmtpManager
         //==============================================================================
         // Connect to Bridge Configuration Service
         $this->config = $config;
-        //==============================================================================
-        // Connect to FOS User Manager
-        $this->setUserManager($users);
         //==============================================================================
         // Connect to Storage Services
         $this->setupStorage($doctrine);

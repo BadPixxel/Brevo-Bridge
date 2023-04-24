@@ -155,6 +155,16 @@ class ConfigurationManager
     }
 
     /**
+     * Get User Storage Class.
+     *
+     * @return class-string
+     */
+    public function getUserStorageClass(): string
+    {
+        return $this->config['storage']['user'];
+    }
+
+    /**
      * Get Email Storage Class.
      *
      * @return class-string

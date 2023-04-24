@@ -14,7 +14,7 @@
 namespace BadPixxel\SendinblueBridge\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use FOS\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Users Send Emails Repository.
