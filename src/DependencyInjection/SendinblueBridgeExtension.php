@@ -35,10 +35,10 @@ class SendinblueBridgeExtension extends Extension
         $bundles = $container->getParameter('kernel.bundles');
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('services.yaml');
 
         if (!is_array($bundles) || isset($bundles['SonataAdminBundle'])) {
-            $loader->load('admin.yml');
+            $loader->load('admin.yaml');
         }
 
         $container->setParameter('sendinblue_bridge', $config);
