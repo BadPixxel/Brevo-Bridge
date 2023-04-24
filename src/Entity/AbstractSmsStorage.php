@@ -15,9 +15,9 @@ namespace BadPixxel\SendinblueBridge\Entity;
 
 use BadPixxel\SendinblueBridge\Helpers\SmsExtractor;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\SendSms;
 use SendinBlue\Client\Model\SendTransacSms;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Base Class for User Sms Historic Storage.
@@ -36,7 +36,7 @@ abstract class AbstractSmsStorage
     /**
      * @var User
      */
-    protected $user;
+    protected User $user;
 
     /**
      * Class Constructor
@@ -76,7 +76,7 @@ abstract class AbstractSmsStorage
         $storage
             ->setSendAt()
             ->setUser($user)
-            ->setEmail($user->getEmailCanonical())
+            ->setEmail((string) $user->getEmailCanonical())
             ->setSubject($sendSms->getRecipient())
             ->setTextContent($sendSms->getContent())
             ->setMd5(SmsExtractor::md5($sendSms))

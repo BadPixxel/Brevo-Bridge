@@ -15,9 +15,9 @@ namespace BadPixxel\SendinblueBridge\Entity;
 
 use BadPixxel\SendinblueBridge\Helpers\EmailExtractor;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\CreateSmtpEmail;
 use SendinBlue\Client\Model\SendSmtpEmail;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Base Class for User Email Historic Storage.
@@ -36,7 +36,7 @@ abstract class AbstractEmailStorage
     /**
      * @var User
      */
-    protected $user;
+    protected User $user;
 
     /**
      * Class Constructor
@@ -72,7 +72,7 @@ abstract class AbstractEmailStorage
         $storage
             ->setSendAt()
             ->setUser($toUser)
-            ->setEmail($toUser->getEmailCanonical())
+            ->setEmail((string) $toUser->getEmailCanonical())
             ->setSubject($sendEmail->getSubject())
             ->setHtmlContent($sendEmail->getHtmlContent())
             ->setTextContent($sendEmail->getTextContent())
