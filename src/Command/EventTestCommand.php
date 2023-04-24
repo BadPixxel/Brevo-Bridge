@@ -16,7 +16,7 @@ namespace BadPixxel\SendinblueBridge\Command;
 use BadPixxel\SendinblueBridge\Models\AbstractTrackEvent;
 use BadPixxel\SendinblueBridge\Services\EventManager;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
-use FOS\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -151,7 +151,7 @@ class EventTestCommand extends Command
         // Extract User Name
         $username = method_exists($user, "__toString")
             ? $user->__toString()
-            : $user->getUsername();
+            : $user->getUserIdentifier();
 
         return self::showResult($output, true, $eventCode, ' Event for '.$username.' submitted');
     }

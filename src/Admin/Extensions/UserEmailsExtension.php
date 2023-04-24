@@ -14,10 +14,10 @@
 namespace BadPixxel\SendinblueBridge\Admin\Extensions;
 
 use BadPixxel\SendinblueBridge\Interfaces\EmailsAwareInterface;
-use FOS\UserBundle\Model\UserInterface as User;
 use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\AdminBundle\Admin\AbstractAdminExtension;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Add a Tab to User's Sonata Admin Page to show Users Emails logs

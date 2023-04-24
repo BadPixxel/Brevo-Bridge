@@ -15,7 +15,7 @@ namespace BadPixxel\SendinblueBridge\Command;
 
 use BadPixxel\SendinblueBridge\Models\AbstractSms;
 use BadPixxel\SendinblueBridge\Services\SmsManager;
-use FOS\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,7 +30,7 @@ class SmsTestCommand extends Command
     /**
      * @var SmsManager
      */
-    private $smsManager;
+    private SmsManager $smsManager;
 
     /**
      * Command Constructor
@@ -143,7 +143,7 @@ class SmsTestCommand extends Command
         // Extract User Name
         $username = method_exists($user, "__toString")
             ? $user->__toString()
-            : $user->getUsername();
+            : $user->getUserIdentifier();
 
         return self::showResult($output, true, $smsCode, ' Sms send to '.$username);
     }

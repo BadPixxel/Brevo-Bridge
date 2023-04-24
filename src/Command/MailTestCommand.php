@@ -15,7 +15,7 @@ namespace BadPixxel\SendinblueBridge\Command;
 
 use BadPixxel\SendinblueBridge\Models\AbstractEmail;
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
-use FOS\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -143,7 +143,7 @@ class MailTestCommand extends Command
         // Extract User Name
         $username = method_exists($user, "__toString")
             ? $user->__toString()
-            : $user->getUsername();
+            : $user->getUserIdentifier();
 
         return self::showResult($output, true, $emailCode, ' Email send to '.$username);
     }
