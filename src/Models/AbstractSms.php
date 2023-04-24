@@ -15,9 +15,9 @@ namespace BadPixxel\SendinblueBridge\Models;
 
 use BadPixxel\SendinblueBridge\Services\SmsManager;
 use Exception;
-use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\SendSms;
 use SendinBlue\Client\Model\SendTransacSms;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

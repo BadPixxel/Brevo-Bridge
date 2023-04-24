@@ -15,7 +15,7 @@ namespace BadPixxel\SendinblueBridge\Models;
 
 use BadPixxel\SendinblueBridge\Services\EventManager;
 use Exception;
-use FOS\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -28,28 +28,28 @@ abstract class AbstractTrackEvent
      *
      * @var string
      */
-    protected $type = "myEventCode";
+    protected string $type = "myEventCode";
 
     /**
      * User Email.
      *
      * @var string
      */
-    protected $userEmail;
+    protected string $userEmail;
 
     /**
      * Default Properties.
      *
      * @var array
      */
-    protected $propertiesDefaults = array();
+    protected array $propertiesDefaults = array();
 
     /**
      * Default Event Data.
      *
      * @var array
      */
-    protected $eventDataDefaults = array();
+    protected array $eventDataDefaults = array();
 
     /**
      * Event Properties.
@@ -59,7 +59,7 @@ abstract class AbstractTrackEvent
      *
      * @var null|array<string, string>
      */
-    private $properties;
+    private ?array $properties;
 
     /**
      * Event Data.
@@ -69,7 +69,7 @@ abstract class AbstractTrackEvent
      *
      * @var null|array<string, string>
      */
-    private $eventdata;
+    private ?array $eventdata;
 
     /**
      * Construct the Event.
@@ -110,9 +110,11 @@ abstract class AbstractTrackEvent
     }
 
     /**
-     * Send a Transactionnal Test/Demo Event.
+     * Send a Transactional Test/Demo Event.
      *
      * @param User $user Target User
+     *
+     * @throws Exception
      *
      * @return bool
      *
@@ -171,11 +173,13 @@ abstract class AbstractTrackEvent
     /**
      * Set Event User
      *
+     * @param User $user
+     *
      * @return self
      */
     public function setUser(User $user): self
     {
-        $this->userEmail = $user->getEmailCanonical();
+        $this->userEmail = (string) $user->getEmailCanonical();
 
         return $this;
     }

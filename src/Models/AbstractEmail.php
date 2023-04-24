@@ -15,9 +15,9 @@ namespace BadPixxel\SendinblueBridge\Models;
 
 use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Exception;
-use FOS\UserBundle\Model\UserInterface as User;
 use SendinBlue\Client\Model\CreateSmtpEmail;
 use SendinBlue\Client\Model\SendSmtpEmail;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -158,6 +158,8 @@ abstract class AbstractEmail extends GenericEvent
     /**
      * Create a New Email and Populate Defaults Values.
      *
+     * @throws Exception
+     *
      * @return null|CreateSmtpEmail
      */
     protected function sendEmail(bool $demoMode): ?CreateSmtpEmail
@@ -179,6 +181,8 @@ abstract class AbstractEmail extends GenericEvent
     /**
      * Add User to Email To.
      *
+     * @param User $toUser
+     *
      * @return self
      */
     protected function addToUser(User $toUser): self
@@ -191,6 +195,8 @@ abstract class AbstractEmail extends GenericEvent
     /**
      * Add User to Email Cc.
      *
+     * @param User $ccUser
+     *
      * @return self
      */
     protected function addCcUser(User $ccUser): self
@@ -202,6 +208,8 @@ abstract class AbstractEmail extends GenericEvent
 
     /**
      * Add User to Email Bcc.
+     *
+     * @param User $bccUser
      *
      * @return self
      */
@@ -285,7 +293,7 @@ abstract class AbstractEmail extends GenericEvent
         // Extract User Name
         $name = method_exists($toUser, "__toString")
             ? $toUser->__toString()
-            : $toUser->getUsername()
+            : $toUser->getUserIdentifier()
         ;
         //==============================================================================
         // Create To User Array
@@ -295,7 +303,7 @@ abstract class AbstractEmail extends GenericEvent
         ));
         //==============================================================================
         // Push User to List
-        if (is_null($emailList) || empty($emailList)) {
+        if (empty($emailList)) {
             return $emailUser;
         }
 
