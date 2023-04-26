@@ -13,7 +13,7 @@ services:
     # AutoWire for Controllers
     BadPixxel\SendinblueBridge\Controller\:
         resource: '../../Controller'
-        tags: ['controller.service_arguments']
+        tags: ['controller.service_arguments', 'container.service_subscriber']
 
     ################################################################################
     # Bridge Configurations Manager

@@ -15,6 +15,7 @@ namespace BadPixxel\SendinblueBridge\Models\UserEmails;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use SendinBlue\Client\Model\GetEmailEventReportEvents;
 use SendinBlue\Client\Model\GetEmailEventReportEvents as Event;
 
@@ -23,25 +24,6 @@ use SendinBlue\Client\Model\GetEmailEventReportEvents as Event;
  */
 trait MetadataTrait
 {
-    /**
-     * @var array
-     */
-    private static $eventSuccess = array(
-        Event::EVENT_DELIVERED,
-        Event::EVENT_OPENED,
-        Event::EVENT_CLICKS,
-    );
-
-    /**
-     * @var array
-     */
-    private static $eventDanger = array(
-        Event::EVENT_SPAM,
-        Event::EVENT_INVALID,
-        Event::EVENT_BLOCKED,
-        //        Event::EVENT_UNSUBSCRIBED
-    );
-
     //==============================================================================
     // DEFINITION DE DONNEES
     //==============================================================================
@@ -53,7 +35,7 @@ trait MetadataTrait
      *
      * @ORM\Column(name="send_at", type="datetime", nullable=true)
      */
-    private $sendAt;
+    protected ?DateTime $sendAt = null;
 
     /**
      * Date of First Opening.
@@ -62,7 +44,7 @@ trait MetadataTrait
      *
      * @ORM\Column(name="open_at", type="datetime", nullable=true)
      */
-    private $openAt;
+    protected ?DateTime $openAt = null;
 
     /**
      * Date of last Events Refresh.
@@ -71,14 +53,32 @@ trait MetadataTrait
      *
      * @ORM\Column(name="refreshed_at", type="datetime", nullable=true)
      */
-    private $refreshedAt;
+    protected ?DateTime $refreshedAt = null;
+    /**
+     * @var array
+     */
+    private static array $eventSuccess = array(
+        Event::EVENT_DELIVERED,
+        Event::EVENT_OPENED,
+        Event::EVENT_CLICKS,
+    );
+
+    /**
+     * @var array
+     */
+    private static array $eventDanger = array(
+        Event::EVENT_SPAM,
+        Event::EVENT_INVALID,
+        Event::EVENT_BLOCKED,
+        //        Event::EVENT_UNSUBSCRIBED
+    );
 
     /**
      * @var null|GetEmailEventReportEvents[]
      *
      * @ORM\Column(name="events", type="array", nullable=true)
      */
-    private $events;
+    private ?array $events = null;
 
     //==============================================================================
     // MAIN FUNCTIONS
@@ -122,6 +122,8 @@ trait MetadataTrait
     /**
      * @param array $events
      *
+     * @throws Exception
+     *
      * @return $this
      */
     public function setEvents(array $events): self
@@ -136,7 +138,7 @@ trait MetadataTrait
             /** @var GetEmailEventReportEvents $event */
             foreach ($events as $event) {
                 if (Event::EVENT_OPENED == $event->getEvent()) {
-                    $this->setOpenAt(new \DateTime($event->getDate()));
+                    $this->setOpenAt(new DateTime($event->getDate()));
 
                     break;
                 }

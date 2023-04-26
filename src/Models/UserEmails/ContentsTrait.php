@@ -31,70 +31,71 @@ trait ContentsTrait
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
-    private $email;
+    protected string $email;
 
     /**
      * @var string
      *
      * @ORM\Column(name="md5", type="string", length=255, nullable=false)
      */
-    private $md5;
+    protected string $md5;
 
     /**
      * @var string
      *
      * @ORM\Column(name="message_id", type="string", length=255, nullable=false)
      */
-    private $messageId;
+    protected string $messageId;
 
     /**
      * @var null|string
      *
      * @ORM\Column(name="uuid", type="string", length=255, nullable=true)
      */
-    private $uuid;
+    protected ?string $uuid = null;
 
     /**
      * @var string
      *
      * @ORM\Column(name="subject", type="string", length=512, nullable=false)
      */
-    private $subject;
+    protected string $subject;
 
     /**
      * @var null|string
      *
      * @ORM\Column(name="html", type="text", nullable=true)
      */
-    private $htmlContent;
+    protected ?string $htmlContent = null;
 
     /**
      * @var null|string
      *
      * @ORM\Column(name="text", type="text", nullable=true)
      */
-    private $textContent;
+    protected ?string $textContent = null;
 
     /**
      * @var null|int
      *
      * @ORM\Column(name="template_id", type="integer", nullable=true)
      */
-    private $templateId;
+    protected ?int $templateId = null;
 
     /**
      * @var null|array
      *
      * @ORM\Column(name="parameters", type="array", nullable=true)
      */
-    private $parameters;
+    protected ?array $parameters = null;
 
     //==============================================================================
     // MAIN FUNCTIONS
     //==============================================================================
 
     /**
-     * @param string $htmlContent
+     * @param string      $uuid
+     * @param null|string $htmlContent
      *
      * @return $this
      */
@@ -183,7 +184,7 @@ trait ContentsTrait
     }
 
     /**
-     * @param string $htmlContent
+     * @param null|string $htmlContent
      *
      * @return $this
      */
@@ -255,7 +256,7 @@ trait ContentsTrait
     }
 
     /**
-     * @param string $textContent
+     * @param null|string $textContent
      *
      * @return $this
      */
@@ -267,7 +268,7 @@ trait ContentsTrait
     }
 
     /**
-     * @param int $templateId
+     * @param null|int $templateId
      *
      * @return $this
      */
@@ -279,7 +280,7 @@ trait ContentsTrait
     }
 
     /**
-     * @param array $parameters
+     * @param null|array $parameters
      *
      * @return $this
      */
