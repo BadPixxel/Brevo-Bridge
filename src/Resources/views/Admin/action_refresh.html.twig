@@ -10,7 +10,7 @@ file that was distributed with this source code.
 #}
 
 {% if object is defined and object.id is not empty %}
-    {% if admin.canAccessObject('edit', object) and admin.hasRoute('refresh') %}
+    {% if admin.checkAccess('edit', object) and admin.hasRoute('refresh') %}
         <li>
             <a class="sonata-action-element text-purple" href="{{ admin.generateObjectUrl('refresh', object) }}">
                 <i class="fa fa-refresh" aria-hidden="true"></i>

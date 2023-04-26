@@ -54,6 +54,13 @@ trait MetadataTrait
      * @ORM\Column(name="refreshed_at", type="datetime", nullable=true)
      */
     protected ?DateTime $refreshedAt = null;
+
+    /**
+     * @var null|GetEmailEventReportEvents[]
+     *
+     * @ORM\Column(name="events", type="array", nullable=true)
+     */
+    protected ?array $events = null;
     /**
      * @var array
      */
@@ -72,13 +79,6 @@ trait MetadataTrait
         Event::EVENT_BLOCKED,
         //        Event::EVENT_UNSUBSCRIBED
     );
-
-    /**
-     * @var null|GetEmailEventReportEvents[]
-     *
-     * @ORM\Column(name="events", type="array", nullable=true)
-     */
-    private ?array $events = null;
 
     //==============================================================================
     // MAIN FUNCTIONS

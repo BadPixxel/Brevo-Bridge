@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
@@ -86,14 +85,14 @@ class TemplatesAdminController extends Controller
      * Complete Debug of an Email Template
      *
      * @param KernelInterface $kernel
-     * @param EngineInterface $twig
+     * @param Environment     $twig
      * @param string          $emailCode
      *
      * @throws LoaderError
      *
      * @return Response
      */
-    public function viewAction(KernelInterface $kernel, EngineInterface $twig, string $emailCode): Response
+    public function viewAction(KernelInterface $kernel, Environment $twig, string $emailCode): Response
     {
         //==============================================================================
         // Identify Email Class

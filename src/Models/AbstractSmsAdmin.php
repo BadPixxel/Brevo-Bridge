@@ -60,7 +60,6 @@ abstract class AbstractSmsAdmin extends Admin
             ->add('email')
             ->add('subject')
             ->add('textContent')
-            ->add('')
         ;
     }
 
