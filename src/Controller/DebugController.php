@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
@@ -47,7 +46,7 @@ class DebugController extends AbstractController
      * @Route("/{emailCode}/mjml/{tmplCode}", name="badpixxel_sendinblue_tmpl_debug_mjml")
      *
      * @param KernelInterface $kernel
-     * @param EngineInterface $twig
+     * @param Environment     $twig
      * @param Manager         $manager
      * @param string          $emailCode Email Code for Parameters Generation
      * @param string          $tmplCode  Twig Source Mjml Block Template
@@ -59,7 +58,7 @@ class DebugController extends AbstractController
      */
     public function mjmlAction(
         KernelInterface $kernel,
-        EngineInterface $twig,
+        Environment $twig,
         Manager $manager,
         string $emailCode,
         string $tmplCode,
@@ -95,7 +94,6 @@ class DebugController extends AbstractController
         file_put_contents($tmplPath.$tmplName, $tmplHtml);
         //==============================================================================
         // Add Temporary Path to Twig Loader
-        /** @var Environment $twig */
         /** @var FilesystemLoader $loader */
         $loader = $twig->getLoader();
         $loader->addPath($tmplPath);
@@ -110,7 +108,7 @@ class DebugController extends AbstractController
      * Debug of a Complete Mjml Email
      *
      * @param KernelInterface $kernel
-     * @param EngineInterface $twig
+     * @param Environment     $twig
      * @param Manager         $tmplManager
      * @param AbstractEmail   $email
      *
@@ -120,7 +118,7 @@ class DebugController extends AbstractController
      */
     public function emailAction(
         KernelInterface $kernel,
-        EngineInterface $twig,
+        Environment $twig,
         Manager $tmplManager,
         AbstractEmail $email
     ): Response {
@@ -148,7 +146,6 @@ class DebugController extends AbstractController
         file_put_contents($tmplPath.$tmplName, $tmplHtml);
         //==============================================================================
         // Add Temporary Path to Twig Loader
-        /** @var Environment $twig */
         /** @var FilesystemLoader $loader */
         $loader = $twig->getLoader();
         $loader->addPath($tmplPath);
