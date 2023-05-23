@@ -1,6 +1,5 @@
 
 # Emails Templating Debug Routes 
-badpixxel_sendinblue_controllers:
-    resource: "@SendinblueBridgeBundle/Controller/"
-    type:     annotation
-    prefix:   /
+badpixxel_sendinblue_tmpl_debug_mjml:
+    controller: BadPixxel\SendinblueBridge\Controller\DebugController:mjmlAction
+    prefix:     /{emailCode}/mjml/{tmplCode}

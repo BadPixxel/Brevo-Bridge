@@ -36,7 +36,7 @@ class WebHooksController extends AbstractController
      *
      * @return Response
      */
-    public function indexAction(Request $request, SmtpManager $smtpManager): Response
+    public function __invoke(Request $request, SmtpManager $smtpManager): Response
     {
         //==============================================================================
         // Safety Check

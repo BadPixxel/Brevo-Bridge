@@ -19,7 +19,6 @@ use BadPixxel\SendinblueBridge\Services\TemplateManager as Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -42,8 +41,6 @@ class DebugController extends AbstractController
 
     /**
      * Debug of a Partial Email Mjml Template Block
-     *
-     * @Route("/{emailCode}/mjml/{tmplCode}", name="badpixxel_sendinblue_tmpl_debug_mjml")
      *
      * @param KernelInterface $kernel
      * @param Environment     $twig
