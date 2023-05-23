@@ -2,4 +2,4 @@
 # Emails Templating Debug Routes 
 badpixxel_sendinblue_tmpl_debug_mjml:
     controller: BadPixxel\SendinblueBridge\Controller\DebugController:mjmlAction
-    prefix:     /{emailCode}/mjml/{tmplCode}
+    path:       /{emailCode}/mjml/{tmplCode}
