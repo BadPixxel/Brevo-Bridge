@@ -11,12 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Entity;
+namespace BadPixxel\BrevoBridge\Entity;
 
-use BadPixxel\SendinblueBridge\Helpers\SmsExtractor;
+use BadPixxel\BrevoBridge\Helpers\SmsExtractor;
+use BadPixxel\BrevoBridge\Models\UserEmails;
+use Brevo\Client\Model\SendSms;
+use Brevo\Client\Model\SendTransacSms;
 use Doctrine\ORM\Mapping as ORM;
-use SendinBlue\Client\Model\SendSms;
-use SendinBlue\Client\Model\SendTransacSms;
 use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
@@ -26,8 +27,8 @@ use Sonata\UserBundle\Model\UserInterface as User;
  */
 abstract class AbstractSmsStorage
 {
-    use \BadPixxel\SendinblueBridge\Models\UserEmails\ContentsTrait;
-    use \BadPixxel\SendinblueBridge\Models\UserEmails\MetadataTrait;
+    use UserEmails\ContentsTrait;
+    use UserEmails\MetadataTrait;
 
     //==============================================================================
     // DATA STORAGE DEFINITION

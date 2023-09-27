@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Helpers;
+namespace BadPixxel\BrevoBridge\Helpers;
 
-use SendinBlue\Client\Model\SendSmtpEmail;
+use Brevo\Client\Model\SendSmtpEmail;
 
 /**
  * SendInBlue Emails Data Extractor.

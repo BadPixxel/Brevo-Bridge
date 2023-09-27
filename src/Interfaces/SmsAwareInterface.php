@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Interfaces;
+namespace BadPixxel\BrevoBridge\Interfaces;
 
 use Doctrine\Common\Collections\Collection;
 

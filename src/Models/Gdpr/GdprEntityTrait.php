@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Gdpr;
+namespace BadPixxel\BrevoBridge\Models\Gdpr;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;

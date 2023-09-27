@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Helpers;
+namespace BadPixxel\BrevoBridge\Helpers;
 
-use SendinBlue\Client\Model\SendTransacSms;
+use Brevo\Client\Model\SendTransacSms;
 
 /**
  * SendInBlue Sms Data Extractor.

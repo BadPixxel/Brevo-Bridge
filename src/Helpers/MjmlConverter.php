@@ -11,8 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Helpers;
+namespace BadPixxel\BrevoBridge\Helpers;
 
+use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class MjmlConverter
 {
-    use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
+    use ErrorLoggerTrait;
 
     /**
      * Mjml API App User
