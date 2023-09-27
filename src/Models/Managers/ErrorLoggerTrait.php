@@ -11,13 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Models\Managers;
 
-use SendinBlue\Client\ApiException;
+use Brevo\Client\ApiException;
 use stdClass;
 
 /**
- * Manage Errors Logging for Sendinblue Services
+ * Manage Errors Logging for Brevo Services
  */
 trait ErrorLoggerTrait
 {

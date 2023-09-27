@@ -11,13 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Models\Managers;
 
-use BadPixxel\SendinblueBridge\Helpers\SmsExtractor;
-use BadPixxel\SendinblueBridge\Repository\SmsRepository;
+use BadPixxel\BrevoBridge\Helpers\SmsExtractor;
+use BadPixxel\BrevoBridge\Repository\SmsRepository;
+use Brevo\Client\Model\SendSms;
+use Brevo\Client\Model\SendTransacSms;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use SendinBlue\Client\Model\SendSms;
-use SendinBlue\Client\Model\SendTransacSms;
 use Sonata\UserBundle\Model\UserInterface as User;
 
 /**

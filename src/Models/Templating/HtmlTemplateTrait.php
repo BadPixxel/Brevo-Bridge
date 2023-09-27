@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Templating;
+namespace BadPixxel\BrevoBridge\Models\Templating;
 
 /**
  * Trait for Access to Email Templating as Html

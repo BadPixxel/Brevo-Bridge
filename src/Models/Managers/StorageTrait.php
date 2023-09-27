@@ -11,14 +11,14 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Models\Managers;
 
-use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
-use BadPixxel\SendinblueBridge\Helpers\EmailExtractor;
-use BadPixxel\SendinblueBridge\Repository\EmailRepository;
+use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as EmailStorage;
+use BadPixxel\BrevoBridge\Helpers\EmailExtractor;
+use BadPixxel\BrevoBridge\Repository\EmailRepository;
+use Brevo\Client\Model\CreateSmtpEmail;
+use Brevo\Client\Model\SendSmtpEmail;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
-use SendinBlue\Client\Model\CreateSmtpEmail;
-use SendinBlue\Client\Model\SendSmtpEmail;
 use Sonata\UserBundle\Model\UserInterface as User;
 
 /**

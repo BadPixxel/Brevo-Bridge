@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Templating;
+namespace BadPixxel\BrevoBridge\Models\Templating;
 
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
 
 /**
  * Trait for Access to Email Templating as Mjml

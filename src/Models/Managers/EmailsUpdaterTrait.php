@@ -11,16 +11,16 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Models\Managers;
 
-use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
+use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as EmailStorage;
+use Brevo\Client\ApiException;
+use Brevo\Client\Model\GetEmailEventReport;
 use Exception;
-use SendinBlue\Client\ApiException;
-use SendinBlue\Client\Model\GetEmailEventReport;
 use stdClass;
 
 /**
- * Functions Collection to Update Emails Metadatas from SendInBlue API.
+ * Functions Collection to Update Emails Metadata from Brevo API.
  */
 trait EmailsUpdaterTrait
 {
@@ -49,6 +49,7 @@ trait EmailsUpdaterTrait
 
             return $this->updateSendEmailEventsErrored($storageEmail);
         }
+
         //==============================================================================
         // Update Storage
         return $this->updateSendEmailEvents($storageEmail, $events);
