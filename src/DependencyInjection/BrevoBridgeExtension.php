@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\DependencyInjection;
+namespace BadPixxel\BrevoBridge\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @see http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class SendinblueBridgeExtension extends Extension
+class BrevoBridgeExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -41,9 +41,9 @@ class SendinblueBridgeExtension extends Extension
             $loader->load('admin.yaml');
         }
 
-        $container->setParameter('sendinblue_bridge', $config);
-        $container->setParameter('sendinblue_bridge.user.class', $config["storage"]["user"]);
-        $container->setParameter('sendinblue_bridge.emails.class', $config["storage"]["emails"]);
-        $container->setParameter('sendinblue_bridge.sms.class', $config["storage"]["sms"]);
+        $container->setParameter('brevo_bridge', $config);
+        $container->setParameter('brevo_bridge.user.class', $config["storage"]["user"]);
+        $container->setParameter('brevo_bridge.emails.class', $config["storage"]["emails"]);
+        $container->setParameter('brevo_bridge.sms.class', $config["storage"]["sms"]);
     }
 }

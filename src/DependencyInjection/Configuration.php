@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\DependencyInjection;
+namespace BadPixxel\BrevoBridge\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -34,16 +34,19 @@ class Configuration implements ConfigurationInterface
         // @phpstan-ignore-next-line
         $rootNode
             ->children()
-            ->scalarNode('api_key')->defaultValue("%sendinblue_api_key%")->cannotBeEmpty()->end()
+            ->scalarNode('api_key')->cannotBeEmpty()->end()
             ->scalarNode('track_key')->defaultValue(null)->end()
             ->scalarNode('cli_host')->defaultValue("http://localhost")->cannotBeEmpty()->end()
+            ->booleanNode("disable_emails")->isRequired()->end()
             ->arrayNode('sender')
+            ->isRequired()
             ->children()
             ->scalarNode('name')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('email')->isRequired()->cannotBeEmpty()->end()
             ->end()
             ->end()
             ->arrayNode('reply')
+            ->isRequired()
             ->children()
             ->scalarNode('name')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('email')->isRequired()->cannotBeEmpty()->end()
@@ -74,8 +77,8 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('mjml')->addDefaultsIfNotSet()
             ->children()
             ->scalarNode('endpoint')->defaultValue("https://api.mjml.io/v1/render")->end()
-            ->scalarNode('api_key')->defaultValue("%mjml_api_key%")->end()
-            ->scalarNode('secret_key')->defaultValue("%mjml_secret_key%")->end()
+            ->scalarNode('api_key')->end()
+            ->scalarNode('secret_key')->end()
             ->end()
             ->end()
             ->end()
