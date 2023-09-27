@@ -11,17 +11,18 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Services;
+namespace BadPixxel\BrevoBridge\Services;
 
-use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as EmailStorage;
-use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
+use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as EmailStorage;
+use BadPixxel\BrevoBridge\Models\Managers;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\ApiException;
+use Brevo\Client\Model\CreateSmtpEmail;
+use Brevo\Client\Model\SendSmtpEmail;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Exception;
 use GuzzleHttp\Client;
-use SendinBlue\Client\Api\TransactionalEmailsApi;
-use SendinBlue\Client\ApiException;
-use SendinBlue\Client\Model\CreateSmtpEmail;
-use SendinBlue\Client\Model\SendSmtpEmail;
 use Symfony\Component\Routing\RouterInterface as Router;
 use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Twig\Environment as Twig;
@@ -33,10 +34,10 @@ use Twig\Environment as Twig;
  */
 class SmtpManager
 {
-    use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
-    use \BadPixxel\SendinblueBridge\Models\Managers\TemplatingTrait;
-    use \BadPixxel\SendinblueBridge\Models\Managers\StorageTrait;
-    use \BadPixxel\SendinblueBridge\Models\Managers\EmailsUpdaterTrait;
+    use Managers\ErrorLoggerTrait;
+    use Managers\TemplatingTrait;
+    use Managers\StorageTrait;
+    use Managers\EmailsUpdaterTrait;
 
     /**
      * Transactional Emails API Service.

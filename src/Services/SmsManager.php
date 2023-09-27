@@ -11,31 +11,32 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Services;
+namespace BadPixxel\BrevoBridge\Services;
 
-use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
+use BadPixxel\BrevoBridge\Models\Managers;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
+use Brevo\Client\Api\TransactionalSMSApi;
+use Brevo\Client\ApiException;
+use Brevo\Client\Model\SendSms;
+use Brevo\Client\Model\SendTransacSms;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Exception;
 use GuzzleHttp\Client;
-use SendinBlue\Client\Api\TransactionalSMSApi;
-use SendinBlue\Client\ApiException;
-use SendinBlue\Client\Model\SendSms;
-use SendinBlue\Client\Model\SendTransacSms;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Routing\RouterInterface as Router;
 use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Twig\Environment as Twig;
 
 /**
- * Sms Manager for SendingBlue Api.
+ * Sms Manager for Brevo Api.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SmsManager
 {
-    use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
-    use \BadPixxel\SendinblueBridge\Models\Managers\TemplatingTrait;
-    use \BadPixxel\SendinblueBridge\Models\Managers\SmsStorageTrait;
+    use Managers\ErrorLoggerTrait;
+    use Managers\TemplatingTrait;
+    use Managers\SmsStorageTrait;
 
     /**
      * Transactional Sms API Service.
