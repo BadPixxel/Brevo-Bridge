@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Controller;
+namespace BadPixxel\BrevoBridge\Controller;
 
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,6 +83,7 @@ class WebHooksController extends AbstractController
         if (empty($messageId) || !is_scalar($messageId)) {
             throw new BadRequestHttpException('No Message Id Found');
         }
+
         //====================================================================//
         // Return Message Id
         return (string) $messageId;

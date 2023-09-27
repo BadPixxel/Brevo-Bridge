@@ -11,11 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Controller;
+namespace BadPixxel\BrevoBridge\Controller;
 
+use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as Email;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
 use BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait;
-use BadPixxel\SendinblueBridge\Entity\AbstractEmailStorage as Email;
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
@@ -49,6 +49,7 @@ class EmailAdminController extends CRUDController
         if (null == $email) {
             throw $this->createNotFoundException(sprintf('unable to find the object with id: %s', $id));
         }
+
         //====================================================================//
         // Output the raw Email Contents
         return new Response($email->getHtmlContent());
@@ -84,6 +85,7 @@ class EmailAdminController extends CRUDController
         if ($referer) {
             return $this->redirect($referer);
         }
+
         //====================================================================//
         // Redirect to View Page
         return $this->redirect(
@@ -108,6 +110,7 @@ class EmailAdminController extends CRUDController
         //==============================================================================
         // Load Selected Models
         $selectedModels = $selectedModelQuery->execute();
+
         //==============================================================================
         // Refresh Email (Forced)
         try {

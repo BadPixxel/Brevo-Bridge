@@ -11,11 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Controller;
+namespace BadPixxel\BrevoBridge\Controller;
 
-use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
-use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use BadPixxel\SendinblueBridge\Services\TemplateManager as Manager;
+use BadPixxel\BrevoBridge\Interfaces\MjmlTemplateProviderInterface;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
+use BadPixxel\BrevoBridge\Services\TemplateManager as Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -146,6 +146,7 @@ class DebugController extends AbstractController
         /** @var FilesystemLoader $loader */
         $loader = $twig->getLoader();
         $loader->addPath($tmplPath);
+
         //==============================================================================
         // Render Email Html Preview
         return $this->render(

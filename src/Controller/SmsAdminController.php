@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Controller;
+namespace BadPixxel\BrevoBridge\Controller;
 
 use BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait;
 use Sonata\AdminBundle\Controller\CRUDController;

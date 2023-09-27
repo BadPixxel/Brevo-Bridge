@@ -11,11 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Controller;
+namespace BadPixxel\BrevoBridge\Controller;
 
-use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
-use BadPixxel\SendinblueBridge\Services\TemplateManager;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Services\TemplateManager;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,7 +75,7 @@ class TemplatesAdminController extends Controller
             }
         }
 
-        return $this->renderWithExtraParams("@SendinblueBridge/TemplatesAdmin/list.html.twig", array(
+        return $this->renderWithExtraParams("@BrevoBridge/TemplatesAdmin/list.html.twig", array(
             "tmplEmails" => $tmplEmails,
             "allEmails" => $this->tmplManager->getAllEmails(),
         ));
@@ -125,7 +125,7 @@ class TemplatesAdminController extends Controller
         /** @var UserInterface $user */
         $user = $this->getUser();
 
-        return $this->render("@SendinblueBridge/Debug/email_view.html.twig", array(
+        return $this->render("@BrevoBridge/Debug/email_view.html.twig", array(
             "tmplPath" => self::TMPL_PATH,
             'tmplParams' => $this->tmplManager->getTmplParameters($emailClass, $user),
             "tmplEmails" => $tmplEmails,
@@ -245,6 +245,6 @@ class TemplatesAdminController extends Controller
      */
     private function redirectToIndex(): Response
     {
-        return $this->redirectToRoute("admin_badpixxel_sendinblue_templates_list");
+        return $this->redirectToRoute("admin_badpixxel_brevo_templates_list");
     }
 }
