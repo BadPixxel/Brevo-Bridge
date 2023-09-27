@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models;
+namespace BadPixxel\BrevoBridge\Models;
 
-use BadPixxel\SendinblueBridge\Services\EventManager;
+use BadPixxel\BrevoBridge\Services\EventManager;
 use Exception;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -104,6 +104,7 @@ abstract class AbstractTrackEvent
         // Create a New Instance of the Event
         /** @var AbstractTrackEvent $instance */
         $instance = call_user_func_array($callback, func_get_args());
+
         //==============================================================================
         // Create a New Instance of the Event
         return $instance->sendEvent(false);
@@ -132,6 +133,7 @@ abstract class AbstractTrackEvent
         // Create a New Instance of the Event
         /** @var AbstractTrackEvent $instance */
         $instance = call_user_func_array($callback, func_get_args());
+
         //==============================================================================
         // Send Event to SendInBlue API
         return $instance->sendEvent(true);
