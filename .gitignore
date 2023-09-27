@@ -57,3 +57,4 @@
 /.php-cs-fixer.cache
 /tests/public/bundles/
 /.env
+/var/
