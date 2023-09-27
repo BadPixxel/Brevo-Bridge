@@ -4,8 +4,8 @@
 
 {% extends base_template %}
 
-{% block title %}SendInBlue{% endblock %}
-{% block navbar_title %}SendInBlue Bridge Templates{% endblock %}
+{% block title %}Brevo{% endblock %}
+{% block navbar_title %}Brevo Bridge Templates{% endblock %}
 
 {% block sonata_admin_content %}
     
@@ -34,21 +34,21 @@
                             <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailClass }}</td> 
                             <td class="sonata-ba-list-field sonata-ba-list-field-actions" objectid="34">
                                 <div class="btn-group">
-                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_view', {'emailCode': emailCode}) }}" 
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_view', {'emailCode': emailCode}) }}"
                                        class="btn btn-sm btn-default view_link" 
                                        target="_blank" title="Preview"
                                        >
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                         Preview
                                     </a>
-                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_update', {'emailCode': emailCode}) }}" 
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_update', {'emailCode': emailCode}) }}"
                                        class="btn btn-sm btn-default view_link" 
                                        title="Export to SenInBlue"
                                        >
                                         <i class="fa fa-upload" aria-hidden="true"></i>
                                         Export
                                     </a>
-                                    <a href="{{ path('admin_badpixxel_sendinblue_templates_send', {'emailCode': emailCode}) }}" 
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_send', {'emailCode': emailCode}) }}"
                                        class="btn btn-sm btn-default view_link" 
                                        title="Send a test Email"
                                        >

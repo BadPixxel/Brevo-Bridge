@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Repository;
+namespace BadPixxel\BrevoBridge\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Sonata\UserBundle\Model\UserInterface as User;

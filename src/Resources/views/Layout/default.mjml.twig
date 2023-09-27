@@ -1,0 +1,42 @@
+{#
+    DEFAULT MJML EMAIL LAYOUT
+#}
+
+<mjml>
+
+    <mj-head>
+        {% block styles %}
+            {% include '@BrevoBridge/Layout/styles.mjml.twig' %}
+        {% endblock %}
+        <mj-preview>{% block preview %}{% endblock %}</mj-preview>
+
+    </mj-head>
+
+    <mj-body background-color="#ffffff">
+        {% block header %}
+            {% include '@BrevoBridge/Layout/header.mjml.twig' %}
+        {% endblock %}
+
+        {% block contents %}
+            <mj-section mj-class="bg-white" padding-bottom="0px">
+                <mj-column>
+
+                    <mj-text mj-class="txt-title">
+                        {% verbatim %}{{ params.subject }}{% endverbatim %}
+                    </mj-text>
+
+                    <mj-text mj-class="txt-lead">
+                        {% verbatim %}{{ params.text }}{% endverbatim %}
+                    </mj-text>
+
+                </mj-column>
+            </mj-section>
+
+        {% endblock %}
+
+        {% block footer %}
+            {% include '@BrevoBridge/Layout/footer.mjml.twig' %}
+        {% endblock %}
+    </mj-body>
+
+</mjml>

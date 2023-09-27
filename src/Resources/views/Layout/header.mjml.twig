@@ -1,0 +1,24 @@
+
+<mj-section mj-class="bg-gray" padding="15px">
+    <mj-column width="30%">
+        <mj-image href="{% verbatim %}{{ params.urls.home }}{% endverbatim %}"
+                  src="{{ asset('bundles/brevobridge/img/brevo-logo.svg') }}"
+                  alt="Logo" align="center" padding="10px" padding-left="20px"
+        >
+        </mj-image>
+    </mj-column>
+
+    <mj-column width="70%" vertical-align="middle" padding-bottom="5px" padding-top="5px">
+        <mj-navbar hamburger="hamburger" ico-color="white">
+            <mj-navbar-link href="{% verbatim %}{{ params.urls.home }}{% endverbatim %}" color="white" font-size="13px">
+                Item 1
+            </mj-navbar-link>
+            <mj-navbar-link href="{% verbatim %}{{ params.urls.home }}{% endverbatim %}" color="white" font-size="13px">
+                Item 2
+            </mj-navbar-link>
+            <mj-navbar-link href="{% verbatim %}{{ params.urls.home }}{% endverbatim %}" color="white" font-size="13px">
+                Item 3
+            </mj-navbar-link>
+        </mj-navbar>
+    </mj-column>
+</mj-section>
