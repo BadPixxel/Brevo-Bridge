@@ -47,7 +47,6 @@ services:
 
     ################################################################################
     # SendInBlue Emails Templates Twig Extension
-    badpixxel.sendinblue.extension:
-        class: BadPixxel\BrevoBridge\Twig\SendinblueBridgeExtension
+    BadPixxel\BrevoBridge\Twig\BrevoBridgeExtension:
         tags:
             - { name: twig.extension  }

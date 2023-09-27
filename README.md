@@ -1,9 +1,9 @@
-# Sendinblue Bridge
+# Brevo Bridge
 
-Symfony Bundle to Manage Sending User Email via Sendinblue Transactionnal API.
+Symfony Bundle to Manage Sending User Email via Brevo Transactionnal API.
 
 Key features
-- Manage Sending Transactionnal Emails via Sendinblue API.
+- Manage Sending Transactional Emails via Sendinblue API.
 - Emails are defined as Static Class without any other requirement.
 - Send Emails are stored on MySQl Database
 - Interfaced with Sonata Admin view User emails from Admin interface

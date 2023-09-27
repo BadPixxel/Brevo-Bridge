@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Twig;
+namespace BadPixxel\BrevoBridge\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -19,7 +19,7 @@ use Twig\TwigFilter;
 /**
  * Twig Extension to Render Sendinblue.
  */
-class SendinblueBridgeExtension extends AbstractExtension
+class BrevoBridgeExtension extends AbstractExtension
 {
     /**
      * Get List of Available Filters.

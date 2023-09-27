@@ -55,3 +55,5 @@
 /.idea/
 /travis/.php_cs.cache
 /.php-cs-fixer.cache
+/tests/public/bundles/
+/.env

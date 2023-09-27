@@ -1,4 +1,4 @@
 # Emails Events Webhooks
-badpixxel_sendinblue_webhooks:
-    controller: BadPixxel\SendinblueBridge\Controller\WebHooksController
+badpixxel_brevo_webhooks:
+    controller: BadPixxel\BrevoBridge\Controller\WebHooksController
     path:       /sibwh
