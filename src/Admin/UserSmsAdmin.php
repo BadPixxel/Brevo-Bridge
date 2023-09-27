@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Admin;
+namespace BadPixxel\BrevoBridge\Admin;
 
-use BadPixxel\SendinblueBridge\Models\AbstractSmsAdmin;
+use BadPixxel\BrevoBridge\Models\AbstractSmsAdmin;
 
 /**
  * Sonata Admin Class for Users Sms.

@@ -11,10 +11,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Command;
+namespace BadPixxel\BrevoBridge\Command;
 
 use ArrayAccess;
-use BadPixxel\SendinblueBridge\Services\AccountManager;
+use BadPixxel\BrevoBridge\Services\AccountManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,8 +47,8 @@ class PingCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('sendinblue:api:ping')
-            ->setDescription('Test Connection to SendInBlue API')
+            ->setName('brevo:api:ping')
+            ->setDescription('Test Connection to Brevo API')
         ;
     }
 

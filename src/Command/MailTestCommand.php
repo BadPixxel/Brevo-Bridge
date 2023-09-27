@@ -11,10 +11,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Command;
+namespace BadPixxel\BrevoBridge\Command;
 
-use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -50,7 +50,7 @@ class MailTestCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('sendinblue:email:test')
+            ->setName('brevo:email:test')
             ->setDescription("Email Sending test: require user email & email Code")
             ->addArgument(
                 'target',

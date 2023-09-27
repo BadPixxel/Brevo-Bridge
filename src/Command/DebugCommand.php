@@ -11,11 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Command;
+namespace BadPixxel\BrevoBridge\Command;
 
-use BadPixxel\SendinblueBridge\Models\AbstractEmail;
-use BadPixxel\SendinblueBridge\Models\AbstractSms;
-use BadPixxel\SendinblueBridge\Services\ConfigurationManager;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
+use BadPixxel\BrevoBridge\Models\AbstractSms;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,8 +51,8 @@ class DebugCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('sendinblue:api:debug')
-            ->setDescription('Show SendInBlue API Configuration Details')
+            ->setName('brevo:api:debug')
+            ->setDescription('Show Brevo API Configuration Details')
         ;
     }
 

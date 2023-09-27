@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Admin;
+namespace BadPixxel\BrevoBridge\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
@@ -26,14 +26,14 @@ class TemplatesAdmin extends Admin
      *
      * @var string
      */
-    protected $baseRouteName = "admin_badpixxel_sendinblue_templates";
+    protected $baseRouteName = "admin_badpixxel_brevo_templates";
 
     /**
      * The base route pattern used to generate the routing information.
      *
      * @var string
      */
-    protected $baseRoutePattern = "sib/templates";
+    protected $baseRoutePattern = "brevo/templates";
 
     /**
      * Action list for the search result.

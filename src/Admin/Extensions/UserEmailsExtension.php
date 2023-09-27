@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Admin\Extensions;
+namespace BadPixxel\BrevoBridge\Admin\Extensions;
 
-use BadPixxel\SendinblueBridge\Interfaces\EmailsAwareInterface;
+use BadPixxel\BrevoBridge\Interfaces\EmailsAwareInterface;
 use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\AdminBundle\Admin\AbstractAdminExtension;
 use Sonata\AdminBundle\Admin\AdminInterface;

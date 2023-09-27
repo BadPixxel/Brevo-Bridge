@@ -11,10 +11,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Command;
+namespace BadPixxel\BrevoBridge\Command;
 
-use BadPixxel\SendinblueBridge\Models\AbstractSms;
-use BadPixxel\SendinblueBridge\Services\SmsManager;
+use BadPixxel\BrevoBridge\Models\AbstractSms;
+use BadPixxel\BrevoBridge\Services\SmsManager;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -50,7 +50,7 @@ class SmsTestCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('sendinblue:sms:test')
+            ->setName('brevo:sms:test')
             ->setDescription("Sms Sending test: require user email & sms Code")
             ->addArgument(
                 'target',

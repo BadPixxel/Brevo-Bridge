@@ -11,11 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Command;
+namespace BadPixxel\BrevoBridge\Command;
 
-use BadPixxel\SendinblueBridge\Models\AbstractTrackEvent;
-use BadPixxel\SendinblueBridge\Services\EventManager;
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Models\AbstractTrackEvent;
+use BadPixxel\BrevoBridge\Services\EventManager;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -58,7 +58,7 @@ class EventTestCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('sendinblue:event:test')
+            ->setName('brevo:event:test')
             ->setDescription("Tracker Event Sending test: require user email & event Code")
             ->addArgument(
                 'target',
