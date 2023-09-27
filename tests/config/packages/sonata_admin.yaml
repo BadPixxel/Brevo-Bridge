@@ -1,0 +1,15 @@
+# Sonata Admin        
+sonata_admin:
+    title:      Brevo Bridge
+    search:     false
+    dashboard:
+        blocks:
+            - { type: sonata.admin.block.admin_list, position: center }
+    options:
+    security:
+        role_admin:                     ROLE_USER
+
+sonata_block:
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts: [admin]

@@ -1,0 +1,29 @@
+
+brevo_bridge:
+
+    api_key:        "%env(string:BREVO_API_KEY)%"
+    track_key:      "%env(string:BREVO_TRACKING_KEY)%"
+    disable_emails: true
+
+    mjml:
+        api_key:    "%env(string:MJML_API_KEY)%"
+        secret_key: "%env(string:MJML_API_SECRET)%"
+
+    sender:
+        name:       "Brevo Bridge Bundle"
+        email:      "no-reply@exemple.com"
+
+    reply:
+        name:       "Brevo Bridge Bundle"
+        email:      "no-reply@exemple.com"
+
+    storage:
+        user:       UserBundle\Entity\User
+        emails:     BadPixxel\BrevoBridge\Tests\Bundle\Entity\Email
+        sms:        BadPixxel\BrevoBridge\Tests\Bundle\Entity\Sms
+
+    emails:
+        # Basic Notification Email
+        Basic:    BadPixxel\BrevoBridge\Tests\Bundle\Emails\Basic
+        # Templated Email
+        Template: BadPixxel\BrevoBridge\Tests\Bundle\Emails\Template

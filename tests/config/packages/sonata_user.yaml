@@ -1,0 +1,7 @@
+sonata_user:
+    class:
+        user:     BadPixxel\BrevoBridge\Tests\Bundle\Entity\User
+    resetting:
+        email:
+            address: sonata@localhost
+            sender_name: Sonata Admin
