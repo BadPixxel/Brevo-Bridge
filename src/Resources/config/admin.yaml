@@ -4,48 +4,63 @@ services:
 
     ############################################################################
     # Sendinblue Bridge Send Emails Admin Extension 
-    badpixxel.sendinblue.admin.emails:
-        class: BadPixxel\SendinblueBridge\Admin\UserEmailsAdmin
-        arguments:
-            - ~
-            - "%sendinblue_bridge.emails.class%"
-            - BadPixxel\SendinblueBridge\Controller\EmailAdminController
+    BadPixxel\BrevoBridge\Admin\UserEmailsAdmin:
         tags:
-            - { name: sonata.admin, manager_type: orm, label: SendInBlue Emails, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>', pager_type: 'simple'  }
+            - {
+                name:           sonata.admin,
+                model_class:    "%brevo_bridge.emails.class%",
+                controller:     BadPixxel\BrevoBridge\Controller\EmailAdminController,
+                manager_type:   orm,
+                label:          Brevo Emails,
+                group:          Brevo,
+                icon:           '<i class="fa far fa-envelope"></i>',
+                pager_type:     'simple'
+            }
 
     ############################################################################
     # Sendinblue Bridge Send Sms Admin Extension
-    badpixxel.sendinblue.admin.sms:
-        class: BadPixxel\SendinblueBridge\Admin\UserSmsAdmin
-        arguments:
-            - ~
-            - "%sendinblue_bridge.sms.class%"
-            - BadPixxel\SendinblueBridge\Controller\SmsAdminController
+    BadPixxel\BrevoBridge\Admin\UserSmsAdmin:
         tags:
-            - { name: sonata.admin, manager_type: orm, label: SendInBlue Sms, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>', pager_type: 'simple'  }
+            - {
+                name:           sonata.admin,
+                model_class:    "%brevo_bridge.sms.class%",
+                controller:     BadPixxel\BrevoBridge\Controller\SmsAdminController,
+                manager_type:   orm,
+                label:          Brevo Sms,
+                group:          Brevo,
+                icon:           '<i class="fa far fa-envelope"></i>',
+                pager_type:     'simple'
+            }
+
+    ############################################################################
+    # Sendinblue Bridge Templates Admin Extension
+    BadPixxel\BrevoBridge\Admin\TemplatesAdmin:
+        tags:
+            - {
+                name:           sonata.admin,
+                model_class:    BadPixxel\BrevoBridge\Models\AbstractEmail,
+                controller:     BadPixxel\BrevoBridge\Controller\TemplatesAdminController,
+                manager_type:   orm,
+                label:          Brevo Templates,
+                group:          Brevo,
+                icon:           '<i class="fa far fa-envelope"></i>'
+            }
 
     ############################################################################
     # Sendinblue Bridge Emails Admin Extension for Users 
-    badpixxel.sendinblue.admin.emails.extension:
-        class: BadPixxel\SendinblueBridge\Admin\Extensions\UserEmailsExtension
+    BadPixxel\BrevoBridge\Admin\Extensions\UserEmailsExtension:
         tags:
-            - { name: sonata.admin.extension, target: sonata.user.admin.user }  
+            - {
+                name: sonata.admin.extension,
+                target: sonata.user.admin.user
+            }
 
     ############################################################################
     # Sendinblue Bridge Sms Admin Extension for Users
-    badpixxel.sendinblue.admin.sms.extension:
-        class: BadPixxel\SendinblueBridge\Admin\Extensions\UserSmsExtension
+    BadPixxel\BrevoBridge\Admin\Extensions\UserSmsExtension:
         tags:
-            - { name: sonata.admin.extension, target: sonata.user.admin.user }
+            - {
+                name: sonata.admin.extension,
+                target: sonata.user.admin.user
+            }
 
-    ############################################################################
-    # Sendinblue Bridge Templates Admin Extension 
-    badpixxel.sendinblue.admin.templates:
-        class: BadPixxel\SendinblueBridge\Admin\TemplatesAdmin
-        arguments: 
-            - ~
-            - BadPixxel\SendinblueBridge\Models\AbstractEmail
-            - BadPixxel\SendinblueBridge\Controller\TemplatesAdminController
-        tags:
-            - { name: sonata.admin, manager_type: orm, label: SendInBlue Templates, group: SendInBlue, icon: '<i class="fa far fa-envelope"></i>'  }
-            

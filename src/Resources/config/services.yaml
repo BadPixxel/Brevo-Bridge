@@ -4,51 +4,50 @@ services:
 
     ########################################################################
     # Declare & AutoWire Bundle Commands
-    BadPixxel\SendinblueBridge\Command\:
+    BadPixxel\BrevoBridge\Command\:
         resource: '../../Command'
         autowire:   true
         tags:       [ console.command ]
 
     ################################################################################
     # AutoWire for Controllers
-    BadPixxel\SendinblueBridge\Controller\:
+    BadPixxel\BrevoBridge\Controller\:
         resource: '../../Controller'
         tags: ['controller.service_arguments', 'container.service_subscriber']
 
     ################################################################################
     # Bridge Configurations Manager
-    BadPixxel\SendinblueBridge\Services\ConfigurationManager:
+    BadPixxel\BrevoBridge\Services\ConfigurationManager:
         arguments:
-            - "%sendinblue_bridge%"
-            - "%mailer_disable%"
-    
+            - "%brevo_bridge%"
+
     ################################################################################
     # SendInBlue API Account Manager
-    BadPixxel\SendinblueBridge\Services\AccountManager: ~
+    BadPixxel\BrevoBridge\Services\AccountManager: ~
 
     ################################################################################
     # SendInBlue Emails SMTP Manager
-    BadPixxel\SendinblueBridge\Services\SmtpManager:
+    BadPixxel\BrevoBridge\Services\SmtpManager:
         public: true
 
     ################################################################################
     # SendInBlue Sms Manager
-    BadPixxel\SendinblueBridge\Services\SmsManager:
+    BadPixxel\BrevoBridge\Services\SmsManager:
         public: true
 
     ################################################################################
     # SendInBlue Events Tracker Manager
-    BadPixxel\SendinblueBridge\Services\EventManager:
+    BadPixxel\BrevoBridge\Services\EventManager:
         public: true
 
     ################################################################################
     # SendInBlue Emails Templates Manager
-    BadPixxel\SendinblueBridge\Services\TemplateManager:
+    BadPixxel\BrevoBridge\Services\TemplateManager:
         public: true
 
     ################################################################################
     # SendInBlue Emails Templates Twig Extension
     badpixxel.sendinblue.extension:
-        class: BadPixxel\SendinblueBridge\Twig\SendinblueBridgeExtension
+        class: BadPixxel\BrevoBridge\Twig\SendinblueBridgeExtension
         tags:
             - { name: twig.extension  }
