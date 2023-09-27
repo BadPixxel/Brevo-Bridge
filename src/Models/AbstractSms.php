@@ -11,12 +11,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models;
+namespace BadPixxel\BrevoBridge\Models;
 
-use BadPixxel\SendinblueBridge\Services\SmsManager;
+use BadPixxel\BrevoBridge\Services\SmsManager;
+use Brevo\Client\Model\SendSms;
+use Brevo\Client\Model\SendTransacSms;
 use Exception;
-use SendinBlue\Client\Model\SendSms;
-use SendinBlue\Client\Model\SendTransacSms;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -94,6 +94,7 @@ abstract class AbstractSms
         // Create a New Instance of the Email
         /** @var AbstractSms $instance */
         $instance = call_user_func_array($callback, func_get_args());
+
         //==============================================================================
         // Create a New Instance of the Sms
         return $instance->sendSms(false);
@@ -120,6 +121,7 @@ abstract class AbstractSms
         // Create a New Instance of the Email
         /** @var AbstractSms $instance */
         $instance = call_user_func_array($callback, func_get_args());
+
         //==============================================================================
         // Create a New Instance of the Sms
         return $instance->sendSms(true);

@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models;
+namespace BadPixxel\BrevoBridge\Models;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
@@ -34,7 +34,7 @@ abstract class AbstractEmailAdmin extends Admin
     {
         $list = parent::configureActionButtons($buttonList, $action, $object);
 
-        $list['refresh']['template'] = '@SendinblueBridge/Admin/action_refresh.html.twig';
+        $list['refresh']['template'] = '@BrevoBridge/Admin/action_refresh.html.twig';
 
         return $list;
     }
@@ -99,7 +99,7 @@ abstract class AbstractEmailAdmin extends Admin
                 'actions' => array(
                     'show' => array(),
                     'refresh' => array(
-                        'template' => '@SendinblueBridge/Admin/list__action_email_refresh.html.twig',
+                        'template' => '@BrevoBridge/Admin/list__action_email_refresh.html.twig',
                     )
                 ),
             ))
@@ -141,7 +141,7 @@ abstract class AbstractEmailAdmin extends Admin
         $show
             ->with('Contents', array('class' => 'col-md-8'))
             ->add('htmlContent', null, array(
-                'template' => '@SendinblueBridge/Admin/html_content.html.twig',
+                'template' => '@BrevoBridge/Admin/html_content.html.twig',
             ))
             ->end()
             ->with('Metadatas', array('class' => 'col-md-4'))
@@ -152,7 +152,7 @@ abstract class AbstractEmailAdmin extends Admin
             ->add('messageId')
             ->add('uuid')
             ->add('events', null, array(
-                'template' => '@SendinblueBridge/Admin/events_list.html.twig',
+                'template' => '@BrevoBridge/Admin/events_list.html.twig',
             ))
             ->end()
         ;

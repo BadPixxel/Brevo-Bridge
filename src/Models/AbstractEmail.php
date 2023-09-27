@@ -11,12 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models;
+namespace BadPixxel\BrevoBridge\Models;
 
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Services\SmtpManager;
+use Brevo\Client\Model\CreateSmtpEmail;
+use Brevo\Client\Model\SendSmtpEmail;
+use Brevo\Client\Model\SendSmtpEmailSender;
 use Exception;
-use SendinBlue\Client\Model\CreateSmtpEmail;
-use SendinBlue\Client\Model\SendSmtpEmail;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,28 +32,28 @@ abstract class AbstractEmail extends GenericEvent
      *
      * @var User[]
      */
-    protected $toUsers;
+    protected array $toUsers;
 
     /**
      * Current Email.
      *
      * @var SendSmtpEmail
      */
-    protected $email;
+    protected SendSmtpEmail $email;
 
     /**
      * Default Parameters.
      *
      * @var array
      */
-    protected $paramsDefaults = array();
+    protected array $paramsDefaults = array();
 
     /**
      * Default Parameters Types.
      *
      * @var array
      */
-    protected $paramsTypes = array();
+    protected array $paramsTypes = array();
 
     /**
      * Construct Minimal Email.
@@ -61,6 +62,7 @@ abstract class AbstractEmail extends GenericEvent
      */
     public function __construct($toUsers)
     {
+        parent::__construct();
         $this
             ->create()
             ->setupToUsers($toUsers)
@@ -88,6 +90,7 @@ abstract class AbstractEmail extends GenericEvent
         // Create a New Instance of the Email
         /** @var AbstractEmail $instance */
         $instance = call_user_func_array($callback, func_get_args());
+
         //==============================================================================
         // Create a New Instance of the Email
         return $instance->sendEmail(false);
@@ -114,6 +117,7 @@ abstract class AbstractEmail extends GenericEvent
         // Create a New Instance of the Email
         /** @var AbstractEmail $instance */
         $instance = call_user_func_array($callback, func_get_args());
+
         //==============================================================================
         // Create a New Instance of the Email
         return $instance->sendEmail(true);
@@ -323,7 +327,7 @@ abstract class AbstractEmail extends GenericEvent
     {
         //==============================================================================
         // Verify Sender
-        /** @var null|\SendinBlue\Client\Model\SendSmtpEmailSender $sender */
+        /** @var null|SendSmtpEmailSender $sender */
         $sender = $this->email->getSender();
         if (empty($sender)) {
             return false;

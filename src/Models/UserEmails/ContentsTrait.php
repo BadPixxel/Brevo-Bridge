@@ -11,14 +11,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\UserEmails;
+namespace BadPixxel\BrevoBridge\Models\UserEmails;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Storage of Email Contents.
- *
- * @author nanard33
  */
 trait ContentsTrait
 {

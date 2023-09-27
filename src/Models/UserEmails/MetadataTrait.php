@@ -11,13 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Models\UserEmails;
+namespace BadPixxel\BrevoBridge\Models\UserEmails;
 
+use Brevo\Client\Model\GetEmailEventReportEvents;
+use Brevo\Client\Model\GetEmailEventReportEvents as Event;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use SendinBlue\Client\Model\GetEmailEventReportEvents;
-use SendinBlue\Client\Model\GetEmailEventReportEvents as Event;
 
 /**
  * Emails Storage Metadata.
