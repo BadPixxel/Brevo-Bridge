@@ -11,18 +11,19 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Services;
+namespace BadPixxel\BrevoBridge\Services;
 
-use BadPixxel\SendinblueBridge\Models\AbstractTrackEvent;
-use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
+use BadPixxel\BrevoBridge\Models\AbstractTrackEvent;
+use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Exception;
 
 /**
- * Tracker Events Manager for SendingBlue Api.
+ * Tracker Events Manager for Brevo Api.
  */
 class EventManager
 {
-    use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
+    use ErrorLoggerTrait;
 
     /**
      * Bridge Configuration.

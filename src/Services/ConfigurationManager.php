@@ -11,46 +11,45 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Services;
+namespace BadPixxel\BrevoBridge\Services;
 
-use SendinBlue\Client\Configuration;
-use SendinBlue\Client\Model\SendSmtpEmailReplyTo;
-use SendinBlue\Client\Model\SendSmtpEmailSender;
+use Brevo\Client\Configuration;
+use Brevo\Client\Model\SendSmtpEmailReplyTo;
+use Brevo\Client\Model\SendSmtpEmailSender;
 use Symfony\Component\Routing\RouterInterface as Router;
 
 /**
- * Bridge Configuration Manager for SendingBlue Api.
+ * Bridge Configuration Manager for Brevo Api.
  */
 class ConfigurationManager
 {
     /**
      * @var array
      */
-    private $config;
+    private array $config;
 
     /**
      * @var null|Configuration
      */
-    private $sdkConfig;
+    private ?Configuration $sdkConfig;
 
     /**
      * @var null|array
      */
-    private $eventsCurlConfig;
+    private ?array $eventsCurlConfig;
 
     /**
      * @var bool
      */
-    private $enabled;
+    private bool $enabled;
 
     /**
      * @param array $configuration
-     * @param bool  $disabled
      */
-    public function __construct(array $configuration, bool $disabled)
+    public function __construct(array $configuration)
     {
         $this->config = $configuration;
-        $this->enabled = !$disabled;
+        $this->enabled = empty($configuration['disable_emails']);
     }
 
     /**
@@ -86,6 +85,7 @@ class ConfigurationManager
         if (empty($this->config["track_key"])) {
             return $this->eventsCurlConfig = array();
         }
+
         //==============================================================================
         // Generate Curl Options Array
         return $this->eventsCurlConfig = array(

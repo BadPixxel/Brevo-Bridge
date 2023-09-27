@@ -11,21 +11,22 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Services;
+namespace BadPixxel\BrevoBridge\Services;
 
-use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
+use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
+use Brevo\Client\Api\AccountApi;
+use Brevo\Client\ApiException;
+use Brevo\Client\Model\GetAccount;
 use Exception;
 use GuzzleHttp\Client;
-use SendinBlue\Client\Api\AccountApi;
-use SendinBlue\Client\ApiException;
-use SendinBlue\Client\Model\GetAccount;
 
 /**
- * Account Manager for SendingBlue Api.
+ * Account Manager for Brevo Api.
  */
 class AccountManager
 {
-    use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
+    use ErrorLoggerTrait;
 
     /**
      * @var AccountApi

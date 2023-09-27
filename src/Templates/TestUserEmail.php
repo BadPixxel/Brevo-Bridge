@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Templates;
+namespace BadPixxel\BrevoBridge\Templates;
 
-use BadPixxel\SendinblueBridge\Models\AbstractEmail;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use Sonata\UserBundle\Model\UserInterface as User;
 
 /**

@@ -11,31 +11,31 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge;
+namespace BadPixxel\BrevoBridge;
 
-use BadPixxel\SendinblueBridge\Services\EventManager;
-use BadPixxel\SendinblueBridge\Services\SmsManager;
-use BadPixxel\SendinblueBridge\Services\SmtpManager;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * A Small Bundle to Manage Sending User Email, Events & Sms via Sendinblue Transactional API.
  */
-class SendinblueBridgeBundle extends Bundle
+class BrevoBridgeBundle extends Bundle
 {
     /**
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
+        if (!$this->container) {
+            return;
+        }
         //==============================================================================
         // Force Loading of SendInBlue Smtp Service
-        $this->container->get(SmtpManager::class);
+        $this->container->get(Services\SmtpManager::class);
         //==============================================================================
         // Force Loading of SendInBlue Events Service
-        $this->container->get(EventManager::class);
+        $this->container->get(Services\EventManager::class);
         //==============================================================================
         // Force Loading of SendInBlue Sms Service
-        $this->container->get(SmsManager::class);
+        $this->container->get(Services\SmsManager::class);
     }
 }

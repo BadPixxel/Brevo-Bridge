@@ -11,25 +11,26 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\SendinblueBridge\Services;
+namespace BadPixxel\BrevoBridge\Services;
 
-use BadPixxel\SendinblueBridge\Helpers\MjmlConverter;
-use BadPixxel\SendinblueBridge\Interfaces\HtmlTemplateProviderInterface;
-use BadPixxel\SendinblueBridge\Interfaces\MjmlTemplateProviderInterface;
-use BadPixxel\SendinblueBridge\Services\ConfigurationManager as Configuration;
+use BadPixxel\BrevoBridge\Helpers\MjmlConverter;
+use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateProviderInterface;
+use BadPixxel\BrevoBridge\Interfaces\MjmlTemplateProviderInterface;
+use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\ApiException;
+use Brevo\Client\Model\UpdateSmtpTemplate;
 use Exception;
 use GuzzleHttp\Client;
-use SendinBlue\Client\Api\TransactionalEmailsApi;
-use SendinBlue\Client\ApiException;
-use SendinBlue\Client\Model\UpdateSmtpTemplate;
 use Symfony\Component\Security\Core\User\UserInterface as User;
 
 /**
- * Emails Templates Manager for SendingBlue Api.
+ * Emails Templates Manager for Brevo Api.
  */
 class TemplateManager
 {
-    use \BadPixxel\SendinblueBridge\Models\Managers\ErrorLoggerTrait;
+    use ErrorLoggerTrait;
 
     /**
      * Smtp API Service.
@@ -178,6 +179,7 @@ class TemplateManager
         if (!$this->config->isMjmlAllowed()) {
             return $this->setError("Mjml Api is not configured");
         }
+
         //==============================================================================
         // Build Mjml Converter
         return new MjmlConverter(
