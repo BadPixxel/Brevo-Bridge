@@ -1,3 +1,15 @@
+################################################################################
+# Default Configuration
+parameters:
+    ################################################################################
+    # Brevo API Key
+    env(BREVO_API_KEY):             "none"
+    env(BREVO_TRACKING_KEY):        "none"
+    ################################################################################
+    # Mjml API Key
+    env(MJML_API_KEY):              "none"
+    env(MJML_API_SECRET):           "none"
+
 
 brevo_bridge:
 
