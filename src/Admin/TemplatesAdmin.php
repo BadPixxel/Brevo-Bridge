@@ -13,6 +13,9 @@
 
 namespace BadPixxel\BrevoBridge\Admin;
 
+use BadPixxel\BrevoBridge\Controller\Templates\Preview;
+use BadPixxel\BrevoBridge\Controller\Templates\Send;
+use BadPixxel\BrevoBridge\Controller\Templates\View;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
@@ -56,8 +59,15 @@ class TemplatesAdmin extends Admin
         $collection->remove('export');
         $collection->remove('delete');
 
-        $collection->add('view', '{emailCode}/view');
+        $collection->add('view', '{emailCode}/view', array(
+            "_controller" => View::class
+        ));
+        $collection->add('preview', '{emailCode}/preview', array(
+            "_controller" => Preview::class
+        ));
         $collection->add('update', '{emailCode}/update');
-        $collection->add('send', '{emailCode}/send');
+        $collection->add('send', '{emailCode}/send', array(
+            "_controller" => Send::class
+        ));
     }
 }
