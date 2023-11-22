@@ -13,10 +13,13 @@
 
 namespace BadPixxel\BrevoBridge;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * A Small Bundle to Manage Sending User Email, Events & Sms via Sendinblue Transactional API.
+ *
+ * @property null|ContainerInterface $container
  */
 class BrevoBridgeBundle extends Bundle
 {

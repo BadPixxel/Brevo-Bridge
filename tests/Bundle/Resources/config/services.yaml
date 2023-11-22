@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire:       true
+        autoconfigure:  true
+
+    ########################################################################
+    # AutoWire Test Emails
+    BadPixxel\BrevoBridge\Tests\Bundle\Emails\:
+        resource: '../../Emails'
+
+    ########################################################################
+    # AutoWire for Emails Processors
+    BadPixxel\BrevoBridge\Tests\Bundle\Processor\:
+        resource: '../../Processor'

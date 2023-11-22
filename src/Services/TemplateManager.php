@@ -14,12 +14,15 @@
 namespace BadPixxel\BrevoBridge\Services;
 
 use BadPixxel\BrevoBridge\Helpers\MjmlConverter;
+use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateAwareInterface;
 use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateProviderInterface;
 use BadPixxel\BrevoBridge\Interfaces\MjmlTemplateProviderInterface;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
 use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\ApiException;
+use Brevo\Client\Model\GetSmtpTemplateOverview ;
 use Brevo\Client\Model\UpdateSmtpTemplate;
 use Exception;
 use GuzzleHttp\Client;
@@ -27,6 +30,8 @@ use Symfony\Component\Security\Core\User\UserInterface as User;
 
 /**
  * Emails Templates Manager for Brevo Api.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TemplateManager
 {
@@ -37,23 +42,12 @@ class TemplateManager
      *
      * @var null|TransactionalEmailsApi
      */
-    protected $smtpApi;
+    protected ?TransactionalEmailsApi $smtpApi;
 
-    /**
-     * Bridge Configuration.
-     *
-     * @var ConfigurationManager
-     */
-    private $config;
-
-    /**
-     * @param Configuration $config
-     */
-    public function __construct(Configuration $config)
-    {
-        //==============================================================================
-        // Connect to Bridge Configuration Service
-        $this->config = $config;
+    public function __construct(
+        private Configuration $config,
+        private SmtpManager $smtpManager,
+    ) {
     }
 
     //==============================================================================
@@ -135,6 +129,40 @@ class TemplateManager
         return true;
     }
 
+    /**
+     * Get Email Html Template via SendInBlue API.
+     *
+     * @param class-string $emailClass
+     *
+     * @return null|GetSmtpTemplateOverview
+     */
+    public function get(string $emailClass, User $user): ?GetSmtpTemplateOverview
+    {
+        //==============================================================================
+        // Safety Checks
+        if (!is_subclass_of($emailClass, HtmlTemplateAwareInterface::class)) {
+            return $this->setError("Email does not uses Html Templates");
+        }
+        //==============================================================================
+        // Generate a Demo Instance of the Email
+        $demoEmail = $this->smtpManager->fake($emailClass, $user);
+        if (!$demoEmail) {
+            return $this->setError("Unable to generate Fake Email");
+        }
+
+        try {
+            //==============================================================================
+            // Get the Email Template
+            return $this->getApi()->getSmtpTemplate(
+                $demoEmail->getEmail()->getTemplateId(),
+            );
+        } catch (ApiException $ex) {
+            return $this->catchError($ex);
+        } catch (Exception $ex) {
+            return $this->setError($ex->getMessage());
+        }
+    }
+
     //==============================================================================
     // TEMPLATES PARAMETERS
     //==============================================================================
@@ -142,23 +170,32 @@ class TemplateManager
     /**
      * Build Parameters for Debug Email Display
      *
-     * @param string $emailClass
+     * @param class-string $emailClass
      *
      * @return array
      */
     public function getTmplParameters(string $emailClass, User $user): array
     {
         //==============================================================================
-        // Collect Email Specific Tests Paramaters
-        $emailParams = $emailClass::getFakeInstance($user)->getEmail()->getParams();
-
+        // Safety Check
+        if (!is_subclass_of($emailClass, AbstractEmail::class)) {
+            return array();
+        }
         //==============================================================================
-        // Collect Email Common Paramaters
+        // Generate a Demo Instance of the Email
+        $fakeEmail = $this->smtpManager->fake($emailClass, $user)?->getEmail();
+        // Collect Email Specific Tests Parameters
+        $emailParams = $fakeEmail ? $fakeEmail->getParams() : array();
+        $templateId = $fakeEmail?->getTemplateId();
+        //==============================================================================
+        // Collect Email Common Parameters
         $tmplParams = is_subclass_of($emailClass, HtmlTemplateProviderInterface::class)
             ? $emailClass::getTemplateParameters()
-            : array();
+            : array()
+        ;
 
         return array_replace_recursive($tmplParams, array(
+            "templateId" => $templateId,
             "params" => $emailParams
         ));
     }
@@ -234,7 +271,7 @@ class TemplateManager
     }
 
     /**
-     * Access to SendinBlue API Service.
+     * Access to Brevo API Service.
      *
      * @return TransactionalEmailsApi
      */

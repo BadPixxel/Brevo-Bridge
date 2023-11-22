@@ -13,10 +13,12 @@
 
 namespace BadPixxel\BrevoBridge\Tests\Bundle\Emails;
 
+use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateAwareInterface;
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Tests\Bundle\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class Basic extends AbstractEmail
+class Basic extends AbstractEmail implements HtmlTemplateAwareInterface
 {
     /**
      * @var string
@@ -27,6 +29,30 @@ class Basic extends AbstractEmail
      * @var string
      */
     const TEST_MSG = "This is a test Message!\n Please do not answers!";
+
+    /**
+     * Default Parameters.
+     *
+     * @var array
+     */
+    protected array $paramsDefaults = array(
+        'subject' => null,
+        'text' => null,
+        'urls' => array(
+            'home' => "https://www.brevo.com"
+        ),
+    );
+
+    /**
+     * Default Parameters Types.
+     *
+     * @var array
+     */
+    protected array $paramsTypes = array(
+        'subject' => 'string',
+        'text' => 'string',
+        'urls' => 'array',
+    );
 
     /**
      * Construct Email.
@@ -43,7 +69,30 @@ class Basic extends AbstractEmail
         $this->email->setParams((object) array(
             'subject' => $subject,
             'text' => $text,
+            'urls' => array(
+                'home' => "https://www.brevo.com"
+            ),
         ));
+    }
+
+    /**
+     * Create Email Instance in Demo Mode.
+     *
+     * @param User|User[] $toUsers
+     *
+     * @return self
+     */
+    public static function getDemoInstance(array|UserInterface $toUsers): self
+    {
+        return self::getInstance($toUsers, self::TEST_SUBJECT, self::TEST_MSG);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getTemplateId(): int
+    {
+        return 1;
     }
 
     /**
@@ -55,20 +104,8 @@ class Basic extends AbstractEmail
      *
      * @return self
      */
-    protected static function getInstance($toUsers, string $subject, string $text): self
+    protected static function getInstance(array|User $toUsers, string $subject, string $text): self
     {
         return new self($toUsers, $subject, $text);
-    }
-
-    /**
-     * Create Email Instance in Demo Mode.
-     *
-     * @param User|User[] $toUsers
-     *
-     * @return self
-     */
-    protected static function getDemoInstance($toUsers): self
-    {
-        return self::getInstance($toUsers, self::TEST_SUBJECT, self::TEST_MSG);
     }
 }

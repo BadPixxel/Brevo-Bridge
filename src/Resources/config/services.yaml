@@ -1,6 +1,7 @@
 services:
     _defaults:
-        autowire:   true
+        autowire:       true
+        autoconfigure:  true
 
     ########################################################################
     # Declare & AutoWire Bundle Commands
@@ -17,9 +18,7 @@ services:
 
     ################################################################################
     # Bridge Configurations Manager
-    BadPixxel\BrevoBridge\Services\ConfigurationManager:
-        arguments:
-            - "%brevo_bridge%"
+    BadPixxel\BrevoBridge\Services\ConfigurationManager: ~
 
     ################################################################################
     # SendInBlue API Account Manager
@@ -41,9 +40,17 @@ services:
         public: true
 
     ################################################################################
-    # SendInBlue Emails Templates Manager
+    # Emails Processor
+    BadPixxel\BrevoBridge\Services\EmailProcessor: ~
+
+    ################################################################################
+    # Emails Templates Manager
     BadPixxel\BrevoBridge\Services\TemplateManager:
         public: true
+
+    ################################################################################
+    # Raw Html Renderer
+    BadPixxel\BrevoBridge\Services\RawHtmlRenderer: ~
 
     ################################################################################
     # SendInBlue Emails Templates Twig Extension

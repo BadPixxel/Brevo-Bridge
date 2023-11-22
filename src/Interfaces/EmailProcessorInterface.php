@@ -13,22 +13,24 @@
 
 namespace BadPixxel\BrevoBridge\Interfaces;
 
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
+
 /**
- * Common Interface for Emails that Provide Html Template Contents
+ * Interface for all Brevo Emails Processor
  */
-interface HtmlTemplateProviderInterface extends HtmlTemplateAwareInterface
+interface EmailProcessorInterface
 {
     /**
-     * Get Raw Template Html Contents.
+     * Check if this Processor Support this Email Class
      *
-     * @return string
+     * @param class-string $emailClass
+     *
+     * @return bool
      */
-    public static function getTemplateHtml(): string;
+    public function supports(string $emailClass): bool;
 
     /**
-     * Get Templating Render Parameters
-     *
-     * @return array
+     * Process this Email before Sending
      */
-    public static function getTemplateParameters(): array;
+    public function process(AbstractEmail $email): void;
 }

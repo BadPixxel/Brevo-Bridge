@@ -11,7 +11,7 @@ services:
                 model_class:    "%brevo_bridge.emails.class%",
                 controller:     BadPixxel\BrevoBridge\Controller\EmailAdminController,
                 manager_type:   orm,
-                label:          Brevo Emails,
+                label:          Send Emails,
                 group:          Brevo,
                 icon:           '<i class="fa far fa-envelope"></i>',
                 pager_type:     'simple'
@@ -26,7 +26,7 @@ services:
                 model_class:    "%brevo_bridge.sms.class%",
                 controller:     BadPixxel\BrevoBridge\Controller\SmsAdminController,
                 manager_type:   orm,
-                label:          Brevo Sms,
+                label:          Send Sms,
                 group:          Brevo,
                 icon:           '<i class="fa far fa-envelope"></i>',
                 pager_type:     'simple'
@@ -41,7 +41,7 @@ services:
                 model_class:    BadPixxel\BrevoBridge\Models\AbstractEmail,
                 controller:     BadPixxel\BrevoBridge\Controller\TemplatesAdminController,
                 manager_type:   orm,
-                label:          Brevo Templates,
+                label:          Emails Templates,
                 group:          Brevo,
                 icon:           '<i class="fa far fa-envelope"></i>'
             }

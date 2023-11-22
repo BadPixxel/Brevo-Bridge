@@ -51,9 +51,9 @@ class TestUserEmail extends AbstractEmail
      *
      * @return TestUserEmail
      */
-    protected static function getInstance($toUsers): TestUserEmail
+    public static function getDemoInstance($toUsers): TestUserEmail
     {
-        return new self($toUsers);
+        return self::getInstance($toUsers);
     }
 
     /**
@@ -63,8 +63,8 @@ class TestUserEmail extends AbstractEmail
      *
      * @return TestUserEmail
      */
-    protected static function getDemoInstance($toUsers): TestUserEmail
+    protected static function getInstance($toUsers): TestUserEmail
     {
-        return self::getInstance($toUsers);
+        return new self($toUsers);
     }
 }

@@ -16,18 +16,17 @@ namespace BadPixxel\BrevoBridge\Services;
 use Brevo\Client\Configuration;
 use Brevo\Client\Model\SendSmtpEmailReplyTo;
 use Brevo\Client\Model\SendSmtpEmailSender;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\Routing\RouterInterface as Router;
 
 /**
  * Bridge Configuration Manager for Brevo Api.
  */
+#[Autoconfigure(
+    bind: array('$config' => "%brevo_bridge%")
+)]
 class ConfigurationManager
 {
-    /**
-     * @var array
-     */
-    private array $config;
-
     /**
      * @var null|Configuration
      */
@@ -44,12 +43,12 @@ class ConfigurationManager
     private bool $enabled;
 
     /**
-     * @param array $configuration
+     * Service Constructor
      */
-    public function __construct(array $configuration)
-    {
-        $this->config = $configuration;
-        $this->enabled = empty($configuration['disable_emails']);
+    public function __construct(
+        private array $config,
+    ) {
+        $this->enabled = empty($config['disable_emails']);
     }
 
     /**

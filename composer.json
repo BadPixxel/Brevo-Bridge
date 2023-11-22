@@ -28,7 +28,7 @@
         "ext-json":                                     "*",
 
         "symfony/config":                               "^5.4 || ^6.0",
-        "symfony/dependency-injection":                 "^5.4",
+        "symfony/dependency-injection":                 "^5.4 || ^6.0",
         "symfony/event-dispatcher":                     "^5.4 || ^6.0",
         "symfony/options-resolver":                     "^5.4 || ^6.0",
 

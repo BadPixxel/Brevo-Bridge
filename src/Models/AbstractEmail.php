@@ -18,13 +18,14 @@ use Brevo\Client\Model\CreateSmtpEmail;
 use Brevo\Client\Model\SendSmtpEmail;
 use Brevo\Client\Model\SendSmtpEmailSender;
 use Exception;
-use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\User\UserInterface as User;
 
 /**
  * Abstract Class for Sending Emails.
  */
+
 abstract class AbstractEmail extends GenericEvent
 {
     /**
@@ -70,6 +71,15 @@ abstract class AbstractEmail extends GenericEvent
     }
 
     /**
+     * Create Email Instance in Demo Mode.
+     *
+     * @param User|User[] $toUsers
+     *
+     * @return self
+     */
+    abstract public static function getDemoInstance(array|User $toUsers): self;
+
+    /**
      * Send a Transactional Email.
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
@@ -78,7 +88,7 @@ abstract class AbstractEmail extends GenericEvent
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function send($toUsers): ?CreateSmtpEmail
+    public static function send(array|User $toUsers): ?CreateSmtpEmail
     {
         //==============================================================================
         // Prepare Callback
@@ -97,7 +107,7 @@ abstract class AbstractEmail extends GenericEvent
     }
 
     /**
-     * Send a Transactionnal Test/Demo Email.
+     * Send a Transactional Test/Demo Email.
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
      *
@@ -105,7 +115,7 @@ abstract class AbstractEmail extends GenericEvent
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function sendDemo($toUsers): ?CreateSmtpEmail
+    public static function sendDemo(array|User $toUsers): ?CreateSmtpEmail
     {
         //==============================================================================
         // Prepare Callback
@@ -126,7 +136,7 @@ abstract class AbstractEmail extends GenericEvent
     /**
      * @return string
      */
-    public static function getLastError()
+    public static function getLastError(): string
     {
         return SmtpManager::getInstance()->getLastError();
     }
@@ -162,12 +172,17 @@ abstract class AbstractEmail extends GenericEvent
     /**
      * Create a New Email and Populate Defaults Values.
      *
+     * @param bool $demoMode
+     *
      * @throws Exception
      *
      * @return null|CreateSmtpEmail
      */
     protected function sendEmail(bool $demoMode): ?CreateSmtpEmail
     {
+        //==============================================================================
+        // Apply Processors to the Email
+        $this->getSmtpManager()->process($this);
         //==============================================================================
         // Verify Email Before Sending
         if (!$this->isValid()) {
@@ -260,9 +275,9 @@ abstract class AbstractEmail extends GenericEvent
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
      *
-     * @return self
+     * @return $this
      */
-    private function setupToUsers($toUsers): self
+    private function setupToUsers(array|User $toUsers): static
     {
         //==============================================================================
         // Ensure we have a List of Users
@@ -300,11 +315,14 @@ abstract class AbstractEmail extends GenericEvent
             : $toUser->getUserIdentifier()
         ;
         //==============================================================================
+        // Extract User Email
+        $email = method_exists($toUser, "getEmailCanonical")
+            ? $toUser->getEmailCanonical()
+            : $toUser->getUserIdentifier()
+        ;
+        //==============================================================================
         // Create To User Array
-        $emailUser = array(array(
-            'name' => $name,
-            'email' => $toUser->getEmailCanonical(),
-        ));
+        $emailUser = array(array('name' => $name, 'email' => $email));
         //==============================================================================
         // Push User to List
         if (empty($emailList)) {

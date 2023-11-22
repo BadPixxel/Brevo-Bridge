@@ -17,6 +17,7 @@ use BadPixxel\BrevoBridge\Interfaces\MjmlTemplateProviderInterface;
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Models\Templating\MjmlTemplateTrait;
 use BadPixxel\BrevoBridge\Tests\Bundle\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class Template extends AbstractEmail implements MjmlTemplateProviderInterface
 {
@@ -90,15 +91,15 @@ class Template extends AbstractEmail implements MjmlTemplateProviderInterface
     }
 
     /**
-     * Create Fake Email Instance.
+     * Create Email Instance in Demo Mode.
      *
      * @param User|User[] $toUsers
      *
      * @return self
      */
-    public static function getFakeInstance($toUsers): self
+    public static function getDemoInstance(array|UserInterface $toUsers): self
     {
-        return static::getDemoInstance($toUsers);
+        return self::getInstance($toUsers, self::TEST_SUBJECT, self::TEST_MSG);
     }
 
     /**
@@ -110,20 +111,8 @@ class Template extends AbstractEmail implements MjmlTemplateProviderInterface
      *
      * @return self
      */
-    protected static function getInstance($toUsers, string $subject, string $text): self
+    protected static function getInstance(array|User $toUsers, string $subject, string $text): self
     {
         return new self($toUsers, $subject, $text);
-    }
-
-    /**
-     * Create Email Instance in Demo Mode.
-     *
-     * @param User|User[] $toUsers
-     *
-     * @return self
-     */
-    protected static function getDemoInstance($toUsers): self
-    {
-        return self::getInstance($toUsers, self::TEST_SUBJECT, self::TEST_MSG);
     }
 }

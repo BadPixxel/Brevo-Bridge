@@ -14,6 +14,7 @@
 namespace BadPixxel\BrevoBridge\Services;
 
 use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as EmailStorage;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Models\Managers;
 use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Brevo\Client\Api\TransactionalEmailsApi;
@@ -24,6 +25,7 @@ use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Exception;
 use GuzzleHttp\Client;
 use Symfony\Component\Routing\RouterInterface as Router;
+use Symfony\Component\Security\Core\User\UserInterface as User;
 use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 use Twig\Environment as Twig;
 
@@ -47,34 +49,18 @@ class SmtpManager
     protected ?TransactionalEmailsApi $smtpApi;
 
     /**
-     * Bridge Configuration.
-     *
-     * @var ConfigurationManager
-     */
-    private ConfigurationManager $config;
-
-    /**
      * @var SmtpManager
      */
     private static SmtpManager $staticInstance;
 
-    /**
-     * @param Configuration $config
-     * @param EntityManager $doctrine
-     * @param Twig          $twig
-     * @param Translator    $translator
-     * @param Router        $router
-     */
     public function __construct(
-        Configuration $config,
+        private Configuration $config,
+        private EmailProcessor $processor,
         EntityManager $doctrine,
         Twig $twig,
         Translator $translator,
         Router $router
     ) {
-        //==============================================================================
-        // Connect to Bridge Configuration Service
-        $this->config = $config;
         //==============================================================================
         // Connect to Storage Services
         $this->setupStorage($doctrine);
@@ -121,6 +107,14 @@ class SmtpManager
     }
 
     /**
+     * Apply Processors to a Transactional Email.
+     */
+    public function process(AbstractEmail $email): AbstractEmail
+    {
+        return $this->processor->process($email);
+    }
+
+    /**
      * Send a Transactional Email from Api.
      *
      * @param array         $toUser
@@ -156,6 +150,30 @@ class SmtpManager
         }
 
         return $createEmail;
+    }
+
+    /**
+     * Generate a Fake version of an Email
+     *
+     * @param class-string $emailClass
+     * @param User         $user
+     *
+     * @return null|AbstractEmail
+     */
+    public function fake(string $emailClass, User $user): ?AbstractEmail
+    {
+        //==============================================================================
+        // Safety Checks
+        if (!is_subclass_of($emailClass, AbstractEmail::class)) {
+            return $this->setError("Email Class must be a ".AbstractEmail::class);
+        }
+        //==============================================================================
+        // Generate a Demo Instance of the Email
+        $fakeEmail = $emailClass::getDemoInstance($user);
+
+        //==============================================================================
+        // Apply Processors to the Email
+        return $this->processor->process($fakeEmail);
     }
 
     /**

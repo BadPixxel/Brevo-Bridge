@@ -28,11 +28,13 @@
                     </thead>
                         
                    <tbody>
-                    {% for emailCode, emailClass in tmplEmails %}
+                    {% for emailCode, emailClass in allEmails %}
                         <tr class="sonata-ba-list-field-header">
                             <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailCode }}</td>                                            
                             <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailClass }}</td> 
                             <td class="sonata-ba-list-field sonata-ba-list-field-actions" objectid="34">
+
+                                {% if emailCode in tmplEmails %}
                                 <div class="btn-group">
                                     <a href="{{ path('admin_badpixxel_brevo_templates_view', {'emailCode': emailCode}) }}"
                                        class="btn btn-sm btn-default view_link" 
@@ -48,14 +50,26 @@
                                         <i class="fa fa-upload" aria-hidden="true"></i>
                                         Export
                                     </a>
+
+                                </div>
+                                {% endif %}
+                                <div class="btn-group">
                                     <a href="{{ path('admin_badpixxel_brevo_templates_send', {'emailCode': emailCode}) }}"
-                                       class="btn btn-sm btn-default view_link" 
+                                       class="btn btn-sm btn-default view_link"
                                        title="Send a test Email"
-                                       >
+                                    >
                                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                         Send
                                     </a>
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_preview', {'emailCode': emailCode}) }}"
+                                       class="btn btn-sm btn-default view_link"
+                                       target="_blank" title="Preview"
+                                    >
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                        Preview from Brevo
+                                    </a>
                                 </div>
+
                             </td>                            
                         </tr>
                     {% endfor %}

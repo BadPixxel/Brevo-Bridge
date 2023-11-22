@@ -50,6 +50,14 @@
 <div align="center">
     <br />
     <hr />
+    <a
+            href="https://my.brevo.com/camp/template/{{ tmplParams.templateId|default("??") }}/message-setup"
+            target="_blank"
+    >
+        Brevo Template ID: {{ tmplParams.templateId|default("??") }}
+    </a>
+    <br />
+    <hr />
     <a class="button" href="{{ path('admin_badpixxel_brevo_templates_list') }}">
         Back to List
     </a>

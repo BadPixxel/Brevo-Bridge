@@ -33,9 +33,3 @@ brevo_bridge:
         user:       UserBundle\Entity\User
         emails:     BadPixxel\BrevoBridge\Tests\Bundle\Entity\Email
         sms:        BadPixxel\BrevoBridge\Tests\Bundle\Entity\Sms
-
-    emails:
-        # Basic Notification Email
-        Basic:    BadPixxel\BrevoBridge\Tests\Bundle\Emails\Basic
-        # Templated Email
-        Template: BadPixxel\BrevoBridge\Tests\Bundle\Emails\Template
