@@ -11,17 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Interfaces;
+namespace BadPixxel\BrevoBridge\Models;
+
+use BadPixxel\BrevoBridge\Interfaces\SmsProcessorInterface;
 
 /**
- * Common Interface for Emails that Provide Uses Html Templates
+ * Base Class for Sms Processor Services
  */
-interface HtmlTemplateAwareInterface
+abstract class AbstractSmsProcessor implements SmsProcessorInterface
 {
-    /**
-     * Get Raw Template ID.
-     *
-     * @return int
-     */
-    public static function getTemplateId(): int;
 }

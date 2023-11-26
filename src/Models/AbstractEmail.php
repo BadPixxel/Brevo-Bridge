@@ -13,27 +13,20 @@
 
 namespace BadPixxel\BrevoBridge\Models;
 
-use BadPixxel\BrevoBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Models\Email\OptionsResolverTrait;
+use BadPixxel\BrevoBridge\Models\Email\SendToUserTrait;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use Brevo\Client\Model\CreateSmtpEmail;
 use Brevo\Client\Model\SendSmtpEmail;
-use Brevo\Client\Model\SendSmtpEmailSender;
-use Exception;
-use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\User\UserInterface as User;
 
 /**
  * Abstract Class for Sending Emails.
  */
-
-abstract class AbstractEmail extends GenericEvent
+abstract class AbstractEmail
 {
-    /**
-     * Current User.
-     *
-     * @var User[]
-     */
-    protected array $toUsers;
+    use SendToUserTrait;
+    use OptionsResolverTrait;
 
     /**
      * Current Email.
@@ -42,113 +35,97 @@ abstract class AbstractEmail extends GenericEvent
      */
     protected SendSmtpEmail $email;
 
-    /**
-     * Default Parameters.
-     *
-     * @var array
-     */
-    protected array $paramsDefaults = array();
+    //==============================================================================
+    // GENERIC EMAIL INTERFACES
+    //==============================================================================
 
     /**
-     * Default Parameters Types.
+     * Configure Email with User Parameters
      *
-     * @var array
+     * @param array<string, mixed> $args
+     *
+     * @return $this
      */
-    protected array $paramsTypes = array();
+    abstract public function configure(array $args): static;
 
     /**
-     * Construct Minimal Email.
+     * Get Arguments for Building Fake Email.
      *
-     * @param User|User[] $toUsers Target User or Array of Target Users
+     * @return array<string, mixed>
      */
-    public function __construct($toUsers)
-    {
-        parent::__construct();
-        $this
-            ->create()
-            ->setupToUsers($toUsers)
-        ;
-    }
-
-    /**
-     * Create Email Instance in Demo Mode.
-     *
-     * @param User|User[] $toUsers
-     *
-     * @return self
-     */
-    abstract public static function getDemoInstance(array|User $toUsers): self;
+    abstract public function getFakeArguments(): array;
 
     /**
      * Send a Transactional Email.
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
-     *
-     * @return null|CreateSmtpEmail
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function send(array|User $toUsers): ?CreateSmtpEmail
+    final public static function send(array|User $toUsers, mixed ...$args): ?CreateSmtpEmail
     {
         //==============================================================================
-        // Prepare Callback
-        $callback = array(static::class, 'getInstance');
-        if (!is_callable($callback)) {
+        // Create a New Instance of the Email
+        $instance = self::getManager()->getEmail(static::class);
+        if (!$instance) {
             return null;
         }
         //==============================================================================
-        // Create a New Instance of the Email
-        /** @var AbstractEmail $instance */
-        $instance = call_user_func_array($callback, func_get_args());
-
-        //==============================================================================
-        // Create a New Instance of the Email
-        return $instance->sendEmail(false);
+        // Send Email
+        return self::getManager()
+            ->send($instance, $toUsers, $args)
+        ;
     }
 
     /**
      * Send a Transactional Test/Demo Email.
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
-     *
-     * @return null|CreateSmtpEmail
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function sendDemo(array|User $toUsers): ?CreateSmtpEmail
     {
         //==============================================================================
-        // Prepare Callback
-        $callback = array(static::class, 'getDemoInstance');
-        if (!is_callable($callback)) {
+        // Create a New Instance of the Email
+        $instance = self::getManager()->getEmail(static::class);
+        if (!$instance) {
             return null;
         }
         //==============================================================================
-        // Create a New Instance of the Email
-        /** @var AbstractEmail $instance */
-        $instance = call_user_func_array($callback, func_get_args());
-
-        //==============================================================================
-        // Create a New Instance of the Email
-        return $instance->sendEmail(true);
+        // Send Demo Email
+        return self::getManager()
+            ->send($instance, $toUsers, $instance->getFakeArguments(),true)
+        ;
     }
 
     /**
      * @return string
      */
-    public static function getLastError(): string
+    final public static function getLastError(): string
     {
-        return SmtpManager::getInstance()->getLastError();
+        return self::getManager()->getLastError();
     }
 
     //==============================================================================
     // BASIC GETTERS
     //==============================================================================
 
+    public function __toString(): string
+    {
+        return static::class;
+    }
+
+    /**
+     * Setup Base Smtp Email
+     */
+    final public function setEmail(SendSmtpEmail $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
     /**
      * @return SendSmtpEmail
      */
-    public function getEmail(): SendSmtpEmail
+    final public function getEmail(): SendSmtpEmail
     {
         return $this->email;
     }
@@ -158,100 +135,20 @@ abstract class AbstractEmail extends GenericEvent
     //==============================================================================
 
     /**
-     * Create a New Email and Populate Defaults Values.
+     * Merge Email Current Parameters with Extra Parameters
      *
-     * @return self
+     * @param array $parameters
+     *
+     * @return $this
      */
-    protected function create(): self
+    final public function mergeParams(array $parameters): static
     {
-        $this->email = $this->getSmtpManager()->create();
+        $this->getEmail()->setParams((object) array_replace_recursive(
+            (array) $this->getEmail()->getParams(),
+            $parameters
+        ));
 
         return $this;
-    }
-
-    /**
-     * Create a New Email and Populate Defaults Values.
-     *
-     * @param bool $demoMode
-     *
-     * @throws Exception
-     *
-     * @return null|CreateSmtpEmail
-     */
-    protected function sendEmail(bool $demoMode): ?CreateSmtpEmail
-    {
-        //==============================================================================
-        // Apply Processors to the Email
-        $this->getSmtpManager()->process($this);
-        //==============================================================================
-        // Verify Email Before Sending
-        if (!$this->isValid()) {
-            throw new Exception("Email Validation Fail");
-        }
-        //==============================================================================
-        // Démo? Add Subject Prefix
-        if ($demoMode) {
-            $this->email->setSubject("[Test]".$this->email->getSubject());
-        }
-
-        return $this->getSmtpManager()->send($this->toUsers, $this->email, $demoMode);
-    }
-
-    /**
-     * Add User to Email To.
-     *
-     * @param User $toUser
-     *
-     * @return self
-     */
-    protected function addToUser(User $toUser): self
-    {
-        $this->email->setTo(self::addUserEmail($this->email->getTo(), $toUser));
-
-        return $this;
-    }
-
-    /**
-     * Add User to Email Cc.
-     *
-     * @param User $ccUser
-     *
-     * @return self
-     */
-    protected function addCcUser(User $ccUser): self
-    {
-        $this->email->setCc(self::addUserEmail($this->email->getCc(), $ccUser));
-
-        return $this;
-    }
-
-    /**
-     * Add User to Email Bcc.
-     *
-     * @param User $bccUser
-     *
-     * @return self
-     */
-    protected function addBccUser(User $bccUser): self
-    {
-        $this->email->setBcc(self::addUserEmail($this->email->getBcc(), $bccUser));
-
-        return $this;
-    }
-
-    /**
-     * Configure Options for Parameters Resolver
-     *
-     * @param OptionsResolver $resolver
-     *
-     * @return void
-     */
-    protected function configureParameters(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults($this->paramsDefaults);
-        foreach ($this->paramsTypes as $key => $types) {
-            $resolver->setAllowedTypes($key, $types);
-        }
     }
 
     //==============================================================================
@@ -259,138 +156,10 @@ abstract class AbstractEmail extends GenericEvent
     //==============================================================================
 
     /**
-     * Static Access to Mailer Service.
-     *
-     * @return SmtpManager
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * Static Access to Email Manager.
      */
-    protected function getSmtpManager(): SmtpManager
+    final protected static function getManager(): EmailsManager
     {
-        return SmtpManager::getInstance();
-    }
-
-    /**
-     * Add User to an Emails List.
-     *
-     * @param User|User[] $toUsers Target User or Array of Target Users
-     *
-     * @return $this
-     */
-    private function setupToUsers(array|User $toUsers): static
-    {
-        //==============================================================================
-        // Ensure we have a List of Users
-        if (!is_array($toUsers)) {
-            $toUsers = array($toUsers);
-        }
-        //==============================================================================
-        // Verify & Store List of Target Users
-        $this->toUsers = array();
-        foreach ($toUsers as $toUser) {
-            if (!$toUser instanceof User) {
-                continue;
-            }
-            $this->addToUser($toUser);
-            $this->toUsers[] = $toUser;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add User to an Emails List.
-     *
-     * @param array $emailList
-     * @param User  $toUser
-     *
-     * @return array
-     */
-    private static function addUserEmail(?array $emailList, User $toUser): array
-    {
-        //==============================================================================
-        // Extract User Name
-        $name = method_exists($toUser, "__toString")
-            ? $toUser->__toString()
-            : $toUser->getUserIdentifier()
-        ;
-        //==============================================================================
-        // Extract User Email
-        $email = method_exists($toUser, "getEmailCanonical")
-            ? $toUser->getEmailCanonical()
-            : $toUser->getUserIdentifier()
-        ;
-        //==============================================================================
-        // Create To User Array
-        $emailUser = array(array('name' => $name, 'email' => $email));
-        //==============================================================================
-        // Push User to List
-        if (empty($emailList)) {
-            return $emailUser;
-        }
-
-        return array_merge($emailList, $emailUser);
-    }
-
-    //==============================================================================
-    // EMAIL VALIDATION (DONE BEFORE SEND)
-    //==============================================================================
-
-    /**
-     * Validate Email Configuration before Sending
-     *
-     * @return bool
-     */
-    private function isValid(): bool
-    {
-        //==============================================================================
-        // Verify Sender
-        /** @var null|SendSmtpEmailSender $sender */
-        $sender = $this->email->getSender();
-        if (empty($sender)) {
-            return false;
-        }
-        //==============================================================================
-        // Verify To
-        if (empty($this->email->getTo())) {
-            return false;
-        }
-        //==============================================================================
-        // Verify Subject
-        if (empty($this->email->getSubject())) {
-            return false;
-        }
-        //==============================================================================
-        // Verify Template & Parameters
-        if (!empty($this->email->getTemplateId())) {
-            //==============================================================================
-            // Verify Parameters
-            return $this->verifyParameters();
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    private function verifyParameters(): bool
-    {
-        try {
-            //==============================================================================
-            // Init Parameters Resolver
-            $resolver = new OptionsResolver();
-            $this->configureParameters($resolver);
-            //==============================================================================
-            // Resolve
-            $emailParams = (array) $this->email->getParams();
-            $this->email->setParams((object) $resolver->resolve($emailParams));
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-
-            return false;
-        }
-
-        return true;
+        return EmailsManager::getInstance();
     }
 }

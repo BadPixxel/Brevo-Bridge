@@ -17,14 +17,12 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 /**
- * Twig Extension to Render Sendinblue.
+ * Twig Extension to Render Brevo Emails from Templates.
  */
 class BrevoBridgeExtension extends AbstractExtension
 {
     /**
      * Get List of Available Filters.
-     *
-     * @return array
      */
     public function getFilters(): array
     {
@@ -34,13 +32,9 @@ class BrevoBridgeExtension extends AbstractExtension
     }
 
     /**
-     * Marks a variable as being safe.
-     *
-     * @param string $string A PHP variable
-     *
-     * @return string
+     * Marks a variable as safe, equivalent of raw in Brevo templates.
      */
-    public function safeToRaw($string)
+    public function safeToRaw(string $string): string
     {
         return $string;
     }

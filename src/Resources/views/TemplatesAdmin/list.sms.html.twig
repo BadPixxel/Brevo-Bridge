@@ -28,45 +28,26 @@
                     </thead>
                         
                    <tbody>
-                    {% for emailCode, emailClass in allEmails %}
+                    {% for smsCode, smsClass in allSms %}
                         <tr class="sonata-ba-list-field-header">
-                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailCode }}</td>                                            
-                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ emailClass }}</td> 
-                            <td class="sonata-ba-list-field sonata-ba-list-field-actions" objectid="34">
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ smsCode }}</td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ smsClass }}</td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-actions">
 
-                                {% if emailClass in tmplEmails %}
                                 <div class="btn-group">
-                                    <a href="{{ path('admin_badpixxel_brevo_templates_emails_view', {'emailId': emailCode}) }}"
-                                       class="btn btn-sm btn-default view_link" 
-                                       target="_blank" title="Preview"
-                                       >
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                        Preview
-                                    </a>
-                                    <a href="{{ path('admin_badpixxel_brevo_templates_emails_export', {'emailId': emailCode}) }}"
-                                       class="btn btn-sm btn-default view_link" 
-                                       title="Export to SenInBlue"
-                                       >
-                                        <i class="fa fa-upload" aria-hidden="true"></i>
-                                        Export
-                                    </a>
-
-                                </div>
-                                {% endif %}
-                                <div class="btn-group">
-                                    <a href="{{ path('admin_badpixxel_brevo_templates_emails_send', {'emailId': emailCode}) }}"
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_sms_send', {'smsId': smsCode}) }}"
                                        class="btn btn-sm btn-default view_link"
                                        title="Send a test Email"
                                     >
                                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                         Send
                                     </a>
-                                    <a href="{{ path('admin_badpixxel_brevo_templates_emails_preview', {'emailId': emailCode}) }}"
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_sms_preview', {'smsId': smsCode}) }}"
                                        class="btn btn-sm btn-default view_link"
                                        target="_blank" title="Preview"
                                     >
                                         <i class="fa fa-eye" aria-hidden="true"></i>
-                                        Preview from Brevo
+                                        Preview
                                     </a>
                                 </div>
 
