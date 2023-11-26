@@ -22,9 +22,8 @@ use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Base Class for User Email Historic Storage.
- *
- * @ORM\MappedSuperclass
  */
+#[ORM\MappedSuperclass]
 abstract class AbstractEmailStorage
 {
     use UserEmails\ContentsTrait;
@@ -63,11 +62,9 @@ abstract class AbstractEmailStorage
     /**
      * Create Storage Class from Api Results
      *
-     * @return self
-     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public static function fromApiResults(User $toUser, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail)
+    public static function fromApiResults(User $toUser, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail): AbstractEmailStorage
     {
         $storage = new static();
         $storage
@@ -91,14 +88,9 @@ abstract class AbstractEmailStorage
     //==============================================================================
 
     /**
-     * Get Doctrine Entity ID. Must be Overriden by Parent Class.
-     *
-     * @return int
+     * Get Doctrine Entity ID.
      */
-    public function getId()
-    {
-        return 0;
-    }
+    abstract public function getId(): ?int;
 
     /**
      * @return User
