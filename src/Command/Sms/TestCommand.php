@@ -11,10 +11,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Command;
+namespace BadPixxel\BrevoBridge\Command\Sms;
 
 use BadPixxel\BrevoBridge\Models\AbstractSms;
-use BadPixxel\BrevoBridge\Services\SmsManager;
+use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,9 +23,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Test Command for Sending an Dummy Sms.
+ * Test Command for Sending a Dummy Sms.
  */
-class SmsTestCommand extends Command
+class TestCommand extends Command
 {
     /**
      * @var SmsManager
