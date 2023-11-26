@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Tests\Bundle\Processor;
+namespace BadPixxel\BrevoBridge\Tests\Bundle\Processors\Email;
 
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Models\AbstractEmailProcessor;
@@ -46,7 +46,7 @@ class BasicProcessor extends AbstractEmailProcessor
         }
         //==============================================================================
         // Setup template as it was not configured on Email Creation
-        $email->getEmail()->setTemplateId(Basic::getTemplateId());
+        $email->getEmail()->setTemplateId(1);
         //==============================================================================
         // Load Current Parameters
         /** @var \stdClass $params */
@@ -57,5 +57,7 @@ class BasicProcessor extends AbstractEmailProcessor
         $params->text .= " <br /> <br /> Source website was ";
         $params->text .= $this->requestStack->getMainRequest()?->getSchemeAndHttpHost();
         $email->getEmail()->setParams($params);
+
+        $email->getResolver()->setDefault("urls", array());
     }
 }

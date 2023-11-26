@@ -16,6 +16,7 @@ return array(
     // Symfony Bundles
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => array("all" => true),
     Symfony\Bundle\TwigBundle\TwigBundle::class => array("all" => true),
+    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => array("all" => true),
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => array("all" => true),
     //==============================================================================
     // Doctrine ORM
