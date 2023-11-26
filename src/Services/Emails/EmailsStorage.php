@@ -11,32 +11,29 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Services\Emails;
 
-use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as EmailStorage;
+use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage;
 use BadPixxel\BrevoBridge\Helpers\EmailExtractor;
 use BadPixxel\BrevoBridge\Repository\EmailRepository;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Brevo\Client\Model\CreateSmtpEmail;
 use Brevo\Client\Model\SendSmtpEmail;
-use Doctrine\ORM\EntityManagerInterface as EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Manage Storage of User Emails in Database.
  */
-trait StorageTrait
+class EmailsStorage
 {
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
+    public function __construct(
+        private readonly Configuration  $config,
+        private readonly EntityManagerInterface $entityManager
+    ) {}
 
     /**
      * Find a User by Email
-     *
-     * @param string $userEmail
-     *
-     * @return null|User
      */
     public function getUserByEmail(string $userEmail): ?User
     {
@@ -51,15 +48,9 @@ trait StorageTrait
     }
 
     /**
-     * Search for Send Email by Message Id
-     *
-     * @param string $messageId
-     *
-     * @return null|EmailStorage
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * Search for Send Email by Message ID
      */
-    public function findByMessageId(string $messageId): ?EmailStorage
+    public function findByMessageId(string $messageId): ?AbstractEmailStorage
     {
         /** @var EmailRepository $repository */
         $repository = $this->entityManager
@@ -69,22 +60,9 @@ trait StorageTrait
             "messageId" => $messageId
         ));
 
-        return ($storageEmail instanceof EmailStorage) ? $storageEmail : null;
+        return ($storageEmail instanceof AbstractEmailStorage) ? $storageEmail : null;
     }
 
-    /**
-     * Setup Entity Manager for Storage
-     *
-     * @param EntityManager $manager
-     *
-     * @return self
-     */
-    protected function setupStorage(EntityManager $manager): self
-    {
-        $this->entityManager = $manager;
-
-        return $this;
-    }
 
     /**
      * Filter Target Users if Email was Already Send.
@@ -95,7 +73,7 @@ trait StorageTrait
      *
      * @return null|User[]
      */
-    protected function filterAlreadySendUsers(array $toUsers, SendSmtpEmail $sendEmail, bool $demoMode): ?array
+    public function filterAlreadySendUsers(array $toUsers, SendSmtpEmail $sendEmail, bool $demoMode): ?array
     {
         //==============================================================================
         // DEMO MODE => Allow Multiple Sending to User
@@ -130,14 +108,8 @@ trait StorageTrait
 
     /**
      * Save this Email in Database
-     *
-     * @param array           $toUsers
-     * @param SendSmtpEmail   $sendEmail
-     * @param CreateSmtpEmail $createEmail
-     *
-     * @return self
      */
-    protected function saveSendEmail(array $toUsers, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail): self
+    public function saveSendEmail(array $toUsers, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail): self
     {
         $storageClass = $this->config->getEmailStorageClass();
         foreach ($toUsers as $toUser) {
@@ -145,6 +117,11 @@ trait StorageTrait
             // Check if User Exists in Db
             if (!($toUser instanceof User) || empty($toUser->getId())) {
                 continue;
+            }
+            //==============================================================================
+            // Check Class is SMS Storage Class
+            if (!is_subclass_of($storageClass, AbstractEmailStorage::class)) {
+                return $this;
             }
             //==============================================================================
             // Create & Persist Email Storage
@@ -158,13 +135,8 @@ trait StorageTrait
 
     /**
      * Update this Email Events in Database
-     *
-     * @param EmailStorage $storageEmail
-     * @param array        $events
-     *
-     * @return self
      */
-    protected function updateSendEmailEvents(EmailStorage $storageEmail, array $events): self
+    public function updateSendEmailEvents(AbstractEmailStorage $storageEmail, array $events): self
     {
         $storageEmail->setEvents($events);
         $this->entityManager->flush();
@@ -174,12 +146,8 @@ trait StorageTrait
 
     /**
      * Set this Email Events Refresh Errored in Database
-     *
-     * @param EmailStorage $storageEmail
-     *
-     * @return self
      */
-    protected function updateSendEmailEventsErrored(EmailStorage $storageEmail): self
+    public function updateSendEmailEventsErrored(AbstractEmailStorage $storageEmail): self
     {
         $storageEmail->setErrored();
         $this->entityManager->flush();
@@ -189,14 +157,8 @@ trait StorageTrait
 
     /**
      * Update this Email Contents in Database
-     *
-     * @param EmailStorage $storageEmail
-     * @param string       $uuid
-     * @param string       $contents
-     *
-     * @return self
      */
-    protected function updateSendEmailContents(EmailStorage $storageEmail, string $uuid, string $contents): self
+    public function updateSendEmailContents(AbstractEmailStorage $storageEmail, string $uuid, string $contents): self
     {
         $storageEmail->setContents($uuid, $contents);
         $this->entityManager->flush();
@@ -206,19 +168,13 @@ trait StorageTrait
 
     /**
      * Check if this Email was Already Send to this User
-     *
-     * @param User          $toUser
-     * @param SendSmtpEmail $email
-     *
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function isAlreadySend(User $toUser, SendSmtpEmail $email): bool
     {
         /** @var EmailRepository $repository */
         $repository = $this->entityManager
-            ->getRepository($this->config->getEmailStorageClass());
+            ->getRepository($this->config->getEmailStorageClass())
+        ;
 
         return !empty($repository->findByMd5($toUser, EmailExtractor::md5($email)));
     }

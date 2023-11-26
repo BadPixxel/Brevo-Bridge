@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Services;
+namespace BadPixxel\BrevoBridge\Services\Emails;
 
 use Exception;
 use Symfony\Component\HttpFoundation\Response;

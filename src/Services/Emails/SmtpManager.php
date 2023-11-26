@@ -11,85 +11,114 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Services\Emails;
 
-use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as EmailStorage;
-use Brevo\Client\ApiException;
-use Brevo\Client\Model\GetEmailEventReport;
-use Exception;
+use BadPixxel\BrevoBridge\Models\Managers;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use stdClass;
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\ApiException;
+use Brevo\Client\Model\CreateSmtpEmail;
+use Brevo\Client\Model\GetEmailEventReport;
+use Brevo\Client\Model\SendSmtpEmail;
+use Exception;
+use GuzzleHttp\Client;
 
 /**
- * Functions Collection to Update Emails Metadata from Brevo API.
+ * Smtp Emails Manager for Brevo Api.
  */
-trait EmailsUpdaterTrait
+class SmtpManager
 {
+    use Managers\ErrorLoggerTrait;
+
     /**
-     * Update Email Events List from Smtp Api.
+     * Transactional Emails API Service.
+     *
+     * @var null|TransactionalEmailsApi
      */
-    protected function updateEvents(EmailStorage &$storageEmail, bool $force): self
-    {
-        //==============================================================================
-        // Check if Events Refresh is Allowed
-        if (!$force && !$this->getConfig()->isRefreshMetadataAllowed()) {
-            return $this;
-        }
-        //==============================================================================
-        // Check if Events Refresh is Needed
-        if (!$force && !$storageEmail->isEventOutdated()) {
-            return $this;
-        }
-        //==============================================================================
-        // Collect Events
-        $events = $this->getEventsFromApi($storageEmail->getMessageId(), $storageEmail->getEmail());
-        if (empty($events)) {
-            if (!empty($storageEmail->getEvents())) {
-                return $this;
-            }
+    protected ?TransactionalEmailsApi $smtpApi;
 
-            return $this->updateSendEmailEventsErrored($storageEmail);
-        }
+    /**
+     * @var SmtpManager
+     */
+    private static SmtpManager $staticInstance;
 
+    public function __construct(
+        private readonly Configuration $config,
+        private readonly EmailsStorage $storage,
+    ) {
         //==============================================================================
-        // Update Storage
-        return $this->updateSendEmailEvents($storageEmail, $events);
+        // Store Static Instance for Access as Static
+        self::$staticInstance = $this;
     }
 
     /**
-     * Update Email Contents from Smtp Api.
+     * Static Access to this Service.
+     *
+     * @return SmtpManager
      */
-    protected function updateContents(EmailStorage &$storageEmail, bool $force): self
+    public static function getInstance(): SmtpManager
+    {
+        return self::$staticInstance;
+    }
+
+    /**
+     * Create a new Transactional Email.
+     *
+     * @return SendSmtpEmail
+     */
+    public function newSmtpEmail(): SendSmtpEmail
     {
         //==============================================================================
-        // Only if Events Refresh is Allowed
-        if (!$this->getConfig()->isRefreshContentsAllowed()) {
-            return $this;
-        }
+        // Create new Smtp Email
+        $newEmail = new SendSmtpEmail();
         //==============================================================================
-        // Check if Contents Refresh is Needed
-        if (!$force && !empty($storageEmail->getHtmlContent())) {
-            return $this;
-        }
-        //==============================================================================
-        // Ensure we have Email UUID
-        $uuid = $storageEmail->getUuid();
-        if (empty($uuid)) {
-            $uuid = $this->getEmailUuid($storageEmail->getMessageId());
-        }
-        if (empty($uuid)) {
-            return $this;
-        }
-        //==============================================================================
-        // Collect Html contents
-        $htmlContents = $this->getEmailContents($uuid);
-        if (empty($htmlContents) || ("Mail content not available" == $htmlContents)) {
-            return $this;
-        }
-        //==============================================================================
-        // Update Storage
-        $this->updateSendEmailContents($storageEmail, $uuid, $htmlContents);
+        // Setup Default Email Values
+        $newEmail
+            ->setSender($this->config->getDefaultSender())
+            ->setReplyTo($this->config->getDefaultReplyTo())
+            ->setTo(array())
+        ;
 
-        return $this;
+        return $newEmail;
+    }
+
+    /**
+     * Send a Transactional Email from Api.
+     *
+     * @param array         $toUser
+     * @param SendSmtpEmail $sendEmail
+     * @param bool          $demoMode
+     *
+     * @return null|CreateSmtpEmail
+     */
+    public function send(array $toUser, SendSmtpEmail $sendEmail, bool $demoMode): ?CreateSmtpEmail
+    {
+        try {
+            //==============================================================================
+            // Check if Sending Emails is Allowed
+            if (!$demoMode && !$this->config->isSendAllowed()) {
+                return $this->setError('Brevo API is Disabled');
+            }
+            //==============================================================================
+            // Check if THIS Email was Already Send
+            $filteredUsers = $this->storage->filterAlreadySendUsers($toUser, $sendEmail, $demoMode);
+            if (!$filteredUsers) {
+                return $this->setError('This Email has Already been Send...');
+            }
+            //==============================================================================
+            // Send the Email
+            $createEmail = $this->getApi()->sendTransacEmail($sendEmail);
+            //==============================================================================
+            // Save the Email to DataBase
+            $this->storage->saveSendEmail($filteredUsers, $sendEmail, $createEmail);
+        } catch (ApiException $ex) {
+            return $this->catchError($ex);
+        } catch (Exception $ex) {
+            return $this->setError($ex->getMessage());
+        }
+
+        return $createEmail;
     }
 
     /**
@@ -100,7 +129,7 @@ trait EmailsUpdaterTrait
      *
      * @return array
      */
-    protected function getEventsFromApi(string $messageId, string $email): array
+    public function getEvents(string $messageId, string $email): array
     {
         //==============================================================================
         // Collect Events for this Message via Smtp Api
@@ -131,7 +160,7 @@ trait EmailsUpdaterTrait
     /**
      * Collect Email Events from Smtp Api.
      */
-    protected function getEmailContents(string $uuid): ?string
+    public function getContents(string $uuid): ?string
     {
         $host = $this->getApi()->getConfig()->getHost();
         $apiKey = $this->getApi()->getConfig()->getApiKey('api-key');
@@ -177,9 +206,9 @@ trait EmailsUpdaterTrait
     }
 
     /**
-     * Collect Email Events from Smtp Api.
+     * Get Email Uuid from Message ID using Smtp Api.
      */
-    protected function getEmailUuid(string $messageId): ?string
+    public function getUuid(string $messageId): ?string
     {
         $host = $this->getApi()->getConfig()->getHost();
         $apiKey = $this->getApi()->getConfig()->getApiKey('api-key');
@@ -222,5 +251,22 @@ trait EmailsUpdaterTrait
         }
 
         return null;
+    }
+
+    /**
+     * Access to Brevo API Service.
+     *
+     * @return TransactionalEmailsApi
+     */
+    private function getApi(): TransactionalEmailsApi
+    {
+        if (!isset($this->smtpApi)) {
+            $this->smtpApi = new TransactionalEmailsApi(
+                new Client(),
+                $this->config->getSdkConfig()
+            );
+        }
+
+        return $this->smtpApi;
     }
 }

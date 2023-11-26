@@ -11,13 +11,16 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Services;
+namespace BadPixxel\BrevoBridge\Services\Emails;
 
 use BadPixxel\BrevoBridge\Dictionary\ServiceTags;
 use BadPixxel\BrevoBridge\Interfaces\EmailProcessorInterface;
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
+/**
+ * Execute All Processors for an Email before Sending
+ */
 class EmailProcessor
 {
     /**
@@ -25,7 +28,7 @@ class EmailProcessor
      */
     public function __construct(
         #[TaggedIterator(ServiceTags::EMAIL_PROCESSOR)]
-        private iterable $processors
+        private readonly iterable $processors
     ) {
     }
 
