@@ -11,62 +11,58 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates;
+namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
 
 use BadPixxel\BrevoBridge\Dictionary\TemplatesRoutes;
-use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateAwareInterface;
-use BadPixxel\BrevoBridge\Services\RawHtmlRenderer;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\BrevoBridge\Services\TemplateManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Render a Demo Email using Brevo Account Template by ID
+ * Export Email Template Html to Brevo
  */
-class Preview extends CRUDController
+class Export extends CRUDController
 {
     public function __construct(
-        private TemplateManager $tmplManager,
-        private RawHtmlRenderer $rawHtmlRenderer
+        private readonly EmailsManager   $manager,
+        private readonly TemplateManager        $templates,
     ) {
     }
 
     /**
      * @throws Exception
      */
-    public function __invoke(Request $request, string $emailCode): Response
+    public function __invoke(Request $request, string $emailId): Response
     {
-        /** @var Session $session */
-        $session = $request->getSession();
         /** @var User $user */
         $user = $this->getUser();
         //==============================================================================
         // Identify Email Class
-        $emailClass = $this->tmplManager->getEmailByCode($emailCode);
-        if (is_null($emailClass) || !class_exists($emailClass)) {
-            return $this->redirectToRoute(TemplatesRoutes::LIST);
-        }
-        if (!is_subclass_of($emailClass, HtmlTemplateAwareInterface::class)) {
+        $email = $this->manager->getEmailById($emailId);
+        if (!$email) {
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
         //==============================================================================
-        // Fetch Email Template from API
-        $smtpTemplate = $this->tmplManager->get($emailClass, $user);
-        if (!$smtpTemplate) {
-            $session->getFlashBag()->add('sonata_flash_error', $this->tmplManager->getLastError());
+        // Generate a Fake Email
+        $fakeEmail = $this->manager->fake($email, $user);
+        if (!$fakeEmail) {
+            $this->addFlash('sonata_flash_error', $this->manager->getLastError());
 
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
-
         //==============================================================================
-        // Render Raw Html Template
-        return $this->rawHtmlRenderer->render(
-            $smtpTemplate->getHtmlContent(),
-            $this->tmplManager->getTmplParameters($emailClass, $user)
-        );
+        // Update Email Template On Host
+        if (null == $this->templates->update($email)) {
+            $this->addFlash('sonata_flash_error', $this->templates->getLastError());
+
+            return $this->redirectToRoute(TemplatesRoutes::LIST);
+        }
+        $this->addFlash('sonata_flash_success', 'Email Template Updated');
+
+        return $this->redirectToRoute(TemplatesRoutes::LIST);
     }
 }

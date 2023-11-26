@@ -13,43 +13,35 @@
 
 namespace BadPixxel\BrevoBridge\Controller;
 
-use BadPixxel\BrevoBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsStorage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * SendInBlue WebHooks Controller
+ * Execute WebHook Actions for Brevo Emails Updates
  */
 class WebHooksController extends AbstractController
 {
-    //====================================================================//
-    //  WEBHOOKS MANAGEMENT
-    //====================================================================//
-
-    /**
-     * Execute WebHook Actions for SendInblue Emails Updates
-     *
-     * @param Request     $request
-     * @param SmtpManager $smtpManager
-     *
-     * @return Response
-     */
-    public function __invoke(Request $request, SmtpManager $smtpManager): Response
-    {
+    public function __invoke(
+        Request       $request,
+        EmailsManager $manager,
+        EmailsStorage $storage,
+    ): Response {
         //==============================================================================
         // Safety Check
         $messageId = $this->verify($request);
         //====================================================================//
         // Search for this Email
-        $storageEmail = $smtpManager->findByMessageId($messageId);
+        $storageEmail = $storage->findByMessageId($messageId);
         if (!$storageEmail) {
             return new Response("No Storage found for this Email");
         }
         //====================================================================//
         // Refresh Email Events
-        $smtpManager->update($storageEmail, true);
+        $manager->update($storageEmail, true);
 
         return new Response("Ok");
     }

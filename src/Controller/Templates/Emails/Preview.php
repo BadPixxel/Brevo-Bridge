@@ -11,61 +11,65 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates;
+namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
 
 use BadPixxel\BrevoBridge\Dictionary\TemplatesRoutes;
-use BadPixxel\BrevoBridge\Services\RawHtmlRenderer;
+use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateAwareInterface;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
+use BadPixxel\BrevoBridge\Services\Emails\RawHtmlRenderer;
 use BadPixxel\BrevoBridge\Services\TemplateManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Render a Brevo Email using Local Template Sources
+ * Render a Demo Email using Brevo Account Template by ID
  */
-class View extends CRUDController
+class Preview extends CRUDController
 {
     public function __construct(
-        private TemplateManager $tmplManager,
-        private RawHtmlRenderer $rawHtmlRenderer
+        private readonly EmailsManager   $manager,
+        private readonly TemplateManager $templates,
+        private readonly RawHtmlRenderer $renderer
     ) {
     }
 
     /**
      * @throws Exception
      */
-    public function __invoke(Request $request, string $emailCode): Response
+    public function __invoke(Request $request, string $emailId): Response
     {
-        /** @var Session $session */
-        $session = $request->getSession();
         /** @var User $user */
         $user = $this->getUser();
         //==============================================================================
         // Identify Email Class
-        $emailClass = $this->tmplManager->getEmailByCode($emailCode);
-        if (is_null($emailClass)) {
-            return $this->redirectToRoute(TemplatesRoutes::LIST);
-        }
-        if (!class_exists($emailClass) || !$this->tmplManager->isTemplateAware($emailClass)) {
+        $email = $this->manager->getEmailById($emailId);
+        if (!$email) {
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
         //==============================================================================
-        // Compile Email Template
-        $rawHtml = (string) $this->tmplManager->compile($emailClass);
-        if (!$rawHtml) {
-            $session->getFlashBag()->add('sonata_flash_error', $this->tmplManager->getLastError());
+        // Generate a Fake Email
+        $fakeEmail = $this->manager->fake($email, $user);
+        if (!$fakeEmail) {
+            $this->addFlash('sonata_flash_error', $this->manager->getLastError());
 
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
+        //==============================================================================
+        // Fetch Email Template from API
+        $smtpTemplate = $this->templates->get($fakeEmail);
+        if (!$smtpTemplate) {
+            $this->addFlash('sonata_flash_error', $this->templates->getLastError());
 
+            return $this->redirectToRoute(TemplatesRoutes::LIST);
+        }
         //==============================================================================
         // Render Raw Html Template
-        return $this->rawHtmlRenderer->render(
-            $rawHtml,
-            $this->tmplManager->getTmplParameters($emailClass, $user)
+        return $this->renderer->render(
+            $smtpTemplate->getHtmlContent(),
+            $this->templates->getTmplParameters($fakeEmail)
         );
     }
 }
