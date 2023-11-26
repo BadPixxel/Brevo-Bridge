@@ -13,30 +13,28 @@
 
 namespace BadPixxel\BrevoBridge\Admin;
 
-use BadPixxel\BrevoBridge\Controller\Templates\Preview;
-use BadPixxel\BrevoBridge\Controller\Templates\Send;
-use BadPixxel\BrevoBridge\Controller\Templates\View;
+use BadPixxel\BrevoBridge\Controller\Templates\Sms;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 
 /**
- * Admin Class for SendInBlue Bridge Emails Templates Management
+ * Admin Class for Brevo Bridge Sms Templates Management
  */
-class TemplatesAdmin extends Admin
+class SmsTemplatesAdmin extends Admin
 {
     /**
      * The base route name used to generate the routing information.
      *
      * @var string
      */
-    protected $baseRouteName = "admin_badpixxel_brevo_templates";
+    protected $baseRouteName = "admin_badpixxel_brevo_templates_sms";
 
     /**
      * The base route pattern used to generate the routing information.
      *
      * @var string
      */
-    protected $baseRoutePattern = "brevo/templates";
+    protected $baseRoutePattern = "brevo/templates/sms";
 
     /**
      * Action list for the search result.
@@ -59,15 +57,14 @@ class TemplatesAdmin extends Admin
         $collection->remove('export');
         $collection->remove('delete');
 
-        $collection->add('view', '{emailCode}/view', array(
-            "_controller" => View::class
+        $collection->add('list', 'list', array(
+            "_controller" => Sms\ListView::class
         ));
-        $collection->add('preview', '{emailCode}/preview', array(
-            "_controller" => Preview::class
+        $collection->add('preview', '{smsId}/preview', array(
+            "_controller" => Sms\Preview::class
         ));
-        $collection->add('update', '{emailCode}/update');
-        $collection->add('send', '{emailCode}/send', array(
-            "_controller" => Send::class
+        $collection->add('send', '{smsId}/send', array(
+            "_controller" => Sms\Send::class
         ));
     }
 }
