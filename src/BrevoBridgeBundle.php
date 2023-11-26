@@ -33,12 +33,12 @@ class BrevoBridgeBundle extends Bundle
         }
         //==============================================================================
         // Force Loading of SendInBlue Smtp Service
-        $this->container->get(Services\SmtpManager::class);
-        //==============================================================================
-        // Force Loading of SendInBlue Events Service
-        $this->container->get(Services\EventManager::class);
+        $this->container->get(Services\Emails\EmailsManager::class);
         //==============================================================================
         // Force Loading of SendInBlue Sms Service
-        $this->container->get(Services\SmsManager::class);
+        $this->container->get(Services\Sms\SmsManager::class);
+        //==============================================================================
+        // Force Loading of SendInBlue Events Service
+        $this->container->get(Services\Events\EventManager::class);
     }
 }
