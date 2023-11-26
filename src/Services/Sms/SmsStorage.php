@@ -11,31 +11,32 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Models\Managers;
+namespace BadPixxel\BrevoBridge\Services\Sms;
 
+use BadPixxel\BrevoBridge\Entity\AbstractSmsStorage;
+use BadPixxel\BrevoBridge\Models\Managers;
 use BadPixxel\BrevoBridge\Helpers\SmsExtractor;
 use BadPixxel\BrevoBridge\Repository\SmsRepository;
+use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Brevo\Client\Model\SendSms;
 use Brevo\Client\Model\SendTransacSms;
-use Doctrine\ORM\EntityManagerInterface as EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sonata\UserBundle\Model\UserInterface as User;
 
 /**
  * Manage Storage of User Sms in Database.
  */
-trait SmsStorageTrait
+class SmsStorage
 {
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
+    use Managers\ErrorLoggerTrait;
+
+    public function __construct(
+        private readonly Configuration  $config,
+        private readonly EntityManagerInterface $entityManager
+    ) {}
 
     /**
      * Find a User by Email
-     *
-     * @param string $userEmail
-     *
-     * @return null|User
      */
     public function getUserByEmail(string $userEmail): ?User
     {
@@ -50,31 +51,9 @@ trait SmsStorageTrait
     }
 
     /**
-     * Setup Entity Manager for Storage
-     *
-     * @param EntityManager $manager
-     *
-     * @return self
-     */
-    protected function setupStorage(EntityManager $manager): self
-    {
-        $this->entityManager = $manager;
-
-        return $this;
-    }
-
-    /**
      * Check if this Sms was Already Send to this User
-     *
-     * @param User           $user
-     * @param SendTransacSms $sms
-     * @param bool           $demoMode
-     *
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    protected function isAlreadySend(User $user, SendTransacSms $sms, bool $demoMode): bool
+    public function isAlreadySend(User $user, SendTransacSms $sms, bool $demoMode): bool
     {
         //==============================================================================
         // DEMO MODE => Allow Multiple Sending to User
@@ -84,26 +63,26 @@ trait SmsStorageTrait
 
         /** @var SmsRepository $repository */
         $repository = $this->entityManager
-            ->getRepository($this->config->getSmsStorageClass());
+            ->getRepository($this->config->getSmsStorageClass())
+        ;
 
         return !empty($repository->findByMd5($user, SmsExtractor::md5($sms)));
     }
 
     /**
      * Save this Sms in Database
-     *
-     * @param User           $user
-     * @param SendTransacSms $sendSms
-     * @param SendSms        $createSms
-     *
-     * @return self
      */
-    protected function saveSendSms(User $user, SendTransacSms $sendSms, SendSms $createSms): self
+    public function saveSendSms(User $user, SendTransacSms $sendSms, SendSms $createSms): static
     {
         $storageClass = $this->config->getSmsStorageClass();
         //==============================================================================
         // Check if User Exists in Db
-        if (!($user instanceof User) || empty($user->getId())) {
+        if (empty($user->getId())) {
+            return $this;
+        }
+        //==============================================================================
+        // Check Class is SMS Storage Class
+        if (!is_subclass_of($storageClass, AbstractSmsStorage::class)) {
             return $this;
         }
         //==============================================================================
