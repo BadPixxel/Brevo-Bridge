@@ -1,5 +1,16 @@
 <?php
 
+/*
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace BadPixxel\BrevoBridge\Helpers;
 
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
@@ -33,6 +44,7 @@ class EmailValidator
         if (empty($email->getEmail()->getSubject())) {
             throw new Exception("No subject defined");
         }
+
         //==============================================================================
         // Verify Parameters & Return Resolved
         return $email->getResolver()->resolve(

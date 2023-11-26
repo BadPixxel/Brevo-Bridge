@@ -39,5 +39,4 @@ class ServiceTags
      * Brevo Bridge Event
      */
     const EVENT = "badpixxel.brevo.bridge.event";
-
 }

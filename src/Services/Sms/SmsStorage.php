@@ -14,8 +14,8 @@
 namespace BadPixxel\BrevoBridge\Services\Sms;
 
 use BadPixxel\BrevoBridge\Entity\AbstractSmsStorage;
-use BadPixxel\BrevoBridge\Models\Managers;
 use BadPixxel\BrevoBridge\Helpers\SmsExtractor;
+use BadPixxel\BrevoBridge\Models\Managers;
 use BadPixxel\BrevoBridge\Repository\SmsRepository;
 use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Brevo\Client\Model\SendSms;
@@ -33,7 +33,8 @@ class SmsStorage
     public function __construct(
         private readonly Configuration  $config,
         private readonly EntityManagerInterface $entityManager
-    ) {}
+    ) {
+    }
 
     /**
      * Find a User by Email

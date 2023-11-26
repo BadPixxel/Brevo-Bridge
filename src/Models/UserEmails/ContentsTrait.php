@@ -13,8 +13,8 @@
 
 namespace BadPixxel\BrevoBridge\Models\UserEmails;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Storage of Email Contents.

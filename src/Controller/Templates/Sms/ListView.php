@@ -13,7 +13,6 @@
 
 namespace BadPixxel\BrevoBridge\Controller\Templates\Sms;
 
-use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Response;

@@ -36,7 +36,7 @@ class TestCommand extends Command
     public function __construct(
         private readonly EmailsManager $manager,
         private readonly EmailsStorage $storage,
-    ){
+    ) {
         parent::__construct(null);
     }
 

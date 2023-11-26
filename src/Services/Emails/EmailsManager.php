@@ -26,7 +26,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\Security\Core\User\UserInterface as User;
 
-
 /**
  * Emails Manager: Access & Process Emails
  */
@@ -74,9 +73,9 @@ class EmailsManager
     /**
      * Build Email.
      *
-     * @param AbstractEmail $email The Email to Compile
-     * @param User|User[] $toUsers Target User or Array of Target Users
-     * @param array $args   User Inputs
+     * @param AbstractEmail $email   The Email to Compile
+     * @param User|User[]   $toUsers Target User or Array of Target Users
+     * @param array         $args    User Inputs
      *
      * @return null|AbstractEmail
      */
@@ -92,6 +91,7 @@ class EmailsManager
         //==============================================================================
         // Apply Processors to Email
         $this->process($email);
+
         //==============================================================================
         // Validate Email & Parameters
         try {
@@ -111,15 +111,19 @@ class EmailsManager
     /**
      * Send an Abstract Brevo Email using Smtp Api.
      *
-     * @param AbstractEmail $email The Email to Compile
-     * @param User|User[] $toUsers Target User or Array of Target Users
-     * @param array $args User Inputs
+     * @param AbstractEmail $email    The Email to Compile
+     * @param User|User[]   $toUsers  Target User or Array of Target Users
+     * @param array         $args     User Inputs
      * @param bool          $demoMode Are we in Debug/Demo/Test Mode
      *
      * @return null|CreateSmtpEmail
      */
-    public function send(AbstractEmail $email, array|User $toUsers, array $args, bool $demoMode = false): ?CreateSmtpEmail
-    {
+    public function send(
+        AbstractEmail $email,
+        array|User $toUsers,
+        array $args,
+        bool $demoMode = false
+    ): ?CreateSmtpEmail {
         //==============================================================================
         // Build Email using User Arguments
         if (!$compiledEmail = $this->build($email, $toUsers, $args)) {

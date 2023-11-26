@@ -29,6 +29,8 @@ use Twig\Environment;
 
 /**
  * Emails Templates Manager for Brevo Api.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TemplateManager
 {
@@ -87,7 +89,7 @@ class TemplateManager
                     $email->getTemplateHtml(),
                     $email->getTemplateParameters()
                 );
-           } catch (\Throwable $exception) {
+            } catch (\Throwable $exception) {
                 return $this->setError(
                     sprintf("Html Compile Fails: %s", $exception->getMessage())
                 );
@@ -112,6 +114,7 @@ class TemplateManager
         if (!$rawHtml = $this->compile($email)) {
             return false;
         }
+
         try {
             //==============================================================================
             // Create Update Template Class

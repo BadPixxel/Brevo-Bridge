@@ -47,17 +47,6 @@ class Basic extends AbstractEmail implements DummyUrlsAwareInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    protected function configureResolver(OptionsResolver $resolver): void
-    {
-        $resolver
-            ->setDefault("subject", self::TEST_SUBJECT)
-            ->setDefault("text", self::TEST_MSG)
-        ;
-    }
-
-    /**
      * Create Email Instance in Demo Mode.
      */
     public function getFakeArguments(): array
@@ -66,5 +55,16 @@ class Basic extends AbstractEmail implements DummyUrlsAwareInterface
             "subject" => self::TEST_SUBJECT,
             "text" => self::TEST_MSG
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function configureResolver(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefault("subject", self::TEST_SUBJECT)
+            ->setDefault("text", self::TEST_MSG)
+        ;
     }
 }

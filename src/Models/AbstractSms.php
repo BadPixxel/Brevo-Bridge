@@ -43,6 +43,15 @@ abstract class AbstractSms
     protected array $parameters = array();
 
     //==============================================================================
+    // BASIC GETTERS
+    //==============================================================================
+
+    public function __toString(): string
+    {
+        return static::class;
+    }
+
+    //==============================================================================
     // GENERIC SMS INTERFACES
     //==============================================================================
 
@@ -60,7 +69,7 @@ abstract class AbstractSms
      *
      * @return string
      */
-    abstract function getContents(): string;
+    abstract public function getContents(): string;
 
     /**
      * Get Arguments for Building Fake Sms.
@@ -80,6 +89,7 @@ abstract class AbstractSms
         if (!$instance) {
             return null;
         }
+
         //==============================================================================
         // Send Sms
         return self::getManager()
@@ -98,10 +108,11 @@ abstract class AbstractSms
         if (!$instance) {
             return null;
         }
+
         //==============================================================================
         // Send Demo Email
         return self::getManager()
-            ->send($instance, $toUser, $instance->getFakeArguments(),true)
+            ->send($instance, $toUser, $instance->getFakeArguments(), true)
         ;
     }
 
@@ -111,15 +122,6 @@ abstract class AbstractSms
     public static function getLastError(): string
     {
         return SmsManager::getInstance()->getLastError();
-    }
-
-    //==============================================================================
-    // BASIC GETTERS
-    //==============================================================================
-
-    public function __toString(): string
-    {
-        return static::class;
     }
 
     /**
@@ -202,5 +204,4 @@ abstract class AbstractSms
     {
         return SmsManager::getInstance();
     }
-
 }

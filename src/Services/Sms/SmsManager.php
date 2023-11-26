@@ -24,10 +24,9 @@ use Brevo\Client\Model\SendSms;
 use Brevo\Client\Model\SendTransacSms;
 use Exception;
 use GuzzleHttp\Client;
+use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
-use Sonata\UserBundle\Model\UserInterface as User;
-
 
 /**
  * Sms Manager for Brevo Api.
@@ -75,29 +74,6 @@ class SmsManager
     }
 
     /**
-     * Create a new Transactional Sms.
-     *
-     * @return SendTransacSms
-     */
-    private function newTransactionalSms(): SendTransacSms
-    {
-        //==============================================================================
-        // Create new Smtp Sms
-        $newSms = new SendTransacSms();
-        //==============================================================================
-        // Setup Default Sms Values
-        $newSms
-            ->setSender(str_replace(
-                array("#", "-", "'", ";", "&"),
-                '',
-                substr($this->config->getDefaultSender()->getName(), 0, 15)
-            ))
-        ;
-
-        return $newSms;
-    }
-
-    /**
      * Generate a Fake version of an Email
      */
     public function fake(AbstractSms $sms, User $user): ?AbstractSms
@@ -110,9 +86,9 @@ class SmsManager
     /**
      * Build Sms.
      *
-     * @param AbstractSms $sms The Sms to Compile
-     * @param User $toUser Target User
-     * @param array $args   User Inputs
+     * @param AbstractSms $sms    The Sms to Compile
+     * @param User        $toUser Target User
+     * @param array       $args   User Inputs
      *
      * @return null|AbstractSms
      */
@@ -128,6 +104,7 @@ class SmsManager
         //==============================================================================
         // Apply Processors to Email
         $this->process($sms);
+
         //==============================================================================
         // Validate Sms & Parameters
         try {
@@ -148,9 +125,9 @@ class SmsManager
      * Send a Transactional Sms from Api.
      *
      * @param AbstractSms $sms
-     * @param User           $toUser
-     * @param array $args User Inputs
-     * @param bool           $demoMode
+     * @param User        $toUser
+     * @param array       $args     User Inputs
+     * @param bool        $demoMode
      *
      * @return null|SendSms
      */
@@ -228,6 +205,29 @@ class SmsManager
     public function getSmsById(string $smsId): ?AbstractSms
     {
         return $this->getAll()[$smsId] ?? null;
+    }
+
+    /**
+     * Create a new Transactional Sms.
+     *
+     * @return SendTransacSms
+     */
+    private function newTransactionalSms(): SendTransacSms
+    {
+        //==============================================================================
+        // Create new Smtp Sms
+        $newSms = new SendTransacSms();
+        //==============================================================================
+        // Setup Default Sms Values
+        $newSms
+            ->setSender(str_replace(
+                array("#", "-", "'", ";", "&"),
+                '',
+                substr($this->config->getDefaultSender()->getName(), 0, 15)
+            ))
+        ;
+
+        return $newSms;
     }
 
     /**

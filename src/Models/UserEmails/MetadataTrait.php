@@ -16,8 +16,8 @@ namespace BadPixxel\BrevoBridge\Models\UserEmails;
 use Brevo\Client\Model\GetEmailEventReportEvents;
 use Brevo\Client\Model\GetEmailEventReportEvents as Event;
 use DateTime;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
 /**

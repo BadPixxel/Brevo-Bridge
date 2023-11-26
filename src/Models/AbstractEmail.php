@@ -36,6 +36,15 @@ abstract class AbstractEmail
     protected SendSmtpEmail $email;
 
     //==============================================================================
+    // BASIC GETTERS
+    //==============================================================================
+
+    public function __toString(): string
+    {
+        return static::class;
+    }
+
+    //==============================================================================
     // GENERIC EMAIL INTERFACES
     //==============================================================================
 
@@ -68,6 +77,7 @@ abstract class AbstractEmail
         if (!$instance) {
             return null;
         }
+
         //==============================================================================
         // Send Email
         return self::getManager()
@@ -88,10 +98,11 @@ abstract class AbstractEmail
         if (!$instance) {
             return null;
         }
+
         //==============================================================================
         // Send Demo Email
         return self::getManager()
-            ->send($instance, $toUsers, $instance->getFakeArguments(),true)
+            ->send($instance, $toUsers, $instance->getFakeArguments(), true)
         ;
     }
 
@@ -101,15 +112,6 @@ abstract class AbstractEmail
     final public static function getLastError(): string
     {
         return self::getManager()->getLastError();
-    }
-
-    //==============================================================================
-    // BASIC GETTERS
-    //==============================================================================
-
-    public function __toString(): string
-    {
-        return static::class;
     }
 
     /**

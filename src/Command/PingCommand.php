@@ -29,7 +29,7 @@ class PingCommand extends Command
      */
     public function __construct(
         private readonly AccountManager $accountManager
-    ){
+    ) {
         parent::__construct(null);
     }
 

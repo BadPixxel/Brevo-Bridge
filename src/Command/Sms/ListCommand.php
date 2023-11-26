@@ -13,7 +13,6 @@
 
 namespace BadPixxel\BrevoBridge\Command\Sms;
 
-use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -30,7 +29,7 @@ class ListCommand extends Command
      */
     public function __construct(
         private readonly SmsManager $manager
-    ){
+    ) {
         parent::__construct();
     }
 
@@ -53,7 +52,7 @@ class ListCommand extends Command
         //==============================================================================
         // Init Console Table
         $table = new Table($output);
-        $table->setHeaders(['ID', 'Class']);
+        $table->setHeaders(array('ID', 'Class'));
         //==============================================================================
         // Walk on All Available SMS
         foreach ($this->manager->getAll() as $serviceId => $abstractSms) {

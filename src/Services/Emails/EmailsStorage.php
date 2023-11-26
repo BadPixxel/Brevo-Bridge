@@ -30,7 +30,8 @@ class EmailsStorage
     public function __construct(
         private readonly Configuration  $config,
         private readonly EntityManagerInterface $entityManager
-    ) {}
+    ) {
+    }
 
     /**
      * Find a User by Email
@@ -62,7 +63,6 @@ class EmailsStorage
 
         return ($storageEmail instanceof AbstractEmailStorage) ? $storageEmail : null;
     }
-
 
     /**
      * Filter Target Users if Email was Already Send.

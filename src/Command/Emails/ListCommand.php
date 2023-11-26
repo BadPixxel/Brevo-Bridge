@@ -29,7 +29,7 @@ class ListCommand extends Command
      */
     public function __construct(
         private readonly EmailsManager $manager
-    ){
+    ) {
         parent::__construct();
     }
 
@@ -52,11 +52,10 @@ class ListCommand extends Command
         //==============================================================================
         // Init Console Table
         $table = new Table($output);
-        $table->setHeaders(['ID', 'Class', 'Templated', 'Provide']);
+        $table->setHeaders(array('ID', 'Class', 'Templated', 'Provide'));
         //==============================================================================
         // Walk on All Available Emails
         foreach ($this->manager->getAll() as $serviceId => $abstractEmail) {
-
             $class = get_class($abstractEmail);
             $usesTemplate = $this->manager->isTemplateProvider($class);
             $templateProvider = false;

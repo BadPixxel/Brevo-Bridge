@@ -1,5 +1,16 @@
 <?php
 
+/*
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace BadPixxel\BrevoBridge\Tests\Bundle\Sms;
 
 use BadPixxel\BrevoBridge\Models\AbstractSms;
@@ -27,19 +38,9 @@ class Basic extends AbstractSms implements DummySubjectAwareSmsInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    protected function configureResolver(OptionsResolver $resolver): void
-    {
-        $resolver
-            ->setDefault("subject", self::TEST_SUBJECT)
-        ;
-    }
-
-    /**
      * @inheritDoc
      */
-    function getContents(): string
+    public function getContents(): string
     {
         /** @var scalar $subject */
         $subject = $this->getParameters()["subject"] ?? null;
@@ -55,5 +56,15 @@ class Basic extends AbstractSms implements DummySubjectAwareSmsInterface
         return array(
             "subject" => self::TEST_SUBJECT,
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function configureResolver(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefault("subject", self::TEST_SUBJECT)
+        ;
     }
 }

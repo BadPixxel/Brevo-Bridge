@@ -13,9 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\Command\Sms;
 
-use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Models\AbstractSms;
-use BadPixxel\BrevoBridge\Services\Emails\EmailsStorage;
 use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use BadPixxel\BrevoBridge\Services\Sms\SmsStorage;
 use Sonata\UserBundle\Model\UserInterface;
@@ -39,8 +37,7 @@ class TestCommand extends Command
     public function __construct(
         private readonly SmsManager $manager,
         private readonly SmsStorage $storage,
-    )
-    {
+    ) {
         parent::__construct(null);
     }
 
@@ -92,7 +89,7 @@ class TestCommand extends Command
         }
 
         return self::showResult($output, true, $sms::class, ' Sms send !');
-   }
+    }
 
     /**
      * Get User for Sending the Sms

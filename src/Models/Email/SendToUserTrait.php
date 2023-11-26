@@ -1,5 +1,16 @@
 <?php
 
+/*
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace BadPixxel\BrevoBridge\Models\Email;
 
 use Brevo\Client\Model;
@@ -115,6 +126,7 @@ trait SendToUserTrait
             ? $toUser->getEmailCanonical()
             : $toUser->getUserIdentifier()
         ;
+
         //==============================================================================
         // Create To User Array
         return array('name' => $name, 'email' => $email);

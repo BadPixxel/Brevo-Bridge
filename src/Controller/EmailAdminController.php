@@ -89,8 +89,10 @@ class EmailAdminController extends CRUDController
     /**
      * Refresh Email Events.
      */
-    public function batchActionRefresh(ProxyQueryInterface $selectedModelQuery, EmailsManager $manager): RedirectResponse
-    {
+    public function batchActionRefresh(
+        ProxyQueryInterface $selectedModelQuery,
+        EmailsManager $manager
+    ): RedirectResponse {
         //==============================================================================
         // Security Check
         if (!$this->admin->isGranted('SHOW')) {

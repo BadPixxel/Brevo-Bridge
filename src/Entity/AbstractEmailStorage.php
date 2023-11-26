@@ -61,11 +61,12 @@ abstract class AbstractEmailStorage
 
     /**
      * Create Storage Class from Api Results
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public static function fromApiResults(User $toUser, SendSmtpEmail $sendEmail, CreateSmtpEmail $createEmail): AbstractEmailStorage
-    {
+    public static function fromApiResults(
+        User $toUser,
+        SendSmtpEmail $sendEmail,
+        CreateSmtpEmail $createEmail
+    ): AbstractEmailStorage {
         $storage = new static();
         $storage
             ->setSendAt()

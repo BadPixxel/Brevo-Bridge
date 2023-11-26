@@ -15,7 +15,6 @@ namespace BadPixxel\BrevoBridge\Services\Emails;
 
 use BadPixxel\BrevoBridge\Models\Managers;
 use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
-use stdClass;
 use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\ApiException;
 use Brevo\Client\Model\CreateSmtpEmail;
@@ -23,6 +22,7 @@ use Brevo\Client\Model\GetEmailEventReport;
 use Brevo\Client\Model\SendSmtpEmail;
 use Exception;
 use GuzzleHttp\Client;
+use stdClass;
 
 /**
  * Smtp Emails Manager for Brevo Api.

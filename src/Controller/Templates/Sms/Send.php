@@ -18,7 +18,6 @@ use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Model\UserInterface as User;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -34,7 +33,7 @@ class Send extends CRUDController
     /**
      * @throws Exception
      */
-    public function __invoke(Request $request, string $smsId): Response
+    public function __invoke(string $smsId): Response
     {
         /** @var User $user */
         $user = $this->getUser();

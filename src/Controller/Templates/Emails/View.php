@@ -14,13 +14,13 @@
 namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
 
 use BadPixxel\BrevoBridge\Dictionary\TemplatesRoutes;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\BrevoBridge\Services\Emails\RawHtmlRenderer;
 use BadPixxel\BrevoBridge\Services\TemplateManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Model\UserInterface as User;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,14 +38,14 @@ class View extends CRUDController
     /**
      * @throws Exception
      */
-    public function __invoke(Request $request, string $emailId): Response
+    public function __invoke(string $emailId): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         //==============================================================================
         // Identify Email Class
         $email = $this->manager->getEmailById($emailId);
-        if (!$email) {
+        if (!$email instanceof AbstractEmail) {
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
         //==============================================================================
@@ -67,6 +67,7 @@ class View extends CRUDController
 
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
+
         //==============================================================================
         // Render Raw Html Template
         return $this->renderer->render(
