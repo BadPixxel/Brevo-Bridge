@@ -11,26 +11,21 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Services;
+namespace BadPixxel\BrevoBridge\Services\Events;
 
 use BadPixxel\BrevoBridge\Models\AbstractTrackEvent;
 use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
 use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 /**
  * Tracker Events Manager for Brevo Api.
  */
+#[Autoconfigure(public: true)]
 class EventManager
 {
     use ErrorLoggerTrait;
-
-    /**
-     * Bridge Configuration.
-     *
-     * @var ConfigurationManager
-     */
-    private $config;
 
     /**
      * @var EventManager
@@ -40,11 +35,9 @@ class EventManager
     /**
      * @param Configuration $config
      */
-    public function __construct(Configuration $config)
-    {
-        //==============================================================================
-        // Connect to Bridge Configuration Service
-        $this->config = $config;
+    public function __construct(
+        private readonly Configuration $config
+    ) {
         //==============================================================================
         // Store Static Instance for Access as Static
         self::$staticInstance = $this;
