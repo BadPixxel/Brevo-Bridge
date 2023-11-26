@@ -18,7 +18,7 @@ use BadPixxel\BrevoBridge\Models\Gdpr\GdprEntityTrait;
 use BadPixxel\Paddock\System\MySql\Models\GdprRemovableInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\UserBundle\Model\UserInterface as User;
+use Sonata\UserBundle\Model\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'user__sms')]
@@ -35,7 +35,7 @@ class Sms extends AbstractSmsStorage implements GdprRemovableInterface
      * @inheritdoc
      */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "sms")]
-    protected User $user;
+    protected UserInterface $user;
     //==============================================================================
     // GENERIC GETTERS & SETTERS
     //==============================================================================
