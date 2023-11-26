@@ -14,6 +14,7 @@
 namespace BadPixxel\BrevoBridge\Command;
 
 use BadPixxel\BrevoBridge\Models\AbstractTrackEvent;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsStorage;
 use BadPixxel\BrevoBridge\Services\Emails\SmtpManager;
 use BadPixxel\BrevoBridge\Services\Events\EventManager;
 use Sonata\UserBundle\Model\UserInterface as User;
@@ -29,27 +30,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class EventTestCommand extends Command
 {
     /**
-     * @var SmtpManager
-     */
-    private $smtpManager;
-
-    /**
-     * @var EventManager
-     */
-    private $eventManager;
-
-    /**
      * Command Constructor
-     *
-     * @param SmtpManager  $smtpManager
-     * @param EventManager $eventManager
-     * @param null|string  $name
      */
-    public function __construct(SmtpManager $smtpManager, EventManager $eventManager, string $name = null)
-    {
-        $this->smtpManager = $smtpManager;
-        $this->eventManager = $eventManager;
-        parent::__construct($name);
+    public function __construct(
+        private readonly EmailsStorage $storage,
+        private readonly EventManager $eventManager
+    ) {
+        parent::__construct(null);
     }
 
     /**
@@ -83,7 +70,7 @@ class EventTestCommand extends Command
         $targetEmail = $input->getArgument('target');
         //==============================================================================
         // Identify User in Database
-        $user = $this->smtpManager->getUserByEmail($targetEmail);
+        $user = $this->storage->getUserByEmail($targetEmail);
         if (is_null($user)) {
             return self::showResult($output, false, 'Init', 'Unable to identify User');
         }

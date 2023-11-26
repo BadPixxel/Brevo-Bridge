@@ -18,6 +18,7 @@ use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\BrevoBridge\Services\Emails\EmailsStorage;
 use Sonata\UserBundle\Model\UserInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -121,6 +122,7 @@ class TestCommand extends Command
         }
         //==============================================================================
         // Ask User to Select
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Please select email to send',

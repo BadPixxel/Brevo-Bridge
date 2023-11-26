@@ -25,20 +25,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PingCommand extends Command
 {
     /**
-     * @var AccountManager
-     */
-    private $accountManager;
-
-    /**
      * Command Constructor
-     *
-     * @param AccountManager $accountManager
-     * @param null|string    $name
      */
-    public function __construct(AccountManager $accountManager, string $name = null)
-    {
-        $this->accountManager = $accountManager;
-        parent::__construct($name);
+    public function __construct(
+        private readonly AccountManager $accountManager
+    ){
+        parent::__construct(null);
     }
 
     /**
@@ -68,7 +60,7 @@ class PingCommand extends Command
             return -1;
         }
 
-        $message = 'Sendinblue Connected: ';
+        $message = 'Brevo Connected: ';
         $message .= ' Compte '.$result['companyName'];
         /** @var array $plan */
         foreach (is_iterable($result['plan']) ? $result['plan'] : array() as $plan) {
