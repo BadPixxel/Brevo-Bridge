@@ -14,7 +14,6 @@
 namespace BadPixxel\BrevoBridge\Services;
 
 use BadPixxel\BrevoBridge\Helpers\MjmlConverter;
-use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateAwareInterface;
 use BadPixxel\BrevoBridge\Interfaces\HtmlTemplateProviderInterface;
 use BadPixxel\BrevoBridge\Interfaces\MjmlTemplateProviderInterface;
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
@@ -22,16 +21,14 @@ use BadPixxel\BrevoBridge\Models\Managers\ErrorLoggerTrait;
 use BadPixxel\BrevoBridge\Services\ConfigurationManager as Configuration;
 use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\ApiException;
-use Brevo\Client\Model\GetSmtpTemplateOverview ;
+use Brevo\Client\Model\GetSmtpTemplateOverview;
 use Brevo\Client\Model\UpdateSmtpTemplate;
 use Exception;
 use GuzzleHttp\Client;
-use Symfony\Component\Security\Core\User\UserInterface as User;
+use Twig\Environment;
 
 /**
  * Emails Templates Manager for Brevo Api.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TemplateManager
 {
@@ -45,8 +42,8 @@ class TemplateManager
     protected ?TransactionalEmailsApi $smtpApi;
 
     public function __construct(
-        private Configuration $config,
-        private SmtpManager $smtpManager,
+        private readonly Configuration $config,
+        private readonly Environment    $twig
     ) {
     }
 
@@ -55,71 +52,73 @@ class TemplateManager
     //==============================================================================
 
     /**
-     * Check if an Email Class Implement Template Management.
-     *
-     * @param string $emailClass
-     *
-     * @return bool
-     */
-    public function isTemplateAware(string $emailClass): bool
-    {
-        return is_subclass_of($emailClass, HtmlTemplateProviderInterface::class);
-    }
-
-    /**
      * Compile Email Template to raw Html Contents.
-     *
-     * @param string $emailClass
-     *
-     * @return null|string
      */
-    public function compile(string $emailClass): ?string
+    public function compile(AbstractEmail $email): ?string
     {
         //==============================================================================
         // Compile Email From Mjml Twig Template
-        if (is_subclass_of($emailClass, MjmlTemplateProviderInterface::class)) {
-            $rawMjml = $emailClass::getTemplateMjml();
-            if (null == $rawMjml) {
-                return $this->setError("Error Reading Mjml Template Contents");
-            }
+        if ($email instanceof MjmlTemplateProviderInterface) {
+            try {
+                //==============================================================================
+                // Render Mjml from Twig Template
+                $rawMjml = $this->twig->render(
+                    $email->getTemplateMjml(),
+                    $email->getTemplateParameters()
+                );
 
-            return $this->convertMjmltoHtml($rawMjml);
+                //==============================================================================
+                // Convert Mjml to Html Template
+                return $this->convertMjmltoHtml($rawMjml);
+            } catch (\Throwable $exception) {
+                return $this->setError(
+                    sprintf("Mjml Compile Fails: %s", $exception->getMessage())
+                );
+            }
         }
+
         //==============================================================================
         // Compile Email From Html Twig Template
-        if (is_subclass_of($emailClass, HtmlTemplateProviderInterface::class)) {
-            return $emailClass::getTemplateHtml();
+        if ($email instanceof HtmlTemplateProviderInterface) {
+            try {
+                //==============================================================================
+                // Render Html from Twig Template
+                return $this->twig->render(
+                    $email->getTemplateHtml(),
+                    $email->getTemplateParameters()
+                );
+           } catch (\Throwable $exception) {
+                return $this->setError(
+                    sprintf("Html Compile Fails: %s", $exception->getMessage())
+                );
+            }
         }
 
         return null;
     }
 
     /**
-     * Update Email Html Template via SendInBlue API.
-     *
-     * @param string $emailClass
-     * @param string $htmlTemplate
-     *
-     * @return null|True
+     * Update Email Html Template via Brevo API.
      */
-    public function update(string $emailClass, string $htmlTemplate): ?bool
+    public function update(AbstractEmail $email): ?bool
     {
         //==============================================================================
         // Safety Checks
-        if (!is_subclass_of($emailClass, HtmlTemplateProviderInterface::class)) {
-            return $this->setError("Email does not manage Html Templates");
+        if (!$templateId = $email->getEmail()->getTemplateId()) {
+            return $this->setError("Email does not uses Html Templates");
         }
-
+        //==============================================================================
+        // Compile Email Raw Html
+        if (!$rawHtml = $this->compile($email)) {
+            return false;
+        }
         try {
             //==============================================================================
             // Create Update Template Class
-            $updateTmpl = new UpdateSmtpTemplate(array("htmlContent" => $htmlTemplate));
+            $updateTmpl = new UpdateSmtpTemplate(array("htmlContent" => $rawHtml));
             //==============================================================================
             // Update the Email Template
-            $this->getApi()->updateSmtpTemplate(
-                (int) $emailClass::getTemplateId(),
-                $updateTmpl
-            );
+            $this->getApi()->updateSmtpTemplate($templateId, $updateTmpl);
         } catch (ApiException $ex) {
             return $this->catchError($ex);
         } catch (Exception $ex) {
@@ -130,32 +129,20 @@ class TemplateManager
     }
 
     /**
-     * Get Email Html Template via SendInBlue API.
-     *
-     * @param class-string $emailClass
-     *
-     * @return null|GetSmtpTemplateOverview
+     * Get Email Html Template via Brevo API.
      */
-    public function get(string $emailClass, User $user): ?GetSmtpTemplateOverview
+    public function get(AbstractEmail $email): ?GetSmtpTemplateOverview
     {
         //==============================================================================
         // Safety Checks
-        if (!is_subclass_of($emailClass, HtmlTemplateAwareInterface::class)) {
+        if (!$templateId = $email->getEmail()->getTemplateId()) {
             return $this->setError("Email does not uses Html Templates");
-        }
-        //==============================================================================
-        // Generate a Demo Instance of the Email
-        $demoEmail = $this->smtpManager->fake($emailClass, $user);
-        if (!$demoEmail) {
-            return $this->setError("Unable to generate Fake Email");
         }
 
         try {
             //==============================================================================
             // Get the Email Template
-            return $this->getApi()->getSmtpTemplate(
-                $demoEmail->getEmail()->getTemplateId(),
-            );
+            return $this->getApi()->getSmtpTemplate($templateId);
         } catch (ApiException $ex) {
             return $this->catchError($ex);
         } catch (Exception $ex) {
@@ -169,35 +156,13 @@ class TemplateManager
 
     /**
      * Build Parameters for Debug Email Display
-     *
-     * @param class-string $emailClass
-     *
-     * @return array
      */
-    public function getTmplParameters(string $emailClass, User $user): array
+    public function getTmplParameters(AbstractEmail $email): array
     {
-        //==============================================================================
-        // Safety Check
-        if (!is_subclass_of($emailClass, AbstractEmail::class)) {
-            return array();
-        }
-        //==============================================================================
-        // Generate a Demo Instance of the Email
-        $fakeEmail = $this->smtpManager->fake($emailClass, $user)?->getEmail();
-        // Collect Email Specific Tests Parameters
-        $emailParams = $fakeEmail ? $fakeEmail->getParams() : array();
-        $templateId = $fakeEmail?->getTemplateId();
-        //==============================================================================
-        // Collect Email Common Parameters
-        $tmplParams = is_subclass_of($emailClass, HtmlTemplateProviderInterface::class)
-            ? $emailClass::getTemplateParameters()
-            : array()
-        ;
-
-        return array_replace_recursive($tmplParams, array(
-            "templateId" => $templateId,
-            "params" => $emailParams
-        ));
+        return array(
+            "templateId" => $email->getEmail()->getTemplateId(),
+            "params" => (array) $email->getEmail()->getParams()
+        );
     }
 
     //==============================================================================
@@ -205,7 +170,7 @@ class TemplateManager
     //==============================================================================
 
     /**
-     * Get Setuped Mjml Convert
+     * Get Mjml Convert
      *
      * @return null|MjmlConverter
      */
@@ -227,8 +192,6 @@ class TemplateManager
 
     /**
      * Convert Mjml to Html using API.
-     *
-     * @return null|string
      */
     public function convertMjmlToHtml(string $rawMjml): ?string
     {
@@ -246,28 +209,6 @@ class TemplateManager
         }
 
         return $rawHtml;
-    }
-
-    /**
-     * Find an Email Class by Code
-     *
-     * @param string $emailCode
-     *
-     * @return null|string
-     */
-    public function getEmailByCode(string $emailCode): ?string
-    {
-        return $this->config->getEmailByCode($emailCode);
-    }
-
-    /**
-     * Find All Available Email Class
-     *
-     * @return array
-     */
-    public function getAllEmails(): array
-    {
-        return $this->config->getAllEmails();
     }
 
     /**
