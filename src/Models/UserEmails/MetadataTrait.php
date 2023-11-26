@@ -17,6 +17,7 @@ use Brevo\Client\Model\GetEmailEventReportEvents;
 use Brevo\Client\Model\GetEmailEventReportEvents as Event;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 use Exception;
 
 /**
@@ -30,37 +31,30 @@ trait MetadataTrait
 
     /**
      * Date the Email was Send.
-     *
-     * @var null|DateTime
-     *
-     * @ORM\Column(name="send_at", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: "send_at", type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTime $sendAt = null;
 
     /**
      * Date of First Opening.
-     *
-     * @var null|DateTime
-     *
-     * @ORM\Column(name="open_at", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: "open_at", type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTime $openAt = null;
 
     /**
      * Date of last Events Refresh.
-     *
-     * @var null|DateTime
-     *
-     * @ORM\Column(name="refreshed_at", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: "refreshed_at", type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTime $refreshedAt = null;
 
     /**
-     * @var null|GetEmailEventReportEvents[]
+     * Last Collected Events List
      *
-     * @ORM\Column(name="events", type="array", nullable=true)
+     * @var null|GetEmailEventReportEvents[]
      */
+    #[ORM\Column(name: "events", type: Types::ARRAY, nullable: true)]
     protected ?array $events = null;
+
     /**
      * @var array
      */
@@ -77,7 +71,6 @@ trait MetadataTrait
         Event::EVENT_SPAM,
         Event::EVENT_INVALID,
         Event::EVENT_BLOCKED,
-        //        Event::EVENT_UNSUBSCRIBED
     );
 
     //==============================================================================
@@ -126,7 +119,7 @@ trait MetadataTrait
      *
      * @return $this
      */
-    public function setEvents(array $events): self
+    public function setEvents(array $events): static
     {
         $this->events = $events;
         //==============================================================================
@@ -153,7 +146,7 @@ trait MetadataTrait
      *
      * @return $this
      */
-    public function setErrored(): self
+    public function setErrored(): static
     {
         $this->events = array(new Event(array(
             "date" => new DateTime(),
@@ -302,12 +295,8 @@ trait MetadataTrait
 
     /**
      * Set sendAt.
-     *
-     * @param DateTime $sendAt
-     *
-     * @return $this
      */
-    protected function setSendAt(DateTime $sendAt = null): self
+    protected function setSendAt(DateTime $sendAt = null): static
     {
         $this->sendAt = $sendAt ? $sendAt : (new DateTime());
 
@@ -316,12 +305,8 @@ trait MetadataTrait
 
     /**
      * Set openAt.
-     *
-     * @param DateTime $openAt
-     *
-     * @return $this
      */
-    protected function setOpenAt(DateTime $openAt = null): self
+    protected function setOpenAt(DateTime $openAt = null): static
     {
         $this->openAt = $openAt ? $openAt : (new DateTime());
 
