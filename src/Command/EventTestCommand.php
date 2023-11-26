@@ -14,8 +14,8 @@
 namespace BadPixxel\BrevoBridge\Command;
 
 use BadPixxel\BrevoBridge\Models\AbstractTrackEvent;
-use BadPixxel\BrevoBridge\Services\EventManager;
-use BadPixxel\BrevoBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Services\Emails\SmtpManager;
+use BadPixxel\BrevoBridge\Services\Events\EventManager;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

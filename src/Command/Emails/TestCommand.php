@@ -11,15 +11,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Command\Sms;
+namespace BadPixxel\BrevoBridge\Command\Emails;
 
 use BadPixxel\BrevoBridge\Models\AbstractEmail;
-use BadPixxel\BrevoBridge\Models\AbstractSms;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\BrevoBridge\Services\Emails\EmailsStorage;
-use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
-use BadPixxel\BrevoBridge\Services\Sms\SmsStorage;
 use Sonata\UserBundle\Model\UserInterface;
-use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Test Command for Sending a Dummy Sms.
+ * Test Command for Sending an Dummy Emails.
  */
 class TestCommand extends Command
 {
@@ -36,10 +33,9 @@ class TestCommand extends Command
      * Command Constructor
      */
     public function __construct(
-        private readonly SmsManager $manager,
-        private readonly SmsStorage $storage,
-    )
-    {
+        private readonly EmailsManager $manager,
+        private readonly EmailsStorage $storage,
+    ){
         parent::__construct(null);
     }
 
@@ -49,18 +45,18 @@ class TestCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName('brevo:sms:test')
-            ->setDescription("Sms Sending test: require user email")
+            ->setName('brevo:email:test')
+            ->setDescription("Email Sending test: require user email")
             ->addArgument(
                 'user',
                 InputArgument::REQUIRED,
-                'Target Email: Who should receive the tests sms'
+                'Target Email: Who should receive the tests emails'
             )
             ->addOption(
-                'send',
+                'email',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Class of Sms to send'
+                'Class of Email to send'
             )
         ;
     }
@@ -77,24 +73,23 @@ class TestCommand extends Command
             return 0;
         }
         //==============================================================================
-        // Identify Sms to Send
-        $sms = $this->getSms($input, $output);
-        if (is_null($sms)) {
+        // Identify Email to Send
+        $email = $this->getEmail($input, $output);
+        if (is_null($email)) {
             return 0;
         }
-
         //==============================================================================
         // Send a Fake Email
-        $sendSms = $sms::sendDemo($user);
-        if (!$sendSms) {
-            return self::showResult($output, false, $sms::class, ' Sms fails: '.$sms::getLastError());
+        $sendEmail = $email::sendDemo($user);
+        if (!$sendEmail) {
+            return self::showResult($output, false, $email::class, ' Email fails: '.$email::getLastError());
         }
 
-        return self::showResult($output, true, $sms::class, ' Sms send !');
-   }
+        return self::showResult($output, true, $email::class, ' Email send !');
+    }
 
     /**
-     * Get User for Sending the Sms
+     * Get User for Sending the Mail
      */
     protected function getUser(InputInterface $input, OutputInterface $output): ?UserInterface
     {
@@ -113,29 +108,29 @@ class TestCommand extends Command
     }
 
     /**
-     * Get Sms Class to Send
+     * Get Email Class to Send
      */
-    protected function getSms(InputInterface $input, OutputInterface $output): ?AbstractSms
+    protected function getEmail(InputInterface $input, OutputInterface $output): ?AbstractEmail
     {
-        /** @var string $smsClass */
-        $smsClass = $input->getOption('sms');
+        /** @var string $emailClass */
+        $emailClass = $input->getOption('email');
         //==============================================================================
-        // Identify Sms by Class
-        if (class_exists($smsClass) && ($sms = $this->manager->getSms($smsClass))) {
-            return $sms;
+        // Identify Email by Class
+        if (class_exists($emailClass) && ($email = $this->manager->getEmail($emailClass))) {
+            return $email;
         }
         //==============================================================================
         // Ask User to Select
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
-            'Please select sms to send',
+            'Please select email to send',
             // choices can also be PHP objects that implement __toString() method
             $this->manager->getAll(),
             0
         );
-        $sms = $helper->ask($input, $output, $question);
+        $email = $helper->ask($input, $output, $question);
 
-        return ($sms instanceof AbstractSms) ? $sms : null;
+        return ($email instanceof AbstractEmail) ? $email : null;
     }
 
     /**
