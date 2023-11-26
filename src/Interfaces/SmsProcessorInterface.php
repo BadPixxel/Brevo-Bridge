@@ -13,25 +13,24 @@
 
 namespace BadPixxel\BrevoBridge\Interfaces;
 
-use Doctrine\Common\Collections\Collection;
+use BadPixxel\BrevoBridge\Models\AbstractSms;
 
 /**
- * Common Interface for Emails Aware Objects
+ * Interface for all Brevo Sms Processor
  */
-interface EmailsAwareInterface
+interface SmsProcessorInterface
 {
     /**
-     * Get Doctrine Entity ID.
+     * Check if this Processor Support this Sms Class
+     *
+     * @param class-string $smsClass
+     *
+     * @return bool
      */
-    public function getId(): ?int;
+    public function supports(string $smsClass): bool;
 
     /**
-     * Get Emails.
+     * Process this Sms before Sending
      */
-    public function getEmails(): Collection;
-
-    /**
-     * Check if User Has Stored Emails.
-     */
-    public function hasEmails(): bool;
+    public function process(AbstractSms $sms): void;
 }

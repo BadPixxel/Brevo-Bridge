@@ -16,12 +16,12 @@ namespace BadPixxel\BrevoBridge\Helpers;
 use Brevo\Client\Model\SendSmtpEmail;
 
 /**
- * SendInBlue Emails Data Extractor.
+ * Brevo Emails Data Extractor.
  */
 class EmailExtractor
 {
     /**
-     * Compute Email Unik Discriminator.
+     * Compute Email Unique Discriminator.
      *
      * @param SendSmtpEmail $email
      *
