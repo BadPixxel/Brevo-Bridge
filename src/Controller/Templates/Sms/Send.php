@@ -53,7 +53,7 @@ class Send extends CRUDController
 
             return $this->redirectToRoute(TemplatesRoutes::SMS_LIST);
         }
-        $this->addFlash('sonata_flash_success', 'Test Sms send to '.$sms->getSms()->getRecipient());
+        $this->addFlash('sonata_flash_success', 'Test Sms was send');
 
         return $this->redirectToRoute(TemplatesRoutes::SMS_LIST);
     }

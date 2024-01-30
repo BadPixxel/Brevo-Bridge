@@ -117,6 +117,9 @@ class SmsManager
         //==============================================================================
         // Update Parameters with resolved Values
         $sms->setParameters($resolvedParams);
+        //==============================================================================
+        // Generate Sms Contents
+        $sms->getSms()->setContent($sms->getContents());
 
         return $sms;
     }
