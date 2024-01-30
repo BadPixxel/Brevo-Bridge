@@ -34,7 +34,7 @@ class AccountManager
     private AccountApi $accountApi;
 
     /**
-     * @param ConfigurationManager $configurationManager
+     * @param Configuration $configurationManager
      */
     public function __construct(
         readonly Configuration $configurationManager

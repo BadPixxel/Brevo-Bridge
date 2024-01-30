@@ -109,7 +109,7 @@ class SmsManager
         // Validate Sms & Parameters
         try {
             $resolvedParams = SmsValidator::validate($sms);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return $this->setError(
                 sprintf("Sms Validation Fails: %s", $ex->getMessage())
             );
