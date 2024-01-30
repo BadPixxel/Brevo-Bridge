@@ -44,7 +44,7 @@ class RawHtmlRenderer
     }
 
     /**
-     * Rendering Raw Html Contents with Twig
+     * Rendering Html Contents with Twig
      *
      * @throws Exception
      */
@@ -67,5 +67,28 @@ class RawHtmlRenderer
             "tmplPath" => self::TMPL_PATH,
             'tmplParams' => $parameters,
         )));
+    }
+
+    /**
+     * Rendering Raw Html Contents with Twig
+     *
+     * @throws Exception
+     */
+    public function renderRaw(string $rawHtml, array $parameters): string
+    {
+        //==============================================================================
+        // Push Raw Html as Twig Template
+        $tmplPath = $this->kernel->getProjectDir().self::TMPL_DIR;
+        file_put_contents($tmplPath.self::TMPL_PATH, $rawHtml);
+
+        //==============================================================================
+        // Add Temporary Path to Twig Loader
+        /** @var FilesystemLoader $loader */
+        $loader = $this->twig->getLoader();
+        $loader->addPath($tmplPath);
+
+        //==============================================================================
+        // Render Raw Html with Parameter
+        return $this->twig->render(self::TMPL_PATH, $parameters);
     }
 }

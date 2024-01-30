@@ -71,7 +71,7 @@ class TemplateManager
 
                 //==============================================================================
                 // Convert Mjml to Html Template
-                return $this->convertMjmltoHtml($rawMjml);
+                return $this->convertMjmlToHtml($rawMjml);
             } catch (\Throwable $exception) {
                 return $this->setError(
                     sprintf("Mjml Compile Fails: %s", $exception->getMessage())
