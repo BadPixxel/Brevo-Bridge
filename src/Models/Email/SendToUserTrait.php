@@ -65,6 +65,26 @@ trait SendToUserTrait
     }
 
     /**
+     * Set Sender User Email.
+     */
+    final protected function setSenderUser(User $user): static
+    {
+        $this->email->setSender(new Model\SendSmtpEmailSender(self::toUserArgs($user)));
+
+        return $this;
+    }
+
+    /**
+     * Set ReplyTo User Email.
+     */
+    final protected function setReplyToUser(User $user): static
+    {
+        $this->email->setReplyTo(new Model\SendSmtpEmailReplyTo(self::toUserArgs($user)));
+
+        return $this;
+    }
+
+    /**
      * Add User to Email To.
      */
     final protected function addToUser(User $user): static
