@@ -3,7 +3,7 @@ services:
         autowire:   true
 
     ############################################################################
-    # Sendinblue Bridge Send Emails Admin Extension 
+    # Brevo Bridge Send Emails Admin Extension
     BadPixxel\BrevoBridge\Admin\UserEmailsAdmin:
         tags:
             - {
@@ -18,7 +18,7 @@ services:
             }
 
     ############################################################################
-    # Sendinblue Bridge Send Sms Admin Extension
+    # Brevo Bridge Send Sms Admin Extension
     BadPixxel\BrevoBridge\Admin\UserSmsAdmin:
         tags:
             - {
@@ -33,13 +33,12 @@ services:
             }
 
     ############################################################################
-    # Sendinblue Bridge Templates Admin Extension
-    BadPixxel\BrevoBridge\Admin\TemplatesAdmin:
+    # Brevo Bridge Email Templates Admin Extension
+    BadPixxel\BrevoBridge\Admin\EmailsTemplatesAdmin:
         tags:
             - {
                 name:           sonata.admin,
                 model_class:    BadPixxel\BrevoBridge\Models\AbstractEmail,
-                controller:     BadPixxel\BrevoBridge\Controller\TemplatesAdminController,
                 manager_type:   orm,
                 label:          Emails Templates,
                 group:          Brevo,
@@ -47,7 +46,20 @@ services:
             }
 
     ############################################################################
-    # Sendinblue Bridge Emails Admin Extension for Users 
+    # Brevo Bridge Sms Templates Admin Extension
+    BadPixxel\BrevoBridge\Admin\SmsTemplatesAdmin:
+        tags:
+            - {
+                name:           sonata.admin,
+                model_class:    BadPixxel\BrevoBridge\Models\AbstractSms,
+                manager_type:   orm,
+                label:          Sms Templates,
+                group:          Brevo,
+                icon:           '<i class="fa far fa-envelope"></i>'
+            }
+
+    ############################################################################
+    # Brevo Bridge Emails Admin Extension for Users
     BadPixxel\BrevoBridge\Admin\Extensions\UserEmailsExtension:
         tags:
             - {

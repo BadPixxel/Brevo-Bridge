@@ -13,6 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\Models\UserEmails;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,66 +26,57 @@ trait ContentsTrait
     //==============================================================================
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * Target Email
      */
+    #[ORM\Column(name: "email", type: Types::STRING, length: 255, nullable: false)]
     protected string $email;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="md5", type="string", length=255, nullable=false)
+     * Email Contents Checksum
      */
+    #[ORM\Column(name: "md5", type: Types::STRING, length: 255, nullable: false)]
     protected string $md5;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="message_id", type="string", length=255, nullable=false)
+     * Brevo Message ID
      */
+    #[ORM\Column(name: "message_id", type: Types::STRING, length: 255, nullable: false)]
     protected string $messageId;
 
     /**
-     * @var null|string
-     *
-     * @ORM\Column(name="uuid", type="string", length=255, nullable=true)
+     * Brevo Message UUID
      */
+    #[ORM\Column(name: "uuid", type: Types::STRING, length: 255, nullable: true)]
     protected ?string $uuid = null;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="subject", type="string", length=512, nullable=false)
+     * Message Subject
      */
+    #[ORM\Column(name: "subject", type: Types::STRING, length: 512, nullable: false)]
     protected string $subject;
 
     /**
-     * @var null|string
-     *
-     * @ORM\Column(name="html", type="text", nullable=true)
+     * Email Raw Html Contents
      */
+    #[ORM\Column(name: "html", type: Types::TEXT, nullable: true)]
     protected ?string $htmlContent = null;
 
     /**
-     * @var null|string
-     *
-     * @ORM\Column(name="text", type="text", nullable=true)
+     * Email Raw Text Contents
      */
+    #[ORM\Column(name: "text", type: Types::TEXT, nullable: true)]
     protected ?string $textContent = null;
 
     /**
-     * @var null|int
-     *
-     * @ORM\Column(name="template_id", type="integer", nullable=true)
+     * Email template ID
      */
+    #[ORM\Column(name: "template_id", type: Types::INTEGER, nullable: true)]
     protected ?int $templateId = null;
 
     /**
-     * @var null|array
-     *
-     * @ORM\Column(name="parameters", type="array", nullable=true)
+     * Email template parameters
      */
+    #[ORM\Column(name: "parameters", type: Types::ARRAY, nullable: true)]
     protected ?array $parameters = null;
 
     //==============================================================================
@@ -97,7 +89,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    public function setContents(string $uuid, ?string $htmlContent): self
+    public function setContents(string $uuid, ?string $htmlContent): static
     {
         $this->setUuid($uuid);
         $this->setHtmlContent($htmlContent);
@@ -186,7 +178,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setHtmlContent(?string $htmlContent): self
+    protected function setHtmlContent(?string $htmlContent): static
     {
         $this->htmlContent = $htmlContent;
 
@@ -198,7 +190,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setEmail(string $email): self
+    protected function setEmail(string $email): static
     {
         $this->email = $email;
 
@@ -210,7 +202,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setMd5(string $md5): self
+    protected function setMd5(string $md5): static
     {
         $this->md5 = $md5;
 
@@ -222,7 +214,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setMessageId(string $messageId): self
+    protected function setMessageId(string $messageId): static
     {
         $this->messageId = $messageId;
 
@@ -234,7 +226,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setUuid(string $uuid): self
+    protected function setUuid(string $uuid): static
     {
         $this->uuid = $uuid;
 
@@ -246,7 +238,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setSubject(string $subject): self
+    protected function setSubject(string $subject): static
     {
         $this->subject = $subject;
 
@@ -258,7 +250,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setTextContent(?string $textContent): self
+    protected function setTextContent(?string $textContent): static
     {
         $this->textContent = $textContent;
 
@@ -270,7 +262,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setTemplateId(?int $templateId): self
+    protected function setTemplateId(?int $templateId): static
     {
         $this->templateId = $templateId;
 
@@ -282,7 +274,7 @@ trait ContentsTrait
      *
      * @return $this
      */
-    protected function setParameters(?array $parameters): self
+    protected function setParameters(?array $parameters): static
     {
         $this->parameters = $parameters;
 

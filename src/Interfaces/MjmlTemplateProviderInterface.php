@@ -19,9 +19,9 @@ namespace BadPixxel\BrevoBridge\Interfaces;
 interface MjmlTemplateProviderInterface extends HtmlTemplateProviderInterface
 {
     /**
-     * Get Raw Template Mjml Contents.
+     * Get Mjml Template Paths.
      *
      * @return string
      */
-    public static function getTemplateMjml(): string;
+    public function getTemplateMjml(): string;
 }

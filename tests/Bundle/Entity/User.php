@@ -13,6 +13,11 @@
 
 namespace BadPixxel\BrevoBridge\Tests\Bundle\Entity;
 
+use BadPixxel\BrevoBridge\Interfaces\EmailsAwareInterface;
+use BadPixxel\BrevoBridge\Interfaces\SmsAwareInterface;
+use BadPixxel\BrevoBridge\Models\User\EmailsTrait;
+use BadPixxel\BrevoBridge\Models\User\SmsTrait;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\UserBundle\Entity\BaseUser;
@@ -22,10 +27,51 @@ use Sonata\UserBundle\Entity\BaseUser;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'user__user')]
-class User extends BaseUser
+class User extends BaseUser implements EmailsAwareInterface, SmsAwareInterface
 {
+    use EmailsTrait;
+    use SmsTrait;
+
+    /**
+     * @var null|int
+     */
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\GeneratedValue]
     protected $id;
+
+    //==============================================================================
+    // DATA DEFINITIONS
+    //==============================================================================
+
+    /**
+     * Target Phone
+     */
+    #[ORM\Column(name: "phone", type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $phone = null;
+
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: Email::class)]
+    #[ORM\OrderBy(array("sendAt" => "DESC"))]
+    protected Collection $emails;
+
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: Sms::class)]
+    #[ORM\OrderBy(array("sendAt" => "DESC"))]
+    protected Collection $sendSms;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    //==============================================================================
+    // GENERIC GETTERS & SETTERS
+    //==============================================================================
+
+    /**
+     * @return string
+     */
+    public function getPhone(): string
+    {
+        return $this->phone ?? "+336060606";
+    }
 }

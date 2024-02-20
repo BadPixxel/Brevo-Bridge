@@ -13,6 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\Models\User;
 
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -26,9 +27,9 @@ trait EmailsTrait
     //==============================================================================
 
     /**
-     * @var Collection
+     * @var Collection<AbstractEmail>
      */
-    protected $emails;
+    protected Collection $emails;
 
     //==============================================================================
     // GENERIC GETTERS & SETTERS
@@ -37,9 +38,9 @@ trait EmailsTrait
     /**
      * Get Emails.
      *
-     * @return Collection
+     * @return Collection<AbstractEmail>
      */
-    public function getEmails()
+    public function getEmails(): Collection
     {
         return $this->emails;
     }

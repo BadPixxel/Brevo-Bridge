@@ -22,29 +22,16 @@ interface SmsAwareInterface
 {
     /**
      * Get Doctrine Entity ID.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Get Sms.
-     *
-     * @return Collection
      */
-    public function getSendSms();
-
-    /**
-     * Set Sms => NO EFFECT.
-     *
-     * @return self
-     */
-    public function setSendSms();
+    public function getSendSms(): Collection;
 
     /**
      * Check if User Has Stored Sms.
-     *
-     * @return bool
      */
     public function hasSendSms(): bool;
 }

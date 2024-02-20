@@ -13,7 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\Models;
 
-use BadPixxel\BrevoBridge\Services\EventManager;
+use BadPixxel\BrevoBridge\Services\Events\EventManager;
 use Exception;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\OptionsResolver\OptionsResolver;

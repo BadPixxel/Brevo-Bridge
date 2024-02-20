@@ -9,6 +9,11 @@ services:
         resource: '../../Emails'
 
     ########################################################################
-    # AutoWire for Emails Processors
-    BadPixxel\BrevoBridge\Tests\Bundle\Processor\:
-        resource: '../../Processor'
+    # AutoWire Test Sms
+    BadPixxel\BrevoBridge\Tests\Bundle\Sms\:
+        resource: '../../Sms'
+
+    ########################################################################
+    # AutoWire for Emails & Sms Processors
+    BadPixxel\BrevoBridge\Tests\Bundle\Processors\:
+        resource: '../../Processors'

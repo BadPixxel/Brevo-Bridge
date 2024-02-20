@@ -13,6 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\Models\User;
 
+use BadPixxel\BrevoBridge\Models\AbstractSms;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -26,9 +27,9 @@ trait SmsTrait
     //==============================================================================
 
     /**
-     * @var Collection
+     * @var Collection<AbstractSms>
      */
-    protected $sendSms;
+    protected Collection $sendSms;
 
     //==============================================================================
     // GENERIC GETTERS & SETTERS
@@ -37,9 +38,9 @@ trait SmsTrait
     /**
      * Get Sms.
      *
-     * @return Collection
+     * @return Collection<AbstractSms>
      */
-    public function getSendSms()
+    public function getSendSms(): Collection
     {
         return $this->sendSms;
     }

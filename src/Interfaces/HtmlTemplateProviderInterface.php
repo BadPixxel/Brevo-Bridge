@@ -16,19 +16,19 @@ namespace BadPixxel\BrevoBridge\Interfaces;
 /**
  * Common Interface for Emails that Provide Html Template Contents
  */
-interface HtmlTemplateProviderInterface extends HtmlTemplateAwareInterface
+interface HtmlTemplateProviderInterface
 {
     /**
-     * Get Raw Template Html Contents.
+     * Get Html Template Path.
      *
      * @return string
      */
-    public static function getTemplateHtml(): string;
+    public function getTemplateHtml(): string;
 
     /**
-     * Get Templating Render Parameters
+     * Get Templating Parameters
      *
      * @return array
      */
-    public static function getTemplateParameters(): array;
+    public function getTemplateParameters(): array;
 }

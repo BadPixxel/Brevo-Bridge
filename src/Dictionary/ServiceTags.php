@@ -33,6 +33,8 @@ class ServiceTags
      */
     const SMS = "badpixxel.brevo.bridge.sms";
 
+    const SMS_PROCESSOR = "badpixxel.brevo.bridge.sms.processor";
+
     /**
      * Brevo Bridge Event
      */

@@ -13,8 +13,8 @@
 
 namespace BadPixxel\BrevoBridge\Controller;
 
-use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage as Email;
-use BadPixxel\BrevoBridge\Services\SmtpManager;
+use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage;
+use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
@@ -44,9 +44,8 @@ class EmailAdminController extends CRUDController
     {
         //====================================================================//
         // Load Email Object
-        /** @var Email $email */
         $email = $this->admin->getObject($id);
-        if (null == $email) {
+        if (!$email instanceof AbstractEmailStorage) {
             throw $this->createNotFoundException(sprintf('unable to find the object with id: %s', $id));
         }
 
@@ -58,25 +57,19 @@ class EmailAdminController extends CRUDController
     /**
      * Refresh Email Events.
      *
-     * @param SmtpManager $smtpManager
-     * @param null|int    $id
-     *
-     * @return Response
-     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    public function refreshAction(Request $request, SmtpManager $smtpManager, int $id = null): Response
+    public function refreshAction(Request $request, EmailsManager $manager, int $id = null): Response
     {
         //====================================================================//
         // Load Email Object
-        /** @var Email $email */
         $email = $this->admin->getObject($id);
-        if (null == $email) {
+        if (!$email instanceof AbstractEmailStorage) {
             throw $this->createNotFoundException(sprintf('unable to find the object with id: %s', $id));
         }
         //==============================================================================
         // Refresh Email (Forced)
-        $smtpManager->update($email, true);
+        $manager->update($email, true);
         $this->addFlash('sonata_flash_success', 'Email Status Refreshed');
         //==============================================================================
         // Load Referer Url
@@ -95,13 +88,11 @@ class EmailAdminController extends CRUDController
 
     /**
      * Refresh Email Events.
-     *
-     * @param ProxyQueryInterface $selectedModelQuery
-     *
-     * @return RedirectResponse
      */
-    public function batchActionRefresh(ProxyQueryInterface $selectedModelQuery): RedirectResponse
-    {
+    public function batchActionRefresh(
+        ProxyQueryInterface $selectedModelQuery,
+        EmailsManager $manager
+    ): RedirectResponse {
         //==============================================================================
         // Security Check
         if (!$this->admin->isGranted('SHOW')) {
@@ -115,10 +106,10 @@ class EmailAdminController extends CRUDController
         // Refresh Email (Forced)
         try {
             foreach ($selectedModels as $selectedModel) {
-                if (!($selectedModel instanceof Email)) {
+                if (!($selectedModel instanceof AbstractEmailStorage)) {
                     throw new Exception();
                 }
-                SmtpManager::getInstance()->update($selectedModel, true);
+                $manager->update($selectedModel, true);
             }
         } catch (Exception $exception) {
             $this->addFlash(
