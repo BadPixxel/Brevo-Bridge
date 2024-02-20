@@ -5,7 +5,7 @@
     {% for event in object.events %}
     
         <li>
-            {{ event.date | localizeddate('short', 'short') }}
+            {{ event.date | format_datetime('short', 'short') }}
             :&nbsp;
             <span class="label label-{{ object.getEventBadgeClass(event.event | default("invalid")) }}">
                 {{ event.event | default("invalid") | capitalize }}

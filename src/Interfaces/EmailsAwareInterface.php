@@ -22,29 +22,16 @@ interface EmailsAwareInterface
 {
     /**
      * Get Doctrine Entity ID.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Get Emails.
-     *
-     * @return Collection
      */
-    public function getEmails();
-
-    /**
-     * Set Emails => NO EFFECT.
-     *
-     * @return self
-     */
-    public function setEmails();
+    public function getEmails(): Collection;
 
     /**
      * Check if User Has Stored Emails.
-     *
-     * @return bool
      */
     public function hasEmails(): bool;
 }

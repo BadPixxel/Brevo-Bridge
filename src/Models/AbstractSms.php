@@ -13,209 +13,184 @@
 
 namespace BadPixxel\BrevoBridge\Models;
 
-use BadPixxel\BrevoBridge\Services\SmsManager;
+use BadPixxel\BrevoBridge\Models\Email\OptionsResolverTrait;
+use BadPixxel\BrevoBridge\Models\Sms\SendToUserTrait;
+use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Brevo\Client\Model\SendSms;
 use Brevo\Client\Model\SendTransacSms;
-use Exception;
 use Sonata\UserBundle\Model\UserInterface as User;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Abstract Class for Sending Sms.
  */
 abstract class AbstractSms
 {
-    /**
-     * Current User.
-     *
-     * @var User
-     */
-    protected $user;
+    use SendToUserTrait;
+    use OptionsResolverTrait;
 
     /**
      * Current Sms.
      *
      * @var SendTransacSms
      */
-    protected $sms;
+    protected SendTransacSms $sms;
 
     /**
      * Parameters.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $params = array();
-
-    /**
-     * Default Parameters.
-     *
-     * @var array
-     */
-    protected $paramsDefaults = array();
-
-    /**
-     * Default Parameters Types.
-     *
-     * @var array
-     */
-    protected $paramsTypes = array();
-
-    /**
-     * Construct Minimal Sms.
-     *
-     * @param User $user Target User
-     */
-    public function __construct(User $user)
-    {
-        $this
-            ->create()
-            ->setupToUser($user)
-        ;
-    }
-
-    /**
-     * Send a Transactional Sms.
-     *
-     * @param User $user Target User
-     *
-     * @return null|SendSms
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function send(User $user): ?SendSms
-    {
-        //==============================================================================
-        // Prepare Callback
-        $callback = array(static::class, 'getInstance');
-        if (!is_callable($callback)) {
-            return null;
-        }
-        //==============================================================================
-        // Create a New Instance of the Email
-        /** @var AbstractSms $instance */
-        $instance = call_user_func_array($callback, func_get_args());
-
-        //==============================================================================
-        // Create a New Instance of the Sms
-        return $instance->sendSms(false);
-    }
-
-    /**
-     * Send a Transactional Test/Demo Sms.
-     *
-     * @param User $user Target User
-     *
-     * @return null|SendSms
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function sendDemo(User $user): ?SendSms
-    {
-        //==============================================================================
-        // Prepare Callback
-        $callback = array(static::class, 'getDemoInstance');
-        if (!is_callable($callback)) {
-            return null;
-        }
-        //==============================================================================
-        // Create a New Instance of the Email
-        /** @var AbstractSms $instance */
-        $instance = call_user_func_array($callback, func_get_args());
-
-        //==============================================================================
-        // Create a New Instance of the Sms
-        return $instance->sendSms(true);
-    }
-
-    /**
-     * @return string
-     */
-    public static function getLastError()
-    {
-        return SmsManager::getInstance()->getLastError();
-    }
+    protected array $parameters = array();
 
     //==============================================================================
     // BASIC GETTERS
     //==============================================================================
 
-    /**
-     * @return SendTransacSms
-     */
-    public function getSms(): SendTransacSms
+    public function __toString(): string
     {
-        return $this->sms;
+        return static::class;
     }
 
     //==============================================================================
-    // BASIC SMS CRUD ACTIONS
+    // GENERIC SMS INTERFACES
     //==============================================================================
 
     /**
-     * Create a New Sms and Populate Defaults Values.
+     * Configure Email with User Parameters
      *
-     * @return self
+     * @param array<string, mixed> $args
+     *
+     * @return $this
      */
-    protected function create(): self
+    abstract public function configure(array $args): static;
+
+    /**
+     * Generate Sms Contents
+     *
+     * @return string
+     */
+    abstract public function getContents(): string;
+
+    /**
+     * Get Arguments for Building Fake Sms.
+     *
+     * @return array<string, mixed>
+     */
+    abstract public function getFakeArguments(): array;
+
+    /**
+     * Send a Transactional Sms.
+     */
+    final public static function send(User $toUser, mixed ...$args): ?SendSms
     {
-        $this->sms = $this->getSmsManager()->create();
+        //==============================================================================
+        // Create a New Instance of the Sms
+        $instance = self::getManager()->getSms(static::class);
+        if (!$instance) {
+            return null;
+        }
+
+        //==============================================================================
+        // Send Sms
+        return self::getManager()
+            ->send($instance, $toUser, $args)
+        ;
+    }
+
+    /**
+     * Send a Transactional Test/Demo Sms.
+     */
+    public static function sendDemo(User $toUser): ?SendSms
+    {
+        //==============================================================================
+        // Create a New Instance of the Email
+        $instance = self::getManager()->getSms(static::class);
+        if (!$instance) {
+            return null;
+        }
+
+        //==============================================================================
+        // Send Demo Email
+        return self::getManager()
+            ->send($instance, $toUser, $instance->getFakeArguments(), true)
+        ;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getLastError(): string
+    {
+        return SmsManager::getInstance()->getLastError();
+    }
+
+    /**
+     * Setup Base Transactional Sms
+     */
+    final public function setSms(SendTransacSms $sms): static
+    {
+        $this->sms = $sms;
 
         return $this;
     }
 
     /**
-     * Create a New Sms and Populate Defaults Values.
-     *
-     * @return null|SendSms
+     * @return SendTransacSms
      */
-    protected function sendSms(bool $demoMode): ?SendSms
+    final public function getSms(): SendTransacSms
     {
-        //==============================================================================
-        // Verify Sms Inputs before Generating Contents
-        if (!$this->verifyParameters()) {
-            throw new Exception("Sms Parameters are Invalid");
-        }
-        //==============================================================================
-        // Generate Sms Contents
-        $this->sms->setContent($this->getContents());
-
-        //==============================================================================
-        // Verify Sms Before Sending
-        if (!$this->isValid()) {
-            throw new Exception("Sms Validation Fail");
-        }
-
-        return $this->getSmsManager()->send($this->user, $this->sms, $demoMode);
+        return $this->sms;
     }
 
     /**
-     * Generate Sms Contents
-     *
-     * @throws Exception
-     *
-     * @return string
+     * Set an Sms Parameter
      */
-    protected function getContents(): string
+    final public function setParameter(string $key, mixed $value): static
     {
-        throw new Exception(
-            "You must override this function to generate"
-            ." Sms Contents once input are validated"
+        $this->parameters[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get All Sms Parameters
+     *
+     * @return array<string, mixed>
+     */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Set All Sms Parameters
+     *
+     * @param array<string, mixed> $parameters
+     *
+     * @return $this
+     */
+    public function setParameters(array $parameters): static
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Merge Sms Current Parameters with Extra Parameters
+     *
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    final public function mergeParams(array $parameters): static
+    {
+        $this->parameters = array_replace_recursive(
+            $this->parameters,
+            $parameters
         );
-    }
 
-    /**
-     * Configure Options for Parameters Resolver
-     *
-     * @param OptionsResolver $resolver
-     *
-     * @return void
-     */
-    protected function configureParameters(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults($this->paramsDefaults);
-        foreach ($this->paramsTypes as $key => $types) {
-            $resolver->setAllowedTypes($key, $types);
-        }
+        return $this;
     }
 
     //==============================================================================
@@ -223,83 +198,10 @@ abstract class AbstractSms
     //==============================================================================
 
     /**
-     * Static Access to SMS Service.
-     *
-     * @return SmsManager
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * Static Access to SMS Manager.
      */
-    protected function getSmsManager(): SmsManager
+    final protected static function getManager(): SmsManager
     {
         return SmsManager::getInstance();
-    }
-
-    /**
-     * Add User to a Sms List.
-     *
-     * @param User $user
-     *
-     * @return self
-     */
-    private function setupToUser($user): self
-    {
-        $this->user = $user;
-        if (method_exists($user, "getPhone")) {
-            $this->sms->setRecipient($user->getPhone());
-        }
-
-        return $this;
-    }
-
-    //==============================================================================
-    // SMS VALIDATION (DONE BEFORE SEND)
-    //==============================================================================
-
-    /**
-     * Validate SMS Configuration before Sending
-     *
-     * @return bool
-     */
-    private function isValid(): bool
-    {
-        //==============================================================================
-        // Verify Sender
-        if (empty($this->sms->getSender())) {
-            return false;
-        }
-        //==============================================================================
-        // Verify Recipient
-        if (empty($this->sms->getRecipient())) {
-            return false;
-        }
-        //==============================================================================
-        // Verify Contents
-        if (empty($this->sms->getContent())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    private function verifyParameters(): bool
-    {
-        try {
-            //==============================================================================
-            // Init Parameters Resolver
-            $resolver = new OptionsResolver();
-            $this->configureParameters($resolver);
-            //==============================================================================
-            // Resolve
-            $this->params = $resolver->resolve($this->params);
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-
-            return false;
-        }
-
-        return true;
     }
 }

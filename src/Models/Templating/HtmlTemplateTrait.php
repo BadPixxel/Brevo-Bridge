@@ -16,7 +16,28 @@ namespace BadPixxel\BrevoBridge\Models\Templating;
 /**
  * Trait for Access to Email Templating as Html
  */
-class HtmlTemplateTrait
+trait HtmlTemplateTrait
 {
-    //put your code here
+    /**
+     * Twig Template for SendInBlue Mjml Template.
+     *
+     * @var string
+     */
+    protected string $template = '@BrevoBridge/Layout/default.mjml.twig';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplateHtml(): string
+    {
+        return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getTemplateParameters(): array
+    {
+        return array();
+    }
 }

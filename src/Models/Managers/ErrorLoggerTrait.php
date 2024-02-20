@@ -24,12 +24,12 @@ trait ErrorLoggerTrait
     /**
      * @var null|string
      */
-    private $lastError;
+    private ?string $lastError;
 
     /**
      * @return string
      */
-    public function getLastError()
+    public function getLastError(): string
     {
         return (string) $this->lastError;
     }

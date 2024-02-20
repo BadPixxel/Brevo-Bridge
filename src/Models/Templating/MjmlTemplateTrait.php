@@ -13,44 +13,25 @@
 
 namespace BadPixxel\BrevoBridge\Models\Templating;
 
-use BadPixxel\BrevoBridge\Services\SmtpManager;
-
 /**
  * Trait for Access to Email Templating as Mjml
  */
 trait MjmlTemplateTrait
 {
+    use HtmlTemplateTrait;
+
     /**
      * {@inheritdoc}
      */
-    public static function getTemplateId(): int
+    public function getTemplateMjml(): string
     {
-        return static::$templateId;
+        return $this->getTemplateHtml();
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function getTemplateHtml(): string
-    {
-        return self::getTemplateMjml();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getTemplateMjml(): string
-    {
-        return SmtpManager::getInstance()->render(
-            static::$templateMjml,
-            static::getTemplateParameters()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getTemplateParameters(): array
+    public function getTemplateParameters(): array
     {
         return self::getTemplateCoreParameters();
     }
@@ -60,14 +41,14 @@ trait MjmlTemplateTrait
      *
      * @return array
      */
-    public static function getTemplateCoreParameters(): array
+    private static function getTemplateCoreParameters(): array
     {
         return array(
             "mirror" => "#mirrorUrl",
             "unsubscribe" => "#unsubscribeUrl",
             "update_profile" => "#update_profileUrl",
             "contact" => array(
-                "EMAIL" => "exemple@immo-pop.com",
+                "EMAIL" => "admin@exemple.com",
                 "PHONE" => "06 06 06 06 06",
             ),
             "params" => array(),

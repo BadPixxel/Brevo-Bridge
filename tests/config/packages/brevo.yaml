@@ -30,6 +30,6 @@ brevo_bridge:
         email:      "no-reply@exemple.com"
 
     storage:
-        user:       UserBundle\Entity\User
+        user:       BadPixxel\BrevoBridge\Tests\Bundle\Entity\User
         emails:     BadPixxel\BrevoBridge\Tests\Bundle\Entity\Email
         sms:        BadPixxel\BrevoBridge\Tests\Bundle\Entity\Sms

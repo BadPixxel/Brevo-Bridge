@@ -16,7 +16,7 @@ namespace BadPixxel\BrevoBridge\Helpers;
 use Brevo\Client\Model\SendTransacSms;
 
 /**
- * SendInBlue Sms Data Extractor.
+ * Brevo Sms Data Extractor.
  */
 class SmsExtractor
 {

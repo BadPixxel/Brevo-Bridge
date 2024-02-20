@@ -31,13 +31,14 @@ class AccountManager
     /**
      * @var AccountApi
      */
-    private $accountApi;
+    private AccountApi $accountApi;
 
     /**
-     * @param ConfigurationManager $configurationManager
+     * @param Configuration $configurationManager
      */
-    public function __construct(Configuration $configurationManager)
-    {
+    public function __construct(
+        readonly Configuration $configurationManager
+    ) {
         $this->accountApi = new AccountApi(
             new Client(),
             $configurationManager->getSdkConfig()
@@ -45,7 +46,7 @@ class AccountManager
     }
 
     /**
-     * Read Account Infromations from Api.
+     * Read Account Information from Api.
      *
      * @return null|GetAccount
      */

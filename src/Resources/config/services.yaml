@@ -17,40 +17,9 @@ services:
         tags: ['controller.service_arguments', 'container.service_subscriber']
 
     ################################################################################
-    # Bridge Configurations Manager
-    BadPixxel\BrevoBridge\Services\ConfigurationManager: ~
-
-    ################################################################################
-    # SendInBlue API Account Manager
-    BadPixxel\BrevoBridge\Services\AccountManager: ~
-
-    ################################################################################
-    # SendInBlue Emails SMTP Manager
-    BadPixxel\BrevoBridge\Services\SmtpManager:
-        public: true
-
-    ################################################################################
-    # SendInBlue Sms Manager
-    BadPixxel\BrevoBridge\Services\SmsManager:
-        public: true
-
-    ################################################################################
-    # SendInBlue Events Tracker Manager
-    BadPixxel\BrevoBridge\Services\EventManager:
-        public: true
-
-    ################################################################################
-    # Emails Processor
-    BadPixxel\BrevoBridge\Services\EmailProcessor: ~
-
-    ################################################################################
-    # Emails Templates Manager
-    BadPixxel\BrevoBridge\Services\TemplateManager:
-        public: true
-
-    ################################################################################
-    # Raw Html Renderer
-    BadPixxel\BrevoBridge\Services\RawHtmlRenderer: ~
+    # AutoWire for Services
+    BadPixxel\BrevoBridge\Services\:
+        resource: '../../Services'
 
     ################################################################################
     # SendInBlue Emails Templates Twig Extension

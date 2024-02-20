@@ -27,7 +27,3 @@ quality:php-8.2:
 quality:php-8.1:
   extends: .quality
   image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
-
-quality:php-8.0:
-  extends: .quality
-  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1

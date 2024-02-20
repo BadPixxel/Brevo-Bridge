@@ -14,18 +14,28 @@
 namespace BadPixxel\BrevoBridge\Tests\Bundle\Entity;
 
 use BadPixxel\BrevoBridge\Entity\AbstractSmsStorage;
+use BadPixxel\BrevoBridge\Models\Gdpr\GdprEntityTrait;
+use BadPixxel\Paddock\System\MySql\Models\GdprRemovableInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Sonata\UserBundle\Model\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'user__sms')]
-class Sms extends AbstractSmsStorage
+class Sms extends AbstractSmsStorage implements GdprRemovableInterface
 {
+    use GdprEntityTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\GeneratedValue]
     protected ?int $id;
 
+    /**
+     * @inheritdoc
+     */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "sms")]
+    protected UserInterface $user;
     //==============================================================================
     // GENERIC GETTERS & SETTERS
     //==============================================================================

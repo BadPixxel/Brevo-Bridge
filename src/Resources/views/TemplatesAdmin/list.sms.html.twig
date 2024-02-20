@@ -1,0 +1,64 @@
+{#
+    SEND IN BLUE BRIDGE: TEMPLATE EMAILS LISTING
+#}
+
+{% extends base_template %}
+
+{% block title %}Brevo{% endblock %}
+{% block navbar_title %}Brevo Bridge Templates{% endblock %}
+
+{% block sonata_admin_content %}
+    
+{% block notice %}
+    {% include ['@SonataCore/FlashMessage/render.html.twig', '@SonataTwig/FlashMessage/render.html.twig'] %}
+{% endblock notice %}
+                            
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="box box-primary" style="margin-bottom: 100px;">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-bordered table-striped table-hover sonata-ba-list">
+                    
+                    <thead>
+                        <tr class="sonata-ba-list-field-header">
+                            <th class="sonata-ba-list-field-header-text">Code</th>                                            
+                            <th class="sonata-ba-list-field-header-text">Class</th>                                            
+                            <th class="sonata-ba-list-field-header-text">Action</th>                                            
+                        </tr>
+                    </thead>
+                        
+                   <tbody>
+                    {% for smsCode, smsClass in allSms %}
+                        <tr class="sonata-ba-list-field-header">
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ smsCode }}</td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ smsClass }}</td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-actions">
+
+                                <div class="btn-group">
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_sms_send', {'smsId': smsCode}) }}"
+                                       class="btn btn-sm btn-default view_link"
+                                       title="Send a test Email"
+                                    >
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        Send
+                                    </a>
+                                    <a href="{{ path('admin_badpixxel_brevo_templates_sms_preview', {'smsId': smsCode}) }}"
+                                       class="btn btn-sm btn-default view_link"
+                                       target="_blank" title="Preview"
+                                    >
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                        Preview
+                                    </a>
+                                </div>
+
+                            </td>                            
+                        </tr>
+                    {% endfor %}
+                   </tbody>
+                   
+                </table>
+            </div>
+        </div>
+    </div>
+</div>        
+{% endblock %}

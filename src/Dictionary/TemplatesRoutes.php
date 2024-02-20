@@ -18,5 +18,7 @@ namespace BadPixxel\BrevoBridge\Dictionary;
  */
 class TemplatesRoutes
 {
-    const LIST = "admin_badpixxel_brevo_templates_list";
+    const LIST = "admin_badpixxel_brevo_templates_emails_list";
+
+    const SMS_LIST = "admin_badpixxel_brevo_templates_sms_list";
 }

@@ -46,7 +46,7 @@ class ConfigurationManager
      * Service Constructor
      */
     public function __construct(
-        private array $config,
+        private readonly array $config,
     ) {
         $this->enabled = empty($config['disable_emails']);
     }
@@ -210,30 +210,6 @@ class ConfigurationManager
     }
 
     /**
-     * Find an Email Class by Code
-     *
-     * @param string $emailCode
-     *
-     * @return null|string
-     */
-    public function getEmailByCode(string $emailCode): ?string
-    {
-        return isset($this->config['emails'][$emailCode])
-            ? $this->config['emails'][$emailCode]
-            : null;
-    }
-
-    /**
-     * Get All Emails Class
-     *
-     * @return array
-     */
-    public function getAllEmails(): array
-    {
-        return $this->config['emails'];
-    }
-
-    /**
      * Find an Event Class by Code
      *
      * @param string $eventCode
@@ -242,9 +218,7 @@ class ConfigurationManager
      */
     public function getEventByCode(string $eventCode): ?string
     {
-        return isset($this->config['events'][$eventCode])
-            ? $this->config['events'][$eventCode]
-            : null;
+        return $this->config['events'][$eventCode] ?? null;
     }
 
     /**
@@ -255,30 +229,6 @@ class ConfigurationManager
     public function getAllEvents(): array
     {
         return $this->config['events'];
-    }
-
-    /**
-     * Find a Sms Class by Code
-     *
-     * @param string $smsCode
-     *
-     * @return null|string
-     */
-    public function getSmsByCode(string $smsCode): ?string
-    {
-        return isset($this->config['sms'][$smsCode])
-            ? $this->config['sms'][$smsCode]
-            : null;
-    }
-
-    /**
-     * Get All Sms Class
-     *
-     * @return array
-     */
-    public function getAllSms(): array
-    {
-        return $this->config['sms'];
     }
 
     /**
