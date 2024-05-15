@@ -79,7 +79,7 @@ class RawHtmlRenderer
         //==============================================================================
         // Push Raw Html as Twig Template
         $tmplPath = $this->kernel->getProjectDir().self::TMPL_DIR;
-        file_put_contents($tmplPath.self::TMPL_PATH, $rawHtml);
+        file_put_contents($tmplPath.self::TMPL_PATH, $this->convert($rawHtml));
 
         //==============================================================================
         // Add Temporary Path to Twig Loader
@@ -90,5 +90,15 @@ class RawHtmlRenderer
         //==============================================================================
         // Render Raw Html with Parameter
         return $this->twig->render(self::TMPL_PATH, $parameters);
+    }
+
+    /**
+     * Convert Brevo tags to Twig
+     */
+    public function convert(string $rawHtml): string
+    {
+        $rawHtml = str_replace("default:false", "default", $rawHtml);
+
+        return str_replace("default:true", "default(true)", $rawHtml);
     }
 }

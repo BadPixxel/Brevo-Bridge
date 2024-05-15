@@ -166,8 +166,12 @@ class TemplateManager
             "templateId" => $email->getEmail()->getTemplateId(),
             "params" => (array) $email->getEmail()->getParams(),
             // Extra Data for Brevo Templates
-            "contact" => array("EMAIL" => "sample@exemple.com"),
-            "unsubscribe" => "unsubscribe.exemple.com"
+            "contact" => array(
+                "EMAIL" => "sample@exemple.com"
+            ),
+            "mirror" => "#mirror",
+            "unsubscribe" => "unsubscribe.exemple.com",
+            "update_profile" => "profile.exemple.com"
         );
     }
 
