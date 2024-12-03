@@ -1,6 +1,6 @@
 
 {# EMBEDD EMAIL FROM COMPILED TEMPLATE #}
-{% include tmplPath with tmplParams only %}
+{% include template_from_string(rawHtml) with tmplParams only %}
 
 <style>
     .button {

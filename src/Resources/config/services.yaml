@@ -26,3 +26,7 @@ services:
     BadPixxel\BrevoBridge\Twig\BrevoBridgeExtension:
         tags:
             - { name: twig.extension  }
+
+    ################################################################################
+    # Register Twig String Loader Extension
+    Twig\Extension\StringLoaderExtension: ~
