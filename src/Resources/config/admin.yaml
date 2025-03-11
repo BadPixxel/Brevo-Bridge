@@ -42,7 +42,8 @@ services:
                 manager_type:   orm,
                 label:          Emails Templates,
                 group:          Brevo,
-                icon:           '<i class="fa far fa-envelope"></i>'
+                icon:           '<i class="fa far fa-envelope"></i>',
+                global_search:  false
             }
 
     ############################################################################
@@ -55,7 +56,8 @@ services:
                 manager_type:   orm,
                 label:          Sms Templates,
                 group:          Brevo,
-                icon:           '<i class="fa far fa-envelope"></i>'
+                icon:           '<i class="fa far fa-envelope"></i>',
+                global_search:  false
             }
 
     ############################################################################
