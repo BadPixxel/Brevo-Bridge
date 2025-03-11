@@ -23,33 +23,27 @@
 services:
 
     ################################################################################
+    # PHP 8.2
+    php-8.2:
+        image:          registry.gitlab.com/badpixxel-projects/php-sdk:php-8.2
+        container_name: sendinblue-bridge-8.2
+        volumes:
+            - ./:/var/www/html
+            - php82-vendor:/var/www/html/vendor
+            - php82-var:/var/www/html/var
+
+    ################################################################################
     # PHP 8.1
     php-8.1:
         image:          registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
         container_name: sendinblue-bridge-8.1
         volumes:
             - ./:/var/www/html
-            - vendor-php81:/var/www/html/vendor
-
-    ################################################################################
-    # PHP 8.0
-    php-8.0:
-        image:          registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
-        container_name: sendinblue-bridge-8.0
-        volumes:
-            - ./:/var/www/html
-            - vendor-php80:/var/www/html/vendor
-
-    ################################################################################
-    # PHP 7.4
-    php-7.4:
-        image:      registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-        container_name: sendinblue-bridge-7.4
-        volumes:
-            - ./:/var/www/html
-            - vendor-php74:/var/www/html/vendor
+            - php81-vendor:/var/www/html/vendor
+            - php81-var:/var/www/html/var
 
 volumes:
-    vendor-php81: ~
-    vendor-php80: ~
-    vendor-php74: ~
+    php82-vendor:   ~
+    php82-var:      ~
+    php81-vendor:   ~
+    php81-var:      ~
