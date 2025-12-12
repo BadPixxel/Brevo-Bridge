@@ -13,11 +13,25 @@
 
 namespace BadPixxel\BrevoBridge\Admin;
 
+use BadPixxel\BrevoBridge\Admin\Controller\SmsAdminController;
 use BadPixxel\BrevoBridge\Models\AbstractSmsAdmin;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
  * Sonata Admin Class for Users Sms.
  */
+#[AutoconfigureTag(
+    'sonata.admin',
+    attributes: array(
+        'model_class' => '%brevo_bridge.sms.class%',
+        'controller' => SmsAdminController::class,
+        'manager_type' => 'orm',
+        'label' => 'Send Sms',
+        'group' => 'Brevo',
+        'icon' => '<i class="fa far fa-envelope"></i>',
+        'pager_type' => 'simple',
+    )
+)]
 class UserSmsAdmin extends AbstractSmsAdmin
 {
 }

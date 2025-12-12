@@ -13,11 +13,25 @@
 
 namespace BadPixxel\BrevoBridge\Admin;
 
+use BadPixxel\BrevoBridge\Admin\Controller\EmailAdminController;
 use BadPixxel\BrevoBridge\Models\AbstractEmailAdmin;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
  * Sonata Admin Class for Users Emails.
  */
+#[AutoconfigureTag(
+    'sonata.admin',
+    attributes: array(
+        'model_class' => '%brevo_bridge.emails.class%',
+        'controller' => EmailAdminController::class,
+        'manager_type' => 'orm',
+        'label' => 'Send Emails',
+        'group' => 'Brevo',
+        'icon' => '<i class="fa far fa-envelope"></i>',
+        'pager_type' => 'simple',
+    )
+)]
 class UserEmailsAdmin extends AbstractEmailAdmin
 {
 }

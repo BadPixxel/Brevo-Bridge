@@ -14,12 +14,25 @@
 namespace BadPixxel\BrevoBridge\Admin;
 
 use BadPixxel\BrevoBridge\Controller\Templates\Emails;
+use BadPixxel\BrevoBridge\Models\AbstractEmail;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
  * Admin Class for SendInBlue Bridge Emails Templates Management
  */
+#[AutoconfigureTag(
+    'sonata.admin',
+    attributes: array(
+        'model_class' => AbstractEmail::class,
+        'manager_type' => 'orm',
+        'label' => 'Emails Templates',
+        'group' => 'Brevo',
+        'icon' => '<i class="fa far fa-envelope"></i>',
+        'global_search' => false,
+    )
+)]
 class EmailsTemplatesAdmin extends Admin
 {
     /**

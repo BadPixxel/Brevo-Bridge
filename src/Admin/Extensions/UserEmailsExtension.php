@@ -18,10 +18,17 @@ use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\AdminBundle\Admin\AbstractAdminExtension;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\UserBundle\Model\UserInterface as User;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
  * Add a Tab to User's Sonata Admin Page to show Users Emails logs
  */
+#[AutoconfigureTag(
+    'sonata.admin.extension',
+    attributes: array(
+        'target' => 'sonata.user.admin.user',
+    )
+)]
 class UserEmailsExtension extends AbstractAdminExtension
 {
     /**
