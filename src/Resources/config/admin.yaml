@@ -1,80 +1,17 @@
 services:
     _defaults:
-        autowire:   true
+        autowire: true
+        autoconfigure: true
 
     ############################################################################
-    # Brevo Bridge Send Emails Admin Extension
-    BadPixxel\BrevoBridge\Admin\UserEmailsAdmin:
-        tags:
-            - {
-                name:           sonata.admin,
-                model_class:    "%brevo_bridge.emails.class%",
-                controller:     BadPixxel\BrevoBridge\Controller\EmailAdminController,
-                manager_type:   orm,
-                label:          Send Emails,
-                group:          Brevo,
-                icon:           '<i class="fa far fa-envelope"></i>',
-                pager_type:     'simple'
-            }
+    # AutoWire Admin Controllers
+    BadPixxel\BrevoBridge\Admin\Controller\:
+        resource: '../../Admin/Controller'
+        tags: ['controller.service_arguments', 'container.service_subscriber']
 
     ############################################################################
-    # Brevo Bridge Send Sms Admin Extension
-    BadPixxel\BrevoBridge\Admin\UserSmsAdmin:
-        tags:
-            - {
-                name:           sonata.admin,
-                model_class:    "%brevo_bridge.sms.class%",
-                controller:     BadPixxel\BrevoBridge\Controller\SmsAdminController,
-                manager_type:   orm,
-                label:          Send Sms,
-                group:          Brevo,
-                icon:           '<i class="fa far fa-envelope"></i>',
-                pager_type:     'simple'
-            }
-
-    ############################################################################
-    # Brevo Bridge Email Templates Admin Extension
-    BadPixxel\BrevoBridge\Admin\EmailsTemplatesAdmin:
-        tags:
-            - {
-                name:           sonata.admin,
-                model_class:    BadPixxel\BrevoBridge\Models\AbstractEmail,
-                manager_type:   orm,
-                label:          Emails Templates,
-                group:          Brevo,
-                icon:           '<i class="fa far fa-envelope"></i>',
-                global_search:  false
-            }
-
-    ############################################################################
-    # Brevo Bridge Sms Templates Admin Extension
-    BadPixxel\BrevoBridge\Admin\SmsTemplatesAdmin:
-        tags:
-            - {
-                name:           sonata.admin,
-                model_class:    BadPixxel\BrevoBridge\Models\AbstractSms,
-                manager_type:   orm,
-                label:          Sms Templates,
-                group:          Brevo,
-                icon:           '<i class="fa far fa-envelope"></i>',
-                global_search:  false
-            }
-
-    ############################################################################
-    # Brevo Bridge Emails Admin Extension for Users
-    BadPixxel\BrevoBridge\Admin\Extensions\UserEmailsExtension:
-        tags:
-            - {
-                name: sonata.admin.extension,
-                target: sonata.user.admin.user
-            }
-
-    ############################################################################
-    # Sendinblue Bridge Sms Admin Extension for Users
-    BadPixxel\BrevoBridge\Admin\Extensions\UserSmsExtension:
-        tags:
-            - {
-                name: sonata.admin.extension,
-                target: sonata.user.admin.user
-            }
+    # AutoWire Admin Classes
+    BadPixxel\BrevoBridge\Admin\:
+        resource: '../../Admin'
+        exclude: '../../Admin/Controller'
 
