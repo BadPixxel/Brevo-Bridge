@@ -11,11 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller;
+namespace BadPixxel\BrevoBridge\Admin\Controller;
 
 use BadPixxel\BrevoBridge\Entity\AbstractEmailStorage;
+use BadPixxel\BrevoBridge\Models\Gdpr\ConditionalGdprTrait;
 use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
-use BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class EmailAdminController extends CRUDController
 {
-    use GdprAdminActionsTrait;
+    use ConditionalGdprTrait;
 
     /**
      * Preview Email Contents.

@@ -65,6 +65,19 @@ abstract class AbstractEmailAdmin extends Admin
             );
         }
 
+        //====================================================================//
+        // Add GDPR Actions if Paddock Available
+        if (trait_exists('BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait')) {
+            $actions['gdpr_check'] = array(
+                'label' => 'GDPR Check',
+                'ask_confirmation' => false
+            );
+            $actions['gdpr_fix'] = array(
+                'label' => 'GDPR Fix',
+                'ask_confirmation' => true
+            );
+        }
+
         return $actions;
     }
 

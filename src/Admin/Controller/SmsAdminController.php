@@ -11,9 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller;
+namespace BadPixxel\BrevoBridge\Admin\Controller;
 
-use BadPixxel\Paddock\System\MySql\Controller\GdprAdminActionsTrait;
+use BadPixxel\BrevoBridge\Models\Gdpr\ConditionalGdprTrait;
 use Sonata\AdminBundle\Controller\CRUDController;
 
 /**
@@ -21,5 +21,5 @@ use Sonata\AdminBundle\Controller\CRUDController;
  */
 class SmsAdminController extends CRUDController
 {
-    use GdprAdminActionsTrait;
+    use ConditionalGdprTrait;
 }
