@@ -11,50 +11,50 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
+namespace BadPixxel\BrevoBridge\Admin\Controller\Sms;
 
 use BadPixxel\BrevoBridge\Dictionary\TemplatesRoutes;
-use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
+use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Render a Brevo Email using Local Template Sources
+ * Send a Brevo Fake Sms
  */
 class Send extends CRUDController
 {
     public function __construct(
-        private readonly EmailsManager   $manager,
+        private readonly SmsManager  $manager,
     ) {
     }
 
     /**
      * @throws Exception
      */
-    public function __invoke(string $emailId): Response
+    public function __invoke(string $smsId): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         //==============================================================================
-        // Identify Email Class
-        $email = $this->manager->getEmailById($emailId);
-        if (!$email) {
-            $this->addFlash('sonata_flash_error', 'Unable to identify Email');
+        // Identify Sms Class
+        $sms = $this->manager->getSmsById($smsId);
+        if (!$sms) {
+            $this->addFlash('sonata_flash_error', 'Unable to identify Sms');
 
-            return $this->redirectToRoute(TemplatesRoutes::LIST);
+            return $this->redirectToRoute(TemplatesRoutes::SMS_LIST);
         }
         //==============================================================================
-        // Send Test Email
-        $sendEmail = $email::sendDemo($user);
-        if (is_null($sendEmail)) {
-            $this->addFlash('sonata_flash_error', $email::getLastError());
+        // Send Test Sms
+        $sendSms = $sms::sendDemo($user);
+        if (is_null($sendSms)) {
+            $this->addFlash('sonata_flash_error', $sms::getLastError());
 
-            return $this->redirectToRoute(TemplatesRoutes::LIST);
+            return $this->redirectToRoute(TemplatesRoutes::SMS_LIST);
         }
-        $this->addFlash('sonata_flash_success', 'Test Email send to '.$user->getEmail());
+        $this->addFlash('sonata_flash_success', 'Test Sms was send');
 
-        return $this->redirectToRoute(TemplatesRoutes::LIST);
+        return $this->redirectToRoute(TemplatesRoutes::SMS_LIST);
     }
 }

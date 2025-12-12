@@ -11,26 +11,22 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
+namespace BadPixxel\BrevoBridge\Admin\Controller\Emails;
 
 use BadPixxel\BrevoBridge\Dictionary\TemplatesRoutes;
 use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
-use BadPixxel\BrevoBridge\Services\Emails\RawHtmlRenderer;
-use BadPixxel\BrevoBridge\Services\TemplateManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Render a Demo Email using Brevo Account Template by ID
+ * Render a Brevo Email using Local Template Sources
  */
-class Preview extends CRUDController
+class Send extends CRUDController
 {
     public function __construct(
         private readonly EmailsManager   $manager,
-        private readonly TemplateManager $templates,
-        private readonly RawHtmlRenderer $renderer
     ) {
     }
 
@@ -45,30 +41,20 @@ class Preview extends CRUDController
         // Identify Email Class
         $email = $this->manager->getEmailById($emailId);
         if (!$email) {
-            return $this->redirectToRoute(TemplatesRoutes::LIST);
-        }
-        //==============================================================================
-        // Generate a Fake Email
-        $fakeEmail = $this->manager->fake($email, $user);
-        if (!$fakeEmail) {
-            $this->addFlash('sonata_flash_error', $this->manager->getLastError());
+            $this->addFlash('sonata_flash_error', 'Unable to identify Email');
 
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
         //==============================================================================
-        // Fetch Email Template from API
-        $smtpTemplate = $this->templates->get($fakeEmail);
-        if (!$smtpTemplate) {
-            $this->addFlash('sonata_flash_error', $this->templates->getLastError());
+        // Send Test Email
+        $sendEmail = $email::sendDemo($user);
+        if (is_null($sendEmail)) {
+            $this->addFlash('sonata_flash_error', $email::getLastError());
 
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
+        $this->addFlash('sonata_flash_success', 'Test Email send to '.$user->getEmail());
 
-        //==============================================================================
-        // Render Raw Html Template
-        return $this->renderer->render(
-            $smtpTemplate->getHtmlContent(),
-            $this->templates->getTmplParameters($fakeEmail)
-        );
+        return $this->redirectToRoute(TemplatesRoutes::LIST);
     }
 }

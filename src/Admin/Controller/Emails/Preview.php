@@ -11,10 +11,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
+namespace BadPixxel\BrevoBridge\Admin\Controller\Emails;
 
 use BadPixxel\BrevoBridge\Dictionary\TemplatesRoutes;
 use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
+use BadPixxel\BrevoBridge\Services\Emails\RawHtmlRenderer;
 use BadPixxel\BrevoBridge\Services\TemplateManager;
 use Exception;
 use Sonata\AdminBundle\Controller\CRUDController;
@@ -22,13 +23,14 @@ use Sonata\UserBundle\Model\UserInterface as User;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Export Email Template Html to Brevo
+ * Render a Demo Email using Brevo Account Template by ID
  */
-class Export extends CRUDController
+class Preview extends CRUDController
 {
     public function __construct(
         private readonly EmailsManager   $manager,
-        private readonly TemplateManager        $templates,
+        private readonly TemplateManager $templates,
+        private readonly RawHtmlRenderer $renderer
     ) {
     }
 
@@ -54,14 +56,19 @@ class Export extends CRUDController
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
         //==============================================================================
-        // Update Email Template On Host
-        if (null == $this->templates->update($email)) {
+        // Fetch Email Template from API
+        $smtpTemplate = $this->templates->get($fakeEmail);
+        if (!$smtpTemplate) {
             $this->addFlash('sonata_flash_error', $this->templates->getLastError());
 
             return $this->redirectToRoute(TemplatesRoutes::LIST);
         }
-        $this->addFlash('sonata_flash_success', 'Email Template Updated');
 
-        return $this->redirectToRoute(TemplatesRoutes::LIST);
+        //==============================================================================
+        // Render Raw Html Template
+        return $this->renderer->render(
+            $smtpTemplate->getHtmlContent(),
+            $this->templates->getTmplParameters($fakeEmail)
+        );
     }
 }

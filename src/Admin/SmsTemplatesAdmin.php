@@ -13,7 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\Admin;
 
-use BadPixxel\BrevoBridge\Controller\Templates\Sms;
+use BadPixxel\BrevoBridge\Admin\Controller\Sms;
 use BadPixxel\BrevoBridge\Models\AbstractSms;
 use Sonata\AdminBundle\Admin\AbstractAdmin as Admin;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;

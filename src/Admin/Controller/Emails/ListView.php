@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates\Emails;
+namespace BadPixxel\BrevoBridge\Admin\Controller\Emails;
 
 use BadPixxel\BrevoBridge\Services\Emails\EmailsManager;
 use Sonata\AdminBundle\Controller\CRUDController;

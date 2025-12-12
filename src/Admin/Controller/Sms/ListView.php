@@ -11,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\BrevoBridge\Controller\Templates\Sms;
+namespace BadPixxel\BrevoBridge\Admin\Controller\Sms;
 
 use BadPixxel\BrevoBridge\Services\Sms\SmsManager;
 use Sonata\AdminBundle\Controller\CRUDController;
