@@ -95,14 +95,14 @@ class MjmlConverter
         //==============================================================================
         // CONVERT MJML TEMPLATES FROM API
         $chr = curl_init($this->endpoint);
-        if (!$chr) {
+        if (!$chr || empty($this->appUser)) {
             return $this->setError("cUrl Init Failed");
         }
 
-        curl_setopt($chr, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($chr, CURLOPT_USERPWD, $this->appUser);
-        curl_setopt($chr, CURLOPT_POST, 1);
-        curl_setopt($chr, CURLOPT_POSTFIELDS, json_encode(array(
+        curl_setopt($chr, CURLOPT_POST, true);
+        curl_setopt($chr, CURLOPT_POSTFIELDS, (string) json_encode(array(
             "mjml" => $rawMjml
         )));
         $response = curl_exec($chr);
