@@ -27,13 +27,13 @@
         "ext-curl":                                     "*",
         "ext-json":                                     "*",
 
-        "symfony/config":                               "^5.4 || ^6.4",
-        "symfony/dependency-injection":                 "^5.4 || ^6.4",
-        "symfony/event-dispatcher":                     "^5.4 || ^6.4",
-        "symfony/options-resolver":                     "^5.4 || ^6.4",
+        "symfony/config":                               "^5.4|^6.4|^7.4|^8.0",
+        "symfony/dependency-injection":                 "^5.4|^6.4|^7.4|^8.0",
+        "symfony/event-dispatcher":                     "^5.4|^6.4|^7.4|^8.0",
+        "symfony/options-resolver":                     "^5.4|^6.4|^7.4|^8.0",
 
-        "doctrine/orm":                                 "^2.6",
-        "doctrine/doctrine-bundle":                     "^2.7",
+        "doctrine/orm":                                 "^2.6|^3.0",
+        "doctrine/doctrine-bundle":                     "^2.7|^3.0",
 
         "twig/extra-bundle":                            "^2.0|^3.0",
         "twig/intl-extra":                              "^2.0|^3.0",
@@ -47,15 +47,19 @@
     },
     
     "require-dev": {
-        "badpixxel/php-sdk":                            "~2.0",
+        "badpixxel/php-sdk":                            "^2.0|^3.0",
         "badpixxel/paddock-mysql":                      "dev-main",
 
-        "symfony/http-kernel":                          "^5.4 || ^6.4",
-        "symfony/twig-bundle":                          "^5.4 || ^6.4",
-        "symfony/runtime":                              "^5.4 || ^6.4",
-        "symfony/mailer":                               "^5.4 || ^6.4",
-        "symfony/phpunit-bridge":                       "^5.4 || ^6.4",
-        "symfony/debug-pack":                           "^1.0",
+        "symfony/http-kernel":                          "^5.4|^6.4|^7.4|^8.0",
+        "symfony/twig-bundle":                          "^5.4|^6.4|^7.4|^8.0",
+        "symfony/runtime":                              "^5.4|^6.4|^7.4|^8.0",
+        "symfony/mailer":                               "^5.4|^6.4|^7.4|^8.0",
+        "symfony/phpunit-bridge":                       "^5.4|^6.4|^7.4|^8.0",
+        "symfony/debug-bundle":                         "^5.4|^6.4|^7.4|^8.0",
+        "symfony/stopwatch":                            "^5.4|^6.4|^7.4|^8.0",
+        "symfony/web-profiler-bundle":                  "^5.4|^6.4|^7.4|^8.0",
+        "symfony/monolog-bundle":                       "^3.0|^4.0",
+        "symfony/flex":                                 "^1.0|^2.0",
 
         "sonata-project/admin-bundle":                  "^4.0",
         "sonata-project/doctrine-orm-admin-bundle":     "^4.0",
@@ -66,20 +70,21 @@
     "config": {
         "allow-plugins": {
             "phpro/grumphp":            true,
-            "symfony/runtime":          true
+            "symfony/runtime":          true,
+            "symfony/flex":             true,
+            "phpro/grumphp-shim":       true
         }
     },
 
     "scripts": {
-        "auto-scripts": [
-            "php bin/console cache:clear --no-debug",
-            "php bin/console assets:install --relative",
-            "php bin/console doctrine:schema:update --force --complete --no-interaction --no-debug",
-            "find var/cache/dev/*.xml | while read -r i; do cp \"$i\" var/cache/dev/testContainer.xml; done"
-        ],
+        "auto-scripts": {
+            "cache:clear --no-debug": "symfony-cmd",
+            "assets:install --relative": "symfony-cmd",
+            "doctrine:schema:update --force --complete --no-interaction --no-debug": "symfony-cmd",
+            "find var/cache/dev/*.xml -not -name \"testContainer.xml\" | while read -r i; do cp \"$i\" var/cache/dev/testContainer.xml; done": "script"
+        },
         "post-install-cmd": [
-            "@auto-scripts",
-            "php bin/console sonata:user:create admin admin@exemple.com admin --super-admin || exit 0"
+            "@auto-scripts"
         ],
 
         "post-update-cmd": [
