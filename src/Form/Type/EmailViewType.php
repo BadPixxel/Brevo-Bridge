@@ -25,7 +25,7 @@ class EmailViewType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param array                $options
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -34,7 +34,7 @@ class EmailViewType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'sendinblue_bridge_email_view';
     }
@@ -42,7 +42,7 @@ class EmailViewType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getBlockPrefix();
     }
