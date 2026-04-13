@@ -47,11 +47,10 @@ class PingCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var null|ArrayAccess $result */
-        $result = $this->accountManager->getAccount();
-        if (!$result) {
+        $account = $this->accountManager->getAccount();
+        if (!$account) {
             $output->writeln(
                 '<error>Exception when calling AccountApi->getAccount: '
                 .$this->accountManager->getLastError().'</error>'
@@ -61,9 +60,9 @@ class PingCommand extends Command
         }
 
         $message = 'Brevo Connected: ';
-        $message .= ' Compte '.$result['companyName'];
+        $message .= ' Compte '.$account->getCompanyName();
         /** @var array $plan */
-        foreach (is_iterable($result['plan']) ? $result['plan'] : array() as $plan) {
+        foreach ($account->getPlan() as $plan) {
             $message .= ' ['.ucwords($plan['type']).': '.$plan['credits'].' Credits] ';
         }
         $output->writeln('<info>'.$message.'</info>');
