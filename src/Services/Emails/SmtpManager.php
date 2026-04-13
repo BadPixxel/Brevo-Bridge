@@ -148,6 +148,7 @@ class SmtpManager
         }
         //==============================================================================
         // Safety Checks
+        /** @var object $eventsReport */
         if (!($eventsReport instanceof GetEmailEventReport)) {
             return array();
         }

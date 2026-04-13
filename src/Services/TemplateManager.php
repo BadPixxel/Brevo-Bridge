@@ -30,7 +30,7 @@ use Twig\Environment;
 /**
  * Emails Templates Manager for Brevo Api.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(CouplingBetweenObjects)
  */
 class TemplateManager
 {

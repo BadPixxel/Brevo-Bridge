@@ -30,12 +30,12 @@ class ConfigurationManager
     /**
      * @var null|Configuration
      */
-    private ?Configuration $sdkConfig;
+    private ?Configuration $sdkConfig = null;
 
     /**
      * @var null|array
      */
-    private ?array $eventsCurlConfig;
+    private ?array $eventsCurlConfig = null;
 
     /**
      * @var bool
