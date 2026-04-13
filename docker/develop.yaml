@@ -11,13 +11,17 @@
 #
 ################################################################################
 
-name: "badpixxel-brevo-bridge"
+services:
 
-################################################################################
-# Multi-versions Dev Services
-include:
-    - docker/develop.yaml
-    - docker/symfony-5.yaml
-    - docker/symfony-6.yaml
-    - docker/symfony-7.yaml
-#    - docker/symfony-8.yaml        # Waiting for Paddock
+    ################################################################################
+    # Develop Image
+    app:
+        image:          "registry.gitlab.com/badpixxel-projects/php-sdk:php-8.3"
+        init:           true
+        container_name: dev.brevo-bridge.local
+        hostname:       dev.brevo-bridge.local
+        volumes:
+            - ../:/var/www/html
+        environment:
+            SERVER_ROOT:        /var/www/html/tests/public
+            SYMFONY_REQUIRE:    7.4.*

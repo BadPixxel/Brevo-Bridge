@@ -1,0 +1,34 @@
+################################################################################
+#
+#  Copyright (C) BadPixxel <www.badpixxel.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+################################################################################
+
+services:
+
+    ################################################################################
+    # Symfony 7 + PHP 8.3
+    sf7:
+        image:          "registry.gitlab.com/badpixxel-projects/php-sdk:php-8.2"
+        init:           true
+        container_name: sf7.brevo-bridge.local
+        hostname:       sf7.brevo-bridge.local
+        volumes:
+            - ../:/var/www/html
+            - sf7-var:/var/www/html/var
+            - sf7-vendor:/var/www/html/vendor
+        environment:
+            COMPOSER_ROOT_VERSION: 6.0.x-dev
+            SERVER_ROOT:        /var/www/html/tests/public
+            SYMFONY_REQUIRE:    7.4.*
+
+volumes:
+    sf7-var:        ~
+    sf7-vendor:     ~
