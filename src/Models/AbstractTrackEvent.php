@@ -90,12 +90,13 @@ abstract class AbstractTrackEvent
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     public static function send(User $user): bool
     {
         //==============================================================================
         // Prepare Callback
+        /** @phpstan-var array $callback */
         $callback = array(static::class, 'getInstance');
         if (!is_callable($callback)) {
             return false;
@@ -119,12 +120,13 @@ abstract class AbstractTrackEvent
      *
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     public static function sendDemo(User $user): bool
     {
         //==============================================================================
         // Prepare Callback
+        /** @phpstan-var array $callback */
         $callback = array(static::class, 'getDemoInstance');
         if (!is_callable($callback)) {
             return false;
@@ -251,7 +253,7 @@ abstract class AbstractTrackEvent
      *
      * @return EventManager
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(StaticAccess)
      */
     protected function getEventManager(): EventManager
     {

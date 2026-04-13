@@ -69,7 +69,7 @@ trait EmailsTrait
         }
         //==============================================================================
         // Check Emails Collection Status
-        if (!($this->emails instanceof Collection) || $this->emails->isEmpty()) {
+        if ($this->emails->isEmpty()) {
             return false;
         }
 

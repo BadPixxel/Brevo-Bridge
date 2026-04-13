@@ -69,7 +69,7 @@ trait SmsTrait
         }
         //==============================================================================
         // Check Emails Collection Status
-        if (!($this->sendSms instanceof Collection) || $this->sendSms->isEmpty()) {
+        if ($this->sendSms->isEmpty()) {
             return false;
         }
 

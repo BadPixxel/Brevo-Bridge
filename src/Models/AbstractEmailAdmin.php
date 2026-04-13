@@ -28,7 +28,7 @@ abstract class AbstractEmailAdmin extends Admin
     /**
      * {@inheritdoc}
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     protected function configureActionButtons(array $buttonList, string $action, ?object $object = null): array
     {
