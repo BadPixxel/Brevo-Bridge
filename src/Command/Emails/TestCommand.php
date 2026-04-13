@@ -65,7 +65,7 @@ class TestCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         //==============================================================================
         // Identify User in Database

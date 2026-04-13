@@ -63,7 +63,7 @@ class EventTestCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $targetEmail */
         $targetEmail = $input->getArgument('target');

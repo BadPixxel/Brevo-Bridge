@@ -38,7 +38,7 @@ class EmailAdminController extends CRUDController
      *
      * @return Response
      *
-     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings(ShortVariable)
      */
     public function previewAction(int $id = null): Response
     {
@@ -57,7 +57,7 @@ class EmailAdminController extends CRUDController
     /**
      * Refresh Email Events.
      *
-     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings(ShortVariable)
      */
     public function refreshAction(Request $request, EmailsManager $manager, int $id = null): Response
     {

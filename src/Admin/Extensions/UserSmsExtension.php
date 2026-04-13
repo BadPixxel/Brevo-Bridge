@@ -32,14 +32,14 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 class UserSmsExtension extends AbstractAdminExtension
 {
     /**
-     * Configure Child Admins (Notary!!).
+     * Configure Child Admins.
      *
      * @param AdminInterface      $admin
      * @param MenuItemInterface   $menu
      * @param string              $action
      * @param null|AdminInterface $childAdmin
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     public function configureTabMenu(
         AdminInterface    $admin,
@@ -54,7 +54,7 @@ class UserSmsExtension extends AbstractAdminExtension
         }
         //==============================================================================
         // Get Current Subject
-        /** @var null|SmsAwareInterface|User $subject */
+        /** @var SmsAwareInterface|User $subject */
         $subject = $admin->getSubject();
         if (!($subject instanceof User) || !($subject instanceof SmsAwareInterface)) {
             return;
