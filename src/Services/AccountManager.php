@@ -37,7 +37,7 @@ class AccountManager
      * @param Configuration $configurationManager
      */
     public function __construct(
-        readonly Configuration $configurationManager
+        public readonly Configuration $configurationManager
     ) {
         $this->accountApi = new AccountApi(
             new Client(),

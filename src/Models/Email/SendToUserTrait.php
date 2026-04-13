@@ -40,6 +40,7 @@ trait SendToUserTrait
      * Add Users to an Emails List.
      *
      * @param User|User[] $toUsers Target User or Array of Target Users
+     *
      * @phpstan-param User|User[]|object[] $toUsers
      */
     final public function setToUsers(array|User $toUsers): static

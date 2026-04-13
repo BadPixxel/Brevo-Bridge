@@ -13,7 +13,6 @@
 
 namespace BadPixxel\BrevoBridge\Command;
 
-use ArrayAccess;
 use BadPixxel\BrevoBridge\Services\AccountManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
