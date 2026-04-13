@@ -13,6 +13,7 @@
 
 namespace BadPixxel\BrevoBridge\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,14 +27,14 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('sendinblue_bridge');
+        /** @var NodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
         // @phpstan-ignore-next-line
-        $rootNode
-            ->children()
+        $rootNode->children()
             ->scalarNode('api_key')->cannotBeEmpty()->end()
             ->scalarNode('track_key')->defaultValue(null)->end()
             ->scalarNode('cli_host')->defaultValue("http://localhost")->cannotBeEmpty()->end()
